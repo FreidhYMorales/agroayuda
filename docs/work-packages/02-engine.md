@@ -240,6 +240,10 @@ SHOULD 0: full engine texts (several lines per section). Then ask the lead for t
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 12:10): the API is wired to your engine already
+
+The API calls `engine.recommend.recommend(site, request, crops, templates)` as soon as `engine/src/engine/recommend.py` exists, and maps your `engine.errors.InvalidRequestError` to HTTP 422. Keep those two names and signatures exactly; you do not touch `api/`. After your PR merges, `/health` shows `"engine": "real"` (it says `"stub"` until then).
+
 ### New (Sat 11:45): the app is online
 
 - Web: https://agroayuda.vercel.app (every merge to `main` deploys; every PR gets its own Vercel preview link in the PR page).
