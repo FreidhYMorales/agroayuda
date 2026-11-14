@@ -31,8 +31,10 @@ def test_chiquimula_maize_bean_gets_current_then_two_scored_alternatives(
     maiz: water 3, soil 2, income 3, risk 1; frijol: 5, 3, 5, 3;
     maiz_frijol: 3, 5, 5, 1; maicillo: 5, 2, 1, 5.
     maiz -> frijol (current): 4, 2.5, 4, 1 -> rounded 4, 3, 4, 1; bare Dec-Apr.
-    frijol -> maicillo: 5, 2.5, 3, 3 -> 5, 3, 3, 3; mean 3.375; bare Jan-Apr and Aug.
+    frijol -> maicillo: 5, 2.5, 3, 2 -> 5, 3, 3, 2; mean 3.125; bare Jan-Apr and Aug.
     maiz_frijol -> maicillo: 4, 3.5, 3, 1 -> 4, 4, 3, 1; mean 2.875; bare Jan-Apr.
+    The example site's canícula is high (story 04): frijol in primera loses 1 risk (3 -> 2);
+    maíz and maiz_frijol already clamp to 1.
     """
     options = recommend(site, request_for("maiz", "frijol"), list(crops.values()), templates)
 
@@ -52,7 +54,7 @@ def test_chiquimula_maize_bean_gets_current_then_two_scored_alternatives(
             "frijol",
             "maicillo",
             False,
-            {"water": 5, "soil": 3, "income": 3, "risk": 3},
+            {"water": 5, "soil": 3, "income": 3, "risk": 2},
             [1, 2, 3, 4, 8],
         ),
         (

@@ -11,9 +11,9 @@
 ## Backlog
 
 01. [x] 300aadf As a farmer, I want to enter my current rotation and see it next to two alternatives scored on water, soil, income and risk so that I can compare them.
-02. [x] 2bf5893 As a farmer, I want my priorities to change how the alternatives rank so that the comparison fits what matters to me. Requires: #01
+02. [x] 95ca738 As a farmer, I want my priorities to change how the alternatives rank so that the comparison fits what matters to me. Requires: #01
 03. [ ] As a farmer, I want to see which months each option leaves the field bare, and lose soil points at 6+ months, so that I see the erosion cost. Requires: #01
-04. [ ] As a farmer, I want the canícula at my site to lower the risk of primera crops so that the options reflect the dry spell. Requires: #01
+04. [x] 867c95f As a farmer, I want the canícula at my site to lower the risk of primera crops so that the options reflect the dry spell. Requires: #01
 05. [ ] As a farmer, I want a warning on options that fail in the canícula (F1/F2) so that I do not plant something likely to be lost. Requires: #04
 06. [ ] As a farmer with irrigation, I want high-water crops to gain risk points and lose the canícula warnings so that my irrigation counts. Requires: #05
 07. [ ] As a farmer, I want one option marked recommended only when it passes and beats my current rotation so that I know if changing is worth it. Requires: #02, #05
