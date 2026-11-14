@@ -53,7 +53,7 @@ def test_health_reports_the_data_version(client: TestClient) -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "data_version": "2026-11-14", "engine": "stub"}
+    assert response.json() == {"status": "ok", "data_version": "2026-11-14", "engine": "real"}
 
 
 def test_site_returns_the_profile_of_the_tapped_cell(client: TestClient) -> None:

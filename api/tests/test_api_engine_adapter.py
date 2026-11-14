@@ -67,8 +67,8 @@ def fake_engine(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     return calls
 
 
-def test_health_says_stub_until_the_engine_lands(client: TestClient) -> None:
-    assert client.get("/health").json()["engine"] == "stub"
+def test_health_says_real_with_the_engine_installed(client: TestClient) -> None:
+    assert client.get("/health").json()["engine"] == "real"
 
 
 def test_health_says_real_once_the_engine_lands(client: TestClient, fake_engine: Any) -> None:
