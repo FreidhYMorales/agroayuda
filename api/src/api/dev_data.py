@@ -16,6 +16,7 @@ from contracts import SiteData
 
 REPO_ROOT: Final = Path(__file__).resolve().parents[3]
 EXAMPLES: Final = REPO_ROOT / "contracts" / "examples"
+CROPS_CSV: Final = REPO_ROOT / "data" / "catalog" / "crops.csv"
 DEV_DATA_DIR: Final = REPO_ROOT / "api" / "dev-data"
 DEV_DATA_VERSION: Final = "dev-fixture"
 
@@ -46,14 +47,19 @@ def build_data_dir(out_dir: Path, rings: list[Ring], data_version: str | None = 
         con.execute("CREATE TABLE region (ring DOUBLE[][])")
         con.executemany("INSERT INTO region VALUES (?)", [[ring] for ring in rings])
         con.execute("COPY region TO ? (FORMAT parquet)", [(out_dir / "region.parquet").as_posix()])
-        for example, target in [
-            ("crop_catalog.json", "crops.parquet"),
-            ("rotation_templates.json", "rotation_templates.parquet"),
-        ]:
-            con.execute(
-                "COPY (SELECT * FROM read_json(?)) TO ? (FORMAT parquet)",
-                [(EXAMPLES / example).as_posix(), (out_dir / target).as_posix()],
-            )
+        # The real, sourced catalog: the example catalog lacks crops the example templates use.
+        con.execute(
+            "COPY (SELECT * REPLACE (string_split(seasons, ';') AS seasons) FROM read_csv(?)) "
+            "TO ? (FORMAT parquet)",
+            [CROPS_CSV.as_posix(), (out_dir / "crops.parquet").as_posix()],
+        )
+        con.execute(
+            "COPY (SELECT * FROM read_json(?)) TO ? (FORMAT parquet)",
+            [
+                (EXAMPLES / "rotation_templates.json").as_posix(),
+                (out_dir / "rotation_templates.parquet").as_posix(),
+            ],
+        )
 
 
 def build_dev_data(out_dir: Path) -> None:
