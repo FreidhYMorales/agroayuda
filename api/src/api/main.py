@@ -15,6 +15,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from api import engine_stub
+from api.dev_data import DEV_DATA_DIR
 from api.geo import cell_resolution_km, point_in_rings, snap_to_cell
 from api.repository import find_site, read_data_version, read_region_rings
 from contracts import (
@@ -38,9 +39,17 @@ ERROR_RESPONSES: Final[dict[int | str, dict[str, object]]] = {
 }
 
 
+def resolve_data_dir(real: Path, dev: Path) -> Path:
+    """Real pipeline output once it exists; the dev fixture until then."""
+    return real if (real / "sites.parquet").exists() else dev
+
+
 def get_data_dir() -> Path:
     """Folder with sites.parquet and region.parquet; override with AGROAYUDA_DATA_DIR."""
-    return Path(os.environ.get("AGROAYUDA_DATA_DIR", DEFAULT_DATA_DIR))
+    override = os.environ.get("AGROAYUDA_DATA_DIR")
+    if override:
+        return Path(override)
+    return resolve_data_dir(DEFAULT_DATA_DIR, DEV_DATA_DIR)
 
 
 DataDir = Annotated[Path, Depends(get_data_dir)]

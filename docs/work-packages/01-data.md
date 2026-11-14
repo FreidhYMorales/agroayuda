@@ -251,6 +251,10 @@ SHOULD 0: region mask `region_mask.geojson` (world ring with the region as holes
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 11:25): the API answers now
+
+Until the data pipeline writes `data/output/sites.parquet`, the API serves a dev fixture: only the Chiquimula cell (tap 14.70, -89.50), everything else is `outside_region`, and `/health` says `"data_version": "dev-fixture"`. `/recommendations` returns the example options. Run it with `uv run fastapi dev api/src/api/main.py` and open http://localhost:8000/docs. When real data lands, the API switches to it by itself.
+
 ### New (Sat 10:30): resources list
 
 The submission form asks for every external resource (data, documents, libraries, images, fonts, tools), even open source. When you add one, add its row to `docs/resources.md` in the same PR. Rows marked _verify_ need you to confirm the licence on the provider's page.
