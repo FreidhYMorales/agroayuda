@@ -33,3 +33,8 @@ Risk: none
 ## Log
 
 - L1 request: /flow:story 10
+- L2 test list approved; mode B (small, Risk: none).
+- L3 commits: a92cdb0 -> 43ea64a (fake "medium"), ee8942e -> 4ff2435 (real factor count; the missing-soil factor was written here, ahead of its test), one test commit for "fallow never counts" (test-built non-local none, since the real none row is local) and "missing soil adds one" (green on first run; proven by mutants "none counts" and "ignore missing soil"), 5b603de + 2fffb82 -> 32cfbf5 (confidence on every option).
+- L4 deviation: 5b603de was committed with missing imports (a multi-line sd did not match and `;` let the commit through), so its first failure was a NameError, not red for the right reason; 2fffb82 fixed only the imports, then the real red ("high" vs "medium") was shown before the code.
+- L5 make check green (Python and web). No verifier (Risk: none).
+- Risk: none
