@@ -1,4 +1,5 @@
-from contracts import CropCatalogEntry, SiteProfile
+from contracts import CropCatalogEntry, RecommendationRequest, RotationTemplate, SiteProfile
+from engine.recommend import recommend
 from engine.scoring import confidence
 
 
