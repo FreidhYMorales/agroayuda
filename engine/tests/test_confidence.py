@@ -42,3 +42,20 @@ def test_missing_soil_adds_one_factor(
         rate(site_null_soil, crops, "maiz", "frijol"),
         rate(site_null_soil, crops, "ayote", "frijol"),
     ) == ("medium", "low")
+
+
+def test_every_option_gets_its_own_confidence(
+    site_null_soil: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    """Null-soil site: every option starts at 1 factor; all stub-template crops are local."""
+    request = RecommendationRequest.model_validate(
+        {
+            "location": {"lat": 14.70, "lon": -89.50},
+            "current_rotation": {"primera": "maiz", "postrera": "frijol"},
+        }
+    )
+    options = recommend(site_null_soil, request, list(crops.values()), templates)
+
+    assert [o.confidence for o in options] == ["medium", "medium", "medium"]
