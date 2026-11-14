@@ -1,3 +1,7 @@
+from collections.abc import Callable
+
+import pytest
+
 from contracts import (
     CropCatalogEntry,
     RecommendationRequest,
@@ -90,3 +94,28 @@ def test_every_season_valid_rotation_gets_three_distinct_options_current_first(
         ):
             failures.append((primera, postrera, sequences))
     assert failures == []
+
+
+@pytest.mark.parametrize(
+    ("first", "second"),
+    [
+        (("canavalia", "maicillo"), ("gandul", "maicillo")),
+        (("gandul", "maicillo"), ("canavalia", "maicillo")),
+    ],
+)
+def test_tied_alternatives_keep_template_order(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    make_template: Callable[[str, str], RotationTemplate],
+    first: tuple[str, str],
+    second: tuple[str, str],
+) -> None:
+    """gandul and canavalia have the same tiers in crops.csv (water 5, soil 5, income 1, risk 5).
+
+    Either one -> maicillo: 5, 3.5, 1, 5 (mean 3.625), above frijol -> maicillo (3.375).
+    """
+    templates = [make_template(*first), make_template(*second), make_template("frijol", "maicillo")]
+
+    options = recommend(site, request_for("maiz", "frijol"), list(crops.values()), templates)
+
+    assert [(o.sequence.primera, o.sequence.postrera) for o in options[1:]] == [first, second]

@@ -1,6 +1,7 @@
 """Shared engine fixtures: the real crop catalog, read with the stdlib csv module."""
 
 import csv
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -62,3 +63,8 @@ def templates() -> list[RotationTemplate]:
         template("frijol", "maicillo"),
         template("maiz", "frijol"),
     ]
+
+
+@pytest.fixture
+def make_template() -> Callable[[str, str], RotationTemplate]:
+    return template
