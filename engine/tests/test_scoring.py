@@ -1,5 +1,7 @@
-from contracts import CropCatalogEntry, SiteProfile, Tier
-from engine.scoring import round_half_up, score_option
+import pytest
+
+from contracts import CropCatalogEntry, Priorities, SiteProfile, Tier
+from engine.scoring import round_half_up, score_option, weighted_score
 
 
 def illustrative_crop(
@@ -46,3 +48,11 @@ def test_fallow_both_seasons_scores_the_fixed_none_row(
     criteria = score_option(site, crops["none"], crops["none"], irrigation=False)
 
     assert criteria == {"water": 5.0, "soil": 1.0, "income": 1.0, "risk": 5.0}
+
+
+def test_weighted_score_uses_unrounded_criteria_and_priorities() -> None:
+    # Worked example: (5 x 4 + 3 x 2.5 + 3 x 4 + 3 x 1) / 14 = 42.5 / 14.
+    criteria = {"water": 4.0, "soil": 2.5, "income": 4.0, "risk": 1.0}
+    priorities = Priorities(water=5, soil=3, income=3, risk=3)
+
+    assert weighted_score(criteria, priorities) == pytest.approx(42.5 / 14)
