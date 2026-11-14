@@ -54,3 +54,17 @@ def test_no_canicula_share_means_no_evidence(
     options = recommend_for(no_share, crops, templates)
 
     assert [o.evidence for o in options] == [[], [], []]
+
+
+POWER_GAP = "La lluvia de NASA POWER es una estimación regional."
+SOIL_GAP = "No hay datos de suelo para este punto."
+
+
+def test_full_soil_and_local_crops_only_note_the_regional_rain(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    current = recommend_for(site, crops, templates)[0]
+
+    assert current.data_gaps == [POWER_GAP]
