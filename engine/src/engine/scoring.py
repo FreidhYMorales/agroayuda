@@ -19,8 +19,12 @@ def canicula_level(site: SiteProfile) -> Level:
 
 def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
     """F1/F2: why the primera crop is likely lost in a high canícula, or None."""
-    if canicula_level(site) == "high" and primera.water_need == "high":
+    if canicula_level(site) != "high":
+        return None
+    if primera.water_need == "high":
         return "Necesita mucha agua justo en la canícula"
+    if primera.drought_tolerance == "low":
+        return "Aguanta poco la sequía de la canícula"
     return None
 
 
