@@ -133,3 +133,13 @@ def test_cors_allows_vercel_and_localhost_only(
 def test_error_fixtures_match_the_api_shape() -> None:
     for path in EXAMPLES.glob("error_response_*.json"):
         ErrorResponse.model_validate(json.loads(path.read_text("utf-8")))
+
+
+def test_real_engine_rejects_a_postrera_only_crop_in_primera(client: TestClient) -> None:
+    response = client.post("/recommendations", json=request_body(CHIQUIMULA, primera="maicillo"))
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "error": "invalid_request",
+        "detail": "maicillo is not a primera crop",
+    }
