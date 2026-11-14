@@ -1,0 +1,376 @@
+{
+  "type": "FeatureCollection",
+  "data_version": "2026-11-14",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "13.5_-90.0",
+      "properties": {
+        "value_mm": 1396.1,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.7
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.3125,
+              13.25
+            ],
+            [
+              -89.6875,
+              13.25
+            ],
+            [
+              -89.6875,
+              13.75
+            ],
+            [
+              -90.3125,
+              13.75
+            ],
+            [
+              -90.3125,
+              13.25
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "14.0_-90.0",
+      "properties": {
+        "value_mm": 1125.5,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.6
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.3125,
+              13.75
+            ],
+            [
+              -89.6875,
+              13.75
+            ],
+            [
+              -89.6875,
+              14.25
+            ],
+            [
+              -90.3125,
+              14.25
+            ],
+            [
+              -90.3125,
+              13.75
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "14.0_-89.375",
+      "properties": {
+        "value_mm": 1124.8,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.6
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -89.6875,
+              13.75
+            ],
+            [
+              -89.0625,
+              13.75
+            ],
+            [
+              -89.0625,
+              14.25
+            ],
+            [
+              -89.6875,
+              14.25
+            ],
+            [
+              -89.6875,
+              13.75
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "14.5_-90.625",
+      "properties": {
+        "value_mm": 1313.3,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.9375,
+              14.25
+            ],
+            [
+              -90.3125,
+              14.25
+            ],
+            [
+              -90.3125,
+              14.75
+            ],
+            [
+              -90.9375,
+              14.75
+            ],
+            [
+              -90.9375,
+              14.25
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "14.5_-90.0",
+      "properties": {
+        "value_mm": 1103.6,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.3125,
+              14.25
+            ],
+            [
+              -89.6875,
+              14.25
+            ],
+            [
+              -89.6875,
+              14.75
+            ],
+            [
+              -90.3125,
+              14.75
+            ],
+            [
+              -90.3125,
+              14.25
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "14.5_-89.375",
+      "properties": {
+        "value_mm": 1135.2,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -89.6875,
+              14.25
+            ],
+            [
+              -89.0625,
+              14.25
+            ],
+            [
+              -89.0625,
+              14.75
+            ],
+            [
+              -89.6875,
+              14.75
+            ],
+            [
+              -89.6875,
+              14.25
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "15.0_-90.625",
+      "properties": {
+        "value_mm": 1363.0,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.9375,
+              14.75
+            ],
+            [
+              -90.3125,
+              14.75
+            ],
+            [
+              -90.3125,
+              15.25
+            ],
+            [
+              -90.9375,
+              15.25
+            ],
+            [
+              -90.9375,
+              14.75
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "15.0_-90.0",
+      "properties": {
+        "value_mm": 1245.4,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -90.3125,
+              14.75
+            ],
+            [
+              -89.6875,
+              14.75
+            ],
+            [
+              -89.6875,
+              15.25
+            ],
+            [
+              -90.3125,
+              15.25
+            ],
+            [
+              -90.3125,
+              14.75
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "15.0_-89.375",
+      "properties": {
+        "value_mm": 1279.4,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -89.6875,
+              14.75
+            ],
+            [
+              -89.0625,
+              14.75
+            ],
+            [
+              -89.0625,
+              15.25
+            ],
+            [
+              -89.6875,
+              15.25
+            ],
+            [
+              -89.6875,
+              14.75
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "15.5_-89.375",
+      "properties": {
+        "value_mm": 1489.0,
+        "unit": "mm/año",
+        "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+        "resolution_km": 61.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -89.6875,
+              15.25
+            ],
+            [
+              -89.0625,
+              15.25
+            ],
+            [
+              -89.0625,
+              15.75
+            ],
+            [
+              -89.6875,
+              15.75
+            ],
+            [
+              -89.6875,
+              15.25
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "chiquimula",
+    "name_es": "Chiquimula",
+    "location": {
+      "lat": 14.7,
+      "lon": -89.5
+    }
+  },
+  {
+    "id": "fuera_ciudad_guatemala",
+    "name_es": "Ciudad de Guatemala (fuera de la región)",
+    "location": {
+      "lat": 14.63,
+      "lon": -90.51
+    }
+  }
+]
