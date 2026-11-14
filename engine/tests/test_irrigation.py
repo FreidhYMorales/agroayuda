@@ -1,5 +1,5 @@
 from contracts import CropCatalogEntry, Level, SiteProfile
-from engine.scoring import score_option
+from engine.scoring import failure_reason, score_option
 
 
 def with_canicula(site: SiteProfile, level: Level) -> SiteProfile:
@@ -48,3 +48,9 @@ def test_irrigation_leaves_a_low_water_crop_unchanged(
 
     assert water_and_risk(low, frijol, maicillo, irrigation=False) == (5.0, 3.0)
     assert water_and_risk(low, frijol, maicillo, irrigation=True) == (5.0, 3.0)
+
+
+def test_irrigation_turns_off_f1(site: SiteProfile, frijol: CropCatalogEntry) -> None:
+    high = with_canicula(site, "high")
+
+    assert failure_reason(high, thirsty(frijol), irrigation=True) is None
