@@ -2,7 +2,7 @@
 
 import math
 
-from contracts import CropCatalogEntry, Level, Priorities, SiteProfile, Tier
+from contracts import Confidence, CropCatalogEntry, Level, Priorities, SiteProfile, Tier
 from engine.calendar import bare_months
 
 TIER_NUMBER: dict[Tier, int] = {"low": 1, "medium": 2, "high": 3}
@@ -29,6 +29,10 @@ def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: boo
     if primera.drought_tolerance == "low":
         return "Aguanta poco la sequía de la canícula"
     return None
+
+
+def confidence(site: SiteProfile, crops: list[CropCatalogEntry]) -> Confidence:
+    return "medium"
 
 
 def round_half_up(x: float) -> int:
