@@ -2,7 +2,7 @@
 
 import math
 
-from contracts import CropCatalogEntry, Level, Priorities, SiteProfile, Tier
+from contracts import Confidence, CropCatalogEntry, Level, Priorities, SiteProfile, Tier
 from engine.calendar import bare_months
 
 TIER_NUMBER: dict[Tier, int] = {"low": 1, "medium": 2, "high": 3}
@@ -29,6 +29,15 @@ def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: boo
     if primera.drought_tolerance == "low":
         return "Aguanta poco la sequía de la canícula"
     return None
+
+
+def confidence(site: SiteProfile, crops: list[CropCatalogEntry]) -> Confidence:
+    """Factors: 1 if any soil field is null, plus 1 per non-`none` crop without a local source."""
+    soil = site.soil
+    missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+    non_local = sum(1 for crop in crops if crop.id != "none" and not crop.local_source)
+    factors = int(missing_soil) + non_local
+    return "high" if factors == 0 else "medium" if factors == 1 else "low"
 
 
 def round_half_up(x: float) -> int:
