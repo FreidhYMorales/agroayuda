@@ -171,3 +171,20 @@ def test_soil_first_ranks_maize_bean_intercrop_first(
         ("maiz_frijol", "maicillo"),
         ("frijol", "maicillo"),
     ]
+
+
+def test_canicula_warnings_mark_options_without_removing_them(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    """Example site, canícula high: maíz (drought low) in primera fails F2; frijol does not."""
+    options = recommend(site, request_for("maiz", "frijol"), list(crops.values()), templates)
+
+    assert [
+        (o.sequence.primera, o.sequence.postrera, o.not_recommended_reason) for o in options
+    ] == [
+        ("maiz", "frijol", "Aguanta poco la sequía de la canícula"),
+        ("frijol", "maicillo", None),
+        ("maiz_frijol", "maicillo", "Aguanta poco la sequía de la canícula"),
+    ]

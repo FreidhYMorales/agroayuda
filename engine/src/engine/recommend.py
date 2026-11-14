@@ -13,7 +13,7 @@ from contracts import (
 )
 from engine.calendar import bare_months
 from engine.errors import InvalidRequestError
-from engine.scoring import round_half_up, score_option, weighted_score
+from engine.scoring import failure_reason, round_half_up, score_option, weighted_score
 
 
 def _option(
@@ -30,7 +30,7 @@ def _option(
         sequence=rotation,
         is_current=is_current,
         recommended=False,
-        not_recommended_reason=None,
+        not_recommended_reason=failure_reason(site, primera, request.constraints.irrigation),
         bare_months=bare_months(primera, postrera),
         criteria=Criteria(**{name: round_half_up(value) for name, value in scores.items()}),
         delta_vs_current=DeltaVsCurrent(water="same", soil="same", income="same", risk="same"),
