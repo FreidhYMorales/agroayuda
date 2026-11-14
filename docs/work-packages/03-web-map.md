@@ -227,6 +227,12 @@ SHOULD 0: region mask (dimmed outside area from `region_mask.geojson`, with data
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 11:45): the app is online
+
+- Web: https://agroayuda.vercel.app (every merge to `main` deploys; every PR gets its own Vercel preview link in the PR page).
+- API: https://agroayuda-api.onrender.com (try `/health` and `/docs`). It is free and sleeps when idle: the first call can take about a minute, which is the "Despertando el servidor…" state your screens show.
+- Until real data lands the API serves the dev fixture (only Chiquimula).
+
 ### New (Sat 11:35): the lead took the Vercel setup (task 03a)
 
 The Vercel project and `VITE_API_URL` are set up by the lead; you do not need `web/vercel.json`. Every merge to `main` deploys, and every PR gets a preview link from Vercel.
