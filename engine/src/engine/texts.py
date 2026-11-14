@@ -43,8 +43,11 @@ def canicula_evidence(site: SiteProfile) -> list[Evidence]:
 
 
 POWER_GAP_ES = "La lluvia de NASA POWER es una estimación regional."
+SOIL_GAP_ES = "No hay datos de suelo para este punto."
 
 
-def data_gaps() -> list[str]:
-    """What the option's advice cannot rest on."""
-    return [POWER_GAP_ES]
+def data_gaps(site: SiteProfile) -> list[str]:
+    """What the option's advice cannot rest on: missing soil, then the regional rain."""
+    soil = site.soil
+    missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+    return [*([SOIL_GAP_ES] if missing_soil else []), POWER_GAP_ES]
