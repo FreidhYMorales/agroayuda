@@ -34,3 +34,8 @@ Risk: none
 
 - L1 request: /flow:story 03
 - L2 stop (existing test would change): the bare-month penalty breaks test_scoring.py::test_worked_example_combines_seasons. Its illustrative crops use cycle_days 90 (May-Jul + Sep-Nov), which leaves 6 bare months, while the work package's worked example says bare Dec-Apr = 5 (no penalty). My hand check missed it. Code left uncommitted; waiting on the user's call.
+- L3 user approved giving the worked example's primera crop a 120-day cycle (53ca1b2), matching the work package's "bare Dec-Apr = 5 (no penalty)"; expected values unchanged.
+- L4 commits: 748159f -> 53ca1b2 + 46fe44e (soil -0.5 at 6+ bare months), then one test commit for the 6-month boundary (green on first run; proven by mutants "> 6" and ">= 5").
+- L5 a same-size mutant restored within one second left a stale .pyc (make check failed on a clean source); cleared __pycache__ and reran green. Mutants are now followed by a cache clear.
+- L6 make check green (Python and web). No verifier (Risk: none).
+- Risk: none
