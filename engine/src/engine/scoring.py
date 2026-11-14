@@ -9,7 +9,7 @@ TIER_NUMBER: dict[Tier, int] = {"low": 1, "medium": 2, "high": 3}
 NONE_ROW = {"water": 5.0, "soil": 1.0, "income": 1.0, "risk": 5.0}
 
 
-CANICULA_PENALTY: dict[Level, float] = {"high": 1.0}
+CANICULA_PENALTY: dict[Level, float] = {"high": 1.0, "medium": 0.5}
 
 
 def canicula_level(site: SiteProfile) -> Level:
