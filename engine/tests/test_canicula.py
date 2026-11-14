@@ -1,3 +1,5 @@
+import pytest
+
 from contracts import CropCatalogEntry, Level, SiteProfile
 from engine.scoring import score_option
 
@@ -28,3 +30,24 @@ def test_medium_canicula_costs_half_a_point(
     site: SiteProfile, crops: dict[str, CropCatalogEntry]
 ) -> None:
     assert risk(with_canicula(site, "medium"), crops, "frijol", "maicillo") == 2.5
+
+
+@pytest.mark.parametrize("level", ["low", "unknown", None])
+def test_low_unknown_or_missing_canicula_costs_nothing(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry], level: Level | None
+) -> None:
+    assert risk(with_canicula(site, level), crops, "frijol", "maicillo") == 3.0
+
+
+def test_fallow_primera_is_exempt_from_the_canicula(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # none row risk 5, maicillo 5: no penalty on fallow, so min stays 5.
+    assert risk(with_canicula(site, "high"), crops, "none", "maicillo") == 5.0
+
+
+def test_penalty_below_one_is_clamped_to_one(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # maíz (drought low) 1 - 1 = 0; frijol 3; min 0, clamped to 1.
+    assert risk(with_canicula(site, "high"), crops, "maiz", "frijol") == 1.0
