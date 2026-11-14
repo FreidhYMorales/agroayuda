@@ -56,6 +56,8 @@ def recommend(
     irrigation = request.constraints.irrigation
     current = request.current_rotation
     for season, crop_id in (("primera", current.primera), ("postrera", current.postrera)):
+        if crop_id not in by_id:
+            raise InvalidRequestError(f"{crop_id} is not in the crop catalog")
         if season not in by_id[crop_id].seasons:
             raise InvalidRequestError(f"{crop_id} is not a {season} crop")
     _, current_option = _option(site, current, by_id, irrigation, is_current=True)
