@@ -16,11 +16,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Only the lead may change contracts/
+      - name: Only the lead may change contracts/, api/, generated types and CI
         if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'FreidhYMorales'
         run: |
-          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E '^contracts/'; then
-            echo "::error::contracts/ is frozen; only the lead may change it."
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
+            | grep -E '^(contracts/|api/|web/src/contracts/|\.github/)'; then
+            echo "::error::These files belong to the lead (see AGENTS.md). Undo them with: git restore --source origin/main <file>"
             exit 1
           fi
 
