@@ -32,7 +32,12 @@ def crop_criteria(crop: CropCatalogEntry) -> dict[str, float]:
 
 def weighted_score(criteria: dict[str, float], priorities: Priorities) -> float:
     """sum(priority x criterion) / sum(priority), on the clamped float criteria."""
-    weights = priorities.model_dump()
+    weights: dict[str, int] = {
+        "water": priorities.water,
+        "soil": priorities.soil,
+        "income": priorities.income,
+        "risk": priorities.risk,
+    }
     return sum(weights[name] * value for name, value in criteria.items()) / sum(weights.values())
 
 
