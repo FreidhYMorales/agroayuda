@@ -251,6 +251,10 @@ SHOULD 0: region mask `region_mask.geojson` (world ring with the region as holes
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 12:10): the API reads your catalog Parquet too
+
+`/recommendations` now loads `data/output/crops.parquet` and `data/output/rotation_templates.parquet` and passes them to the engine. Columns = the `CropCatalogEntry` and `RotationTemplate` fields; keep the CSV row order (ties break by it). Ship `sites.parquet`, `region.parquet`, `crops.parquet` and `rotation_templates.parquet` in the same PR: the API switches from the dev fixture to `data/output/` as soon as `sites.parquet` exists.
+
 ### New (Sat 11:45): the app is online
 
 - Web: https://agroayuda.vercel.app (every merge to `main` deploys; every PR gets its own Vercel preview link in the PR page).

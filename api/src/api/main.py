@@ -14,18 +14,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from api import engine_stub
 from api.dev_data import DEV_DATA_DIR
+from api.engine_adapter import EngineRejectedRequest, engine_mode, recommend_options
 from api.geo import cell_resolution_km, point_in_rings, snap_to_cell
-from api.repository import find_site, read_data_version, read_region_rings
+from api.repository import find_site, read_data_version, read_models, read_region_rings
 from contracts import (
     ERROR_HTTP_STATUS,
     Climate,
+    CropCatalogEntry,
     ErrorCode,
     ErrorResponse,
     Location,
     RecommendationRequest,
     RecommendationResponse,
+    RotationTemplate,
     SiteProfile,
 )
 
@@ -132,7 +134,11 @@ def load_site(location: Location, data_dir: Path) -> SiteProfile:
 
 @app.get("/health")
 def health(data_dir: DataDir) -> dict[str, str | None]:
-    return {"status": "ok", "data_version": read_data_version(data_dir / "sites.parquet")}
+    return {
+        "status": "ok",
+        "data_version": read_data_version(data_dir / "sites.parquet"),
+        "engine": engine_mode(),
+    }
 
 
 @app.get("/site", responses=ERROR_RESPONSES)
@@ -147,4 +153,10 @@ def site(
 @app.post("/recommendations", responses=ERROR_RESPONSES)
 def recommendations(request: RecommendationRequest, data_dir: DataDir) -> RecommendationResponse:
     profile = load_site(request.location, data_dir)
-    return RecommendationResponse(site=profile, options=engine_stub.recommend(profile, request))
+    crops = read_models(data_dir / "crops.parquet", CropCatalogEntry)
+    templates = read_models(data_dir / "rotation_templates.parquet", RotationTemplate)
+    try:
+        options = recommend_options(profile, request, crops, templates)
+    except EngineRejectedRequest as exc:
+        raise ApiError("invalid_request", str(exc)) from exc
+    return RecommendationResponse(site=profile, options=options)

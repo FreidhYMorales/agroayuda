@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import duckdb
+from pydantic import BaseModel
 
 from contracts import SiteData
 
@@ -24,6 +25,19 @@ def find_site(parquet_path: Path, cell_id: str) -> SiteData | None:
     if row is None:
         return None
     return SiteData.model_validate(dict(zip(names, row, strict=True)))
+
+
+def read_models[M: BaseModel](parquet_path: Path, model: type[M]) -> list[M]:
+    """Every row as a validated model, in file order (templates break ties by CSV order)."""
+    with duckdb.connect() as con:
+        cursor = con.execute(
+            "SELECT * EXCLUDE (file_row_number) "
+            "FROM read_parquet(?, file_row_number = true) ORDER BY file_row_number",
+            [parquet_path.as_posix()],
+        )
+        names = [column[0] for column in cursor.description or []]
+        rows: list[tuple[Any, ...]] = cursor.fetchall()
+    return [model.model_validate(dict(zip(names, row, strict=True))) for row in rows]
 
 
 def read_region_rings(parquet_path: Path) -> list[list[list[float]]]:
