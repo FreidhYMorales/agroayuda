@@ -1,0 +1,23 @@
+[
+  {
+    "id": "maiz_frijol__maicillo",
+    "primera": "maiz_frijol",
+    "postrera": "maicillo",
+    "description_es": "Maíz con frijol en primera y maicillo en postrera.",
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  },
+  {
+    "id": "frijol__maicillo",
+    "primera": "frijol",
+    "postrera": "maicillo",
+    "description_es": "Frijol en primera y maicillo en postrera.",
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  },
+  {
+    "id": "maiz__frijol",
+    "primera": "maiz",
+    "postrera": "frijol",
+    "description_es": "Maíz en primera y frijol en postrera.",
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  }
+]

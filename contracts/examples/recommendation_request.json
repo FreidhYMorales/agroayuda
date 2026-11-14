@@ -1,0 +1,19 @@
+{
+  "location": {
+    "lat": 14.7,
+    "lon": -89.5
+  },
+  "current_rotation": {
+    "primera": "maiz",
+    "postrera": "frijol"
+  },
+  "priorities": {
+    "water": 5,
+    "soil": 3,
+    "income": 3,
+    "risk": 3
+  },
+  "constraints": {
+    "irrigation": false
+  }
+}

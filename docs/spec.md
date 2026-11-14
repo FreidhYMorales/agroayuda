@@ -33,7 +33,7 @@ Flow: pick point -> site risks -> current rotation + priorities -> compare 3 str
 
 ## Contracts (frozen by the lead at H2)
 
-- `CropId`: `Literal` fixed at H2 from the lead's curated list (cap ~10-12), always including `maiz`, `frijol`, `maiz_frijol` (asocio), `maicillo` and `none`. A test checks `crops.csv` covers exactly these ids.
+- `CropId` (frozen 2026-11-14): `maiz`, `frijol`, `maiz_frijol` (asocio), `maicillo`, `maiz_maicillo` (relevo), `caupi`, `canavalia` (abono verde), `ajonjoli`, `ayote`, `none`. A test checks `crops.csv` covers exactly these ids. Adding a crop is a contract change (lead): new id, regenerated schema and TS types, and the `crops.csv` row in the same PR.
 - `Level = Literal["low", "medium", "high", "unknown"]`; `Confidence = Literal["low", "medium", "high"]`; `Tier = Literal["low", "medium", "high"]`; months are integers 1-12; scores are integers 1-5.
 - `Location { lat: float, lon: float }`; `Polygon { type: "Polygon", coordinates: float[][][] }` (hand-written, no new dependency).
 - `Priorities { water: 1-5, soil: 1-5, income: 1-5, risk: 1-5 }` (default 3 each).
@@ -51,7 +51,8 @@ Flow: pick point -> site risks -> current rotation + priorities -> compare 3 str
   - `DemoPoint { id, name_es, location }`
   - `RainCellProperties { value_mm (1991-2020 annual normal), unit, source, resolution_km }`
 - `SiteData` (one Parquet row per POWER cell, input of `risks.py`, frozen at H2): `{ cell_id, lat, lon, cell_polygon: Polygon, monthly_precip_mm[12], monthly_tmax_c[12], dekadal_precip_mm[36], dry_spell_year_share: float, dry_spell_rule: str, soil: { clay_pct, sand_pct, ph, soc_g_kg } (nullable), soil_sample_lat: float | null, soil_sample_lon: float | null, data_version: str (pipeline run date), risks: SiteRisk[] (precomputed) }`. The API maps `SiteData` to `SiteProfile`; it never reads files other than Parquet.
-- Codegen: `json-schema-to-typescript` with `ignoreMinAndMaxItems: true`; lengths stay validated in Pydantic.
+- Codegen: one combined schema `contracts/schema/contracts.schema.json` (`uv run --package contracts python -m contracts.export`) -> `web/src/contracts/contracts.ts` (`npm --prefix web run contracts`, `json-schema-to-typescript` with `ignoreMinAndMaxItems`); lengths stay validated in Pydantic. CI fails if either file drifts from the models.
+- Fixtures: `contracts/examples/<model>[_variant].json`; a test validates each one against its model. Catalog and template fixtures are marked "EXAMPLE FIXTURE, not real data".
 
 ### Files
 

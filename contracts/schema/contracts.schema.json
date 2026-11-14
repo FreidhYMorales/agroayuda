@@ -1,0 +1,889 @@
+{
+  "$defs": {
+    "Climate": {
+      "additionalProperties": false,
+      "properties": {
+        "dekadal_precip_mm": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 36,
+          "minItems": 36,
+          "type": "array"
+        },
+        "monthly_precip_mm": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 12,
+          "minItems": 12,
+          "type": "array"
+        },
+        "monthly_tmax_c": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 12,
+          "minItems": 12,
+          "type": "array"
+        }
+      },
+      "required": [
+        "monthly_precip_mm",
+        "monthly_tmax_c",
+        "dekadal_precip_mm"
+      ],
+      "title": "Climate",
+      "type": "object"
+    },
+    "Constraints": {
+      "additionalProperties": false,
+      "properties": {
+        "irrigation": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "irrigation"
+      ],
+      "title": "Constraints",
+      "type": "object"
+    },
+    "Criteria": {
+      "additionalProperties": false,
+      "properties": {
+        "income": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "risk": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "soil": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "water": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "water",
+        "soil",
+        "income",
+        "risk"
+      ],
+      "title": "Criteria",
+      "type": "object"
+    },
+    "CropCatalogEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "cycle_days": {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "drought_tolerance": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "type": "string"
+        },
+        "erosion_cover": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/CropId"
+        },
+        "local_source": {
+          "type": "boolean"
+        },
+        "market_tier": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "type": "string"
+        },
+        "n_fixing": {
+          "type": "boolean"
+        },
+        "name_es": {
+          "type": "string"
+        },
+        "root_depth": {
+          "enum": [
+            "shallow",
+            "deep"
+          ],
+          "type": "string"
+        },
+        "seasons": {
+          "items": {
+            "enum": [
+              "primera",
+              "postrera"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "source": {
+          "type": "string"
+        },
+        "water_need": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name_es",
+        "icon",
+        "seasons",
+        "cycle_days",
+        "water_need",
+        "n_fixing",
+        "root_depth",
+        "erosion_cover",
+        "drought_tolerance",
+        "market_tier",
+        "local_source",
+        "source"
+      ],
+      "title": "CropCatalogEntry",
+      "type": "object"
+    },
+    "CropId": {
+      "enum": [
+        "maiz",
+        "frijol",
+        "maiz_frijol",
+        "maicillo",
+        "maiz_maicillo",
+        "caupi",
+        "canavalia",
+        "ajonjoli",
+        "ayote",
+        "none"
+      ],
+      "type": "string"
+    },
+    "DeltaVsCurrent": {
+      "additionalProperties": false,
+      "properties": {
+        "income": {
+          "enum": [
+            "better",
+            "same",
+            "worse"
+          ],
+          "type": "string"
+        },
+        "risk": {
+          "enum": [
+            "better",
+            "same",
+            "worse"
+          ],
+          "type": "string"
+        },
+        "soil": {
+          "enum": [
+            "better",
+            "same",
+            "worse"
+          ],
+          "type": "string"
+        },
+        "water": {
+          "enum": [
+            "better",
+            "same",
+            "worse"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "water",
+        "soil",
+        "income",
+        "risk"
+      ],
+      "title": "DeltaVsCurrent",
+      "type": "object"
+    },
+    "DemoPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "name_es": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name_es",
+        "location"
+      ],
+      "title": "DemoPoint",
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "type": "string"
+        },
+        "error": {
+          "enum": [
+            "outside_region",
+            "invalid_request",
+            "not_found",
+            "internal"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "error",
+        "detail"
+      ],
+      "title": "ErrorResponse",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "text_es": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text_es",
+        "dataset",
+        "value"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Location": {
+      "additionalProperties": false,
+      "properties": {
+        "lat": {
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number"
+        },
+        "lon": {
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number"
+        }
+      },
+      "required": [
+        "lat",
+        "lon"
+      ],
+      "title": "Location",
+      "type": "object"
+    },
+    "Polygon": {
+      "additionalProperties": false,
+      "description": "GeoJSON Polygon: rings of [lon, lat] positions.",
+      "properties": {
+        "coordinates": {
+          "items": {
+            "items": {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "Polygon",
+          "default": "Polygon",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "Polygon",
+      "type": "object"
+    },
+    "Priorities": {
+      "additionalProperties": false,
+      "properties": {
+        "income": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "risk": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "soil": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "water": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "water",
+        "soil",
+        "income",
+        "risk"
+      ],
+      "title": "Priorities",
+      "type": "object"
+    },
+    "RainCellProperties": {
+      "additionalProperties": false,
+      "properties": {
+        "resolution_km": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "value_mm": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "value_mm",
+        "unit",
+        "source",
+        "resolution_km"
+      ],
+      "title": "RainCellProperties",
+      "type": "object"
+    },
+    "RecommendationRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "constraints": {
+          "$ref": "#/$defs/Constraints"
+        },
+        "current_rotation": {
+          "$ref": "#/$defs/Rotation"
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "priorities": {
+          "$ref": "#/$defs/Priorities"
+        }
+      },
+      "required": [
+        "location",
+        "current_rotation",
+        "priorities",
+        "constraints"
+      ],
+      "title": "RecommendationRequest",
+      "type": "object"
+    },
+    "RecommendationResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "options": {
+          "items": {
+            "$ref": "#/$defs/RotationOption"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "site": {
+          "$ref": "#/$defs/SiteProfile"
+        }
+      },
+      "required": [
+        "site",
+        "options"
+      ],
+      "title": "RecommendationResponse",
+      "type": "object"
+    },
+    "Rotation": {
+      "additionalProperties": false,
+      "description": "One crop per season; `none` means the field is left empty that season.",
+      "properties": {
+        "postrera": {
+          "$ref": "#/$defs/CropId"
+        },
+        "primera": {
+          "$ref": "#/$defs/CropId"
+        }
+      },
+      "required": [
+        "primera",
+        "postrera"
+      ],
+      "title": "Rotation",
+      "type": "object"
+    },
+    "RotationOption": {
+      "additionalProperties": false,
+      "properties": {
+        "bare_months": {
+          "items": {
+            "maximum": 12,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "benefits": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "confidence": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "type": "string"
+        },
+        "criteria": {
+          "$ref": "#/$defs/Criteria"
+        },
+        "data_gaps": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "delta_vs_current": {
+          "$ref": "#/$defs/DeltaVsCurrent"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "type": "array"
+        },
+        "is_current": {
+          "type": "boolean"
+        },
+        "local_review": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "not_recommended_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "recommended": {
+          "type": "boolean"
+        },
+        "sequence": {
+          "$ref": "#/$defs/Rotation"
+        }
+      },
+      "required": [
+        "sequence",
+        "is_current",
+        "recommended",
+        "not_recommended_reason",
+        "bare_months",
+        "criteria",
+        "delta_vs_current",
+        "confidence",
+        "reasons",
+        "evidence",
+        "benefits",
+        "data_gaps",
+        "local_review"
+      ],
+      "title": "RotationOption",
+      "type": "object"
+    },
+    "RotationTemplate": {
+      "additionalProperties": false,
+      "properties": {
+        "description_es": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "postrera": {
+          "$ref": "#/$defs/CropId"
+        },
+        "primera": {
+          "$ref": "#/$defs/CropId"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "primera",
+        "postrera",
+        "description_es",
+        "source"
+      ],
+      "title": "RotationTemplate",
+      "type": "object"
+    },
+    "SiteData": {
+      "additionalProperties": false,
+      "description": "One Parquet row per NASA POWER cell (data pipeline output, read by the API).",
+      "properties": {
+        "cell_id": {
+          "type": "string"
+        },
+        "cell_polygon": {
+          "$ref": "#/$defs/Polygon"
+        },
+        "data_version": {
+          "type": "string"
+        },
+        "dekadal_precip_mm": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 36,
+          "minItems": 36,
+          "type": "array"
+        },
+        "dry_spell_rule": {
+          "type": "string"
+        },
+        "dry_spell_year_share": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "lat": {
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number"
+        },
+        "lon": {
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number"
+        },
+        "monthly_precip_mm": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 12,
+          "minItems": 12,
+          "type": "array"
+        },
+        "monthly_tmax_c": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 12,
+          "minItems": 12,
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/SiteRisk"
+          },
+          "type": "array"
+        },
+        "soil": {
+          "$ref": "#/$defs/Soil"
+        },
+        "soil_sample_lat": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "soil_sample_lon": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "cell_id",
+        "lat",
+        "lon",
+        "cell_polygon",
+        "monthly_precip_mm",
+        "monthly_tmax_c",
+        "dekadal_precip_mm",
+        "dry_spell_year_share",
+        "dry_spell_rule",
+        "soil",
+        "soil_sample_lat",
+        "soil_sample_lon",
+        "data_version",
+        "risks"
+      ],
+      "title": "SiteData",
+      "type": "object"
+    },
+    "SiteProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "cell_polygon": {
+          "$ref": "#/$defs/Polygon"
+        },
+        "cell_resolution_km": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "climate": {
+          "$ref": "#/$defs/Climate"
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/SiteRisk"
+          },
+          "type": "array"
+        },
+        "soil": {
+          "$ref": "#/$defs/Soil"
+        },
+        "soil_sample_location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Location"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "location",
+        "cell_polygon",
+        "cell_resolution_km",
+        "climate",
+        "soil",
+        "soil_sample_location",
+        "risks"
+      ],
+      "title": "SiteProfile",
+      "type": "object"
+    },
+    "SiteRisk": {
+      "additionalProperties": false,
+      "properties": {
+        "estimated": {
+          "type": "boolean"
+        },
+        "explanation_es": {
+          "type": "string"
+        },
+        "id": {
+          "enum": [
+            "canicula",
+            "bare_field",
+            "heat",
+            "missing_data"
+          ],
+          "type": "string"
+        },
+        "level": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "period_months": {
+          "items": {
+            "maximum": 12,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "source": {
+          "type": "string"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "level",
+        "period_months",
+        "value",
+        "threshold",
+        "unit",
+        "source",
+        "estimated",
+        "explanation_es"
+      ],
+      "title": "SiteRisk",
+      "type": "object"
+    },
+    "Soil": {
+      "additionalProperties": false,
+      "description": "SoilGrids sample near the cell center; each field is null when SoilGrids has no value.",
+      "properties": {
+        "clay_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ph": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sand_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "soc_g_kg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "clay_pct",
+        "sand_pct",
+        "ph",
+        "soc_g_kg"
+      ],
+      "title": "Soil",
+      "type": "object"
+    }
+  },
+  "title": "AgroAyudaContracts"
+}
