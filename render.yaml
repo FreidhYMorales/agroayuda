@@ -1,0 +1,23 @@
+# Render Blueprint for the AgroAyuda API (free web service, auto-deploys from main).
+# The free instance sleeps when idle and takes about a minute to wake: open /health before a demo.
+services:
+  - type: web
+    name: agroayuda-api
+    runtime: python
+    plan: free
+    region: ohio
+    branch: main
+    autoDeploy: true
+    buildCommand: pip install uv && uv sync --package api --no-dev --frozen
+    startCommand: uv run --package api --no-sync fastapi run api/src/api/main.py --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    buildFilter:
+      paths:
+        - api/**
+        - contracts/**
+        - engine/**
+        - data/output/**
+        - pyproject.toml
+        - uv.lock
+        - .python-version
+        - render.yaml
