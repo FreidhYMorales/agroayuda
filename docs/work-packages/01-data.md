@@ -274,6 +274,11 @@ One short branch per task, named `data/<task>` (e.g. `data/power-download`). Mer
 
 ### Notes for you (data)
 
+- **API input formats (fixed by the lead, Sat 09:40):**
+  - `cell_id` = `f"{lat}_{lon}"` with the node coordinates as Python floats, e.g. `"14.5_-89.375"`. Snap with round-half-up: `math.floor((lat + 90) / 0.5 + 0.5)` and `math.floor((lon + 180) / 0.625 + 0.5)`, the same as `api/src/api/geo.py`.
+  - `region.parquet`: one row per ring, a single column `ring` of type `DOUBLE[][]` holding `[[lon, lat], ...]` (closed). Outer rings and holes all go in; the API uses the even-odd rule.
+  - `sites.parquet`: write it with `write_site_data` (below). `/health` reads `max(data_version)` from it.
+
 - Write Parquet with DuckDB, as in `parquet_io.py`. `pandas.DataFrame.to_parquet` needs `pyarrow`, which is not an approved dependency: do not add it.
 - `write_site_data(rows, path)` already writes `sites.parquet` from `SiteData` models; call it from your `outputs.py` instead of writing your own. The lead's API reads that file with `find_site`.
 - `data_version` is a string (`"2026-11-14"`), not a date.
