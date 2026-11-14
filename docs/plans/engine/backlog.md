@@ -20,5 +20,5 @@
 08. [ ] As a farmer, I want better/same/worse arrows versus my current rotation so that differences are clear at a glance. Requires: #01
 09. [ ] As a farmer on low-carbon soil, I want nitrogen-fixing crops to earn extra soil points with SoilGrids evidence so that the soil advice fits my plot. Requires: #01
 10. [ ] As a farmer, I want a confidence level per option so that I know how much to trust it. Requires: #01
-11. [~] As a farmer who edited the link, I want a clear error when a crop is in a season it does not support so that I am not shown nonsense. Requires: #01
+11. [x] 561d7c9 As a farmer who edited the link, I want a clear error when a crop is in a season it does not support so that I am not shown nonsense. Requires: #01
 12. [ ] As a farmer, I want one short line in Spanish for reasons, evidence, benefits, local review and data gaps so that I understand each option. Requires: #07, #09, #10

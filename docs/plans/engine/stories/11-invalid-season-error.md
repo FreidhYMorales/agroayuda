@@ -36,3 +36,9 @@ Risk: item 3, 5 (the API's 422 contract and `/health`; merging switches the depl
 - L1 request: /flow:story 11
 - L2 user approved touching `api/tests/test_api_engine_adapter.py` (stub `/health` test) inside this story, and adding the missing-crop criterion.
 - L3 stop (design decision): with the real engine on, the API dev fixture fails (500, KeyError 'maiz_frijol'): contracts/examples/rotation_templates.json uses maiz_frijol but contracts/examples/crop_catalog.json has only maiz, frijol, maicillo, none. Waiting on the lead's call.
+- L4 lead decision after L3: the dev fixture builds crops.parquet from data/catalog/crops.csv (no contract change); this changed the crop-id expectation in test_real_engine_gets_crops_and_templates_in_file_order and required regenerating the committed api/dev-data/crops.parquet (the deployed API reads it).
+- L5 commits: 994f00f -> ee56f0f (season check primera + /health real), 514b8bf -> 2985b43 + bff90ab (real catalog in dev fixture), 46c5e31 -> 87c21ff (postrera), b22d69c -> 561d7c9 (missing crop), caf36d7 (API 422 test).
+- L6 deviations: cb7c020 changed a committed test to a raw-string regex (same pattern, ruff RUF043); caf36d7 passed on first run, proven by a mutant.
+- L7 make check: 132 passed (Python), 9 passed (web), mypy/ruff/biome/tsc clean.
+- L8 verifier: PASS. Notes: no test pins api/dev-data/crops.parquet in sync with crops.csv (pre-existing gap, checked by hand); after merge the deployed API serves real-engine placeholders (recommended false, deltas "same", empty texts) until stories 07, 08, 12.
+- Risk: item 3, 5 (the API's 422 contract and `/health`; merging switches the deployed API from the stub to the real engine)
