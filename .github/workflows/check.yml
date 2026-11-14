@@ -37,3 +37,12 @@ jobs:
       - run: uv sync --locked
       - run: npm --prefix web ci
       - run: make check
+
+      - name: Generated contracts are up to date
+        run: |
+          uv run --package contracts python -m contracts.export
+          npm --prefix web run contracts
+          git diff --exit-code contracts/schema web/src/contracts || {
+            echo "::error::Schema or TS types drifted. Run the export and 'npm --prefix web run contracts', then commit."
+            exit 1
+          }

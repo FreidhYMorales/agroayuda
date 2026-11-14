@@ -12,7 +12,7 @@
     "lint": "biome lint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "contracts": "json2ts --cwd ../contracts/schema -i \"../contracts/schema/*.schema.json\" -o src/contracts --ignoreMinAndMaxItems"
+    "contracts": "json2ts -i ../contracts/schema/contracts.schema.json -o src/contracts/contracts.ts --unreachableDefinitions --ignoreMinAndMaxItems --additionalProperties false"
   },
   "dependencies": {
     "maplibre-gl": "^6.18.0",

@@ -1,0 +1,145 @@
+{
+  "location": {
+    "lat": 14.7,
+    "lon": -89.5
+  },
+  "cell_polygon": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -89.6875,
+          14.25
+        ],
+        [
+          -89.0625,
+          14.25
+        ],
+        [
+          -89.0625,
+          14.75
+        ],
+        [
+          -89.6875,
+          14.75
+        ],
+        [
+          -89.6875,
+          14.25
+        ]
+      ]
+    ]
+  },
+  "cell_resolution_km": 60.0,
+  "climate": {
+    "monthly_precip_mm": [
+      5.0,
+      5.0,
+      10.0,
+      40.0,
+      110.0,
+      190.0,
+      150.0,
+      160.0,
+      190.0,
+      150.0,
+      40.0,
+      10.0
+    ],
+    "monthly_tmax_c": [
+      29.0,
+      30.0,
+      32.0,
+      33.0,
+      32.0,
+      30.0,
+      30.0,
+      30.0,
+      29.0,
+      28.0,
+      28.0,
+      28.0
+    ],
+    "dekadal_precip_mm": [
+      2.0,
+      2.0,
+      1.0,
+      2.0,
+      2.0,
+      1.0,
+      3.0,
+      3.0,
+      4.0,
+      10.0,
+      15.0,
+      15.0,
+      30.0,
+      40.0,
+      40.0,
+      70.0,
+      60.0,
+      60.0,
+      60.0,
+      40.0,
+      50.0,
+      50.0,
+      50.0,
+      60.0,
+      60.0,
+      70.0,
+      60.0,
+      60.0,
+      50.0,
+      40.0,
+      20.0,
+      10.0,
+      10.0,
+      4.0,
+      3.0,
+      3.0
+    ]
+  },
+  "soil": {
+    "clay_pct": 30.0,
+    "sand_pct": 40.0,
+    "ph": 6.5,
+    "soc_g_kg": 12.0
+  },
+  "soil_sample_location": {
+    "lat": 14.5,
+    "lon": -89.375
+  },
+  "risks": [
+    {
+      "id": "canicula",
+      "level": "high",
+      "period_months": [
+        7,
+        8
+      ],
+      "value": 0.7,
+      "threshold": 0.67,
+      "unit": "share of years 1991-2020",
+      "source": "NASA POWER (PRECTOTCORR diario, 1991-2020)",
+      "estimated": false,
+      "explanation_es": "Racha seca larga a mediados de julio y agosto. La lluvia de NASA POWER es una estimación regional."
+    },
+    {
+      "id": "bare_field",
+      "level": "medium",
+      "period_months": [
+        12,
+        1,
+        2,
+        3,
+        4
+      ],
+      "value": 5.0,
+      "threshold": null,
+      "unit": "meses",
+      "source": "Calendario de siembra y catálogo de cultivos",
+      "estimated": true,
+      "explanation_es": "Suelo sin cultivo de diciembre a abril (estimado, con la rotación típica maíz → frijol)."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "id": "maiz",
+    "name_es": "Maíz",
+    "icon": "🌽",
+    "seasons": [
+      "primera",
+      "postrera"
+    ],
+    "cycle_days": 120,
+    "water_need": "high",
+    "n_fixing": false,
+    "root_depth": "deep",
+    "erosion_cover": "medium",
+    "drought_tolerance": "low",
+    "market_tier": "high",
+    "local_source": false,
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  },
+  {
+    "id": "frijol",
+    "name_es": "Frijol",
+    "icon": "🫘",
+    "seasons": [
+      "primera",
+      "postrera"
+    ],
+    "cycle_days": 75,
+    "water_need": "medium",
+    "n_fixing": true,
+    "root_depth": "shallow",
+    "erosion_cover": "medium",
+    "drought_tolerance": "medium",
+    "market_tier": "high",
+    "local_source": false,
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  },
+  {
+    "id": "maicillo",
+    "name_es": "Maicillo",
+    "icon": "🌾",
+    "seasons": [
+      "postrera"
+    ],
+    "cycle_days": 110,
+    "water_need": "low",
+    "n_fixing": false,
+    "root_depth": "deep",
+    "erosion_cover": "medium",
+    "drought_tolerance": "high",
+    "market_tier": "medium",
+    "local_source": false,
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  },
+  {
+    "id": "none",
+    "name_es": "Nada",
+    "icon": "⬜",
+    "seasons": [
+      "primera",
+      "postrera"
+    ],
+    "cycle_days": 1,
+    "water_need": "low",
+    "n_fixing": false,
+    "root_depth": "shallow",
+    "erosion_cover": "low",
+    "drought_tolerance": "high",
+    "market_tier": "low",
+    "local_source": false,
+    "source": "EXAMPLE FIXTURE, not real data: real values live in data/catalog/"
+  }
+]
