@@ -137,19 +137,28 @@ def ranked_alternatives(
     return [(o.sequence.primera, o.sequence.postrera) for o in options[1:]]
 
 
+def low_canicula(site: SiteProfile) -> SiteProfile:
+    """The example site with canícula low: no penalty and no F1/F2, so only priorities rank."""
+    risks = [
+        risk.model_copy(update={"level": "low"}) if risk.id == "canicula" else risk
+        for risk in site.risks
+    ]
+    return site.model_copy(update={"risks": risks})
+
+
 def test_water_first_ranks_bean_then_sorghum_first(
     site: SiteProfile,
     crops: dict[str, CropCatalogEntry],
     templates: list[RotationTemplate],
 ) -> None:
-    """5/1/1/1 on float criteria (crops.csv, story 01 docstring values):
+    """5/1/1/1 on float criteria, canícula low (crops.csv, story 01 docstring values):
 
     frijol -> maicillo (5, 2.5, 3, 3): (25 + 2.5 + 3 + 3) / 8 = 4.1875.
     maiz_frijol -> maicillo (4, 3.5, 3, 1): (20 + 3.5 + 3 + 1) / 8 = 3.4375.
     """
     priorities = {"water": 5, "soil": 1, "income": 1, "risk": 1}
 
-    assert ranked_alternatives(site, crops, templates, priorities) == [
+    assert ranked_alternatives(low_canicula(site), crops, templates, priorities) == [
         ("frijol", "maicillo"),
         ("maiz_frijol", "maicillo"),
     ]
@@ -160,14 +169,14 @@ def test_soil_first_ranks_maize_bean_intercrop_first(
     crops: dict[str, CropCatalogEntry],
     templates: list[RotationTemplate],
 ) -> None:
-    """1/5/1/1 on float criteria:
+    """1/5/1/1 on float criteria, canícula low (so maiz_frijol passes):
 
     maiz_frijol -> maicillo (4, 3.5, 3, 1): (4 + 17.5 + 3 + 1) / 8 = 3.1875.
     frijol -> maicillo (5, 2.5, 3, 3): (5 + 12.5 + 3 + 3) / 8 = 2.9375.
     """
     priorities = {"water": 1, "soil": 5, "income": 1, "risk": 1}
 
-    assert ranked_alternatives(site, crops, templates, priorities) == [
+    assert ranked_alternatives(low_canicula(site), crops, templates, priorities) == [
         ("maiz_frijol", "maicillo"),
         ("frijol", "maicillo"),
     ]
