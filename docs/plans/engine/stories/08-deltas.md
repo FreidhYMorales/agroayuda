@@ -32,3 +32,7 @@ Risk: none
 ## Log
 
 - L1 request: /flow:story 08
+- L2 test list approved; mode B (small, Risk: none).
+- L3 commits: 314cf47 -> c9932f2 (deltas from rounded criteria for both alternatives), then one test commit for "current same as itself" and "equal after rounding" (green on first run; proven by mutants: compare the current with slot 1, use >= for "better"). A float-comparison mutant was not possible since `criteria` are already integers.
+- L4 make check green (Python and web). No verifier (Risk: none).
+- Risk: none

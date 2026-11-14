@@ -17,7 +17,7 @@
 05. [x] e9ae637 As a farmer, I want a warning on options that fail in the canícula (F1/F2) so that I do not plant something likely to be lost. Requires: #04
 06. [x] e2ab82e As a farmer with irrigation, I want high-water crops to gain risk points and lose the canícula warnings so that my irrigation counts. Requires: #05
 07. [-] split → #13, #14
-08. [~] As a farmer, I want better/same/worse arrows versus my current rotation so that differences are clear at a glance. Requires: #01
+08. [x] c9932f2 As a farmer, I want better/same/worse arrows versus my current rotation so that differences are clear at a glance. Requires: #01
 09. [ ] As a farmer on low-carbon soil, I want nitrogen-fixing crops to earn extra soil points with SoilGrids evidence so that the soil advice fits my plot. Requires: #01
 10. [ ] As a farmer, I want a confidence level per option so that I know how much to trust it. Requires: #01
 11. [x] 561d7c9 As a farmer who edited the link, I want a clear error when a crop is in a season it does not support so that I am not shown nonsense. Requires: #01
