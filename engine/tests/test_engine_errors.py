@@ -30,3 +30,14 @@ def test_primera_only_crop_in_postrera_is_rejected(
 ) -> None:
     with pytest.raises(InvalidRequestError, match=r"^maiz is not a postrera crop$"):
         recommend(site, request_for("maiz", "maiz"), list(crops.values()), templates)
+
+
+def test_crop_missing_from_the_loaded_catalog_is_rejected(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    catalog = [crop for crop in crops.values() if crop.id != "gandul"]
+
+    with pytest.raises(InvalidRequestError, match=r"^gandul is not in the crop catalog$"):
+        recommend(site, request_for("gandul", "frijol"), catalog, templates)
