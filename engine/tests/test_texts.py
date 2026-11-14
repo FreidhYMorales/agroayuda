@@ -64,3 +64,15 @@ def test_ties_break_water_soil_income_risk(
     chosen = Priorities(water=water, soil=soil, income=income, risk=risk)
 
     assert reason_line(chosen, Criteria(water=1, soil=2, income=3, risk=4)) == expected
+
+
+def test_every_option_asks_to_check_with_a_local_technician(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    options = maize_bean(site, crops, templates, Priorities())
+
+    assert [o.local_review for o in options] == [
+        ["Consulte con un técnico local antes de cambiar su siembra."]
+    ] * 3
