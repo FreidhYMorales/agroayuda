@@ -240,6 +240,10 @@ SHOULD 0: full engine texts (several lines per section). Then ask the lead for t
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 11:35): the lead took the Render deploy (task 02e)
+
+You no longer own `render.yaml` or the Render service; skip that part of your milestones and spend the time on scoring. The API URL will be posted in the team chat.
+
 ### New (Sat 11:25): the API answers now
 
 Until the data pipeline writes `data/output/sites.parquet`, the API serves a dev fixture: only the Chiquimula cell (tap 14.70, -89.50), everything else is `outside_region`, and `/health` says `"data_version": "dev-fixture"`. `/recommendations` returns the example options. Run it with `uv run fastapi dev api/src/api/main.py` and open http://localhost:8000/docs. When real data lands, the API switches to it by itself.
