@@ -20,3 +20,10 @@ def test_thirsty_primera_crop_fails_in_a_high_canicula(
     thirsty = maiz.model_copy(update={"water_need": "high", "drought_tolerance": "medium"})
 
     assert failure_reason(with_canicula(site, "high"), thirsty, irrigation=False) == F1
+
+
+def test_drought_sensitive_primera_crop_fails_in_a_high_canicula(
+    site: SiteProfile, maiz: CropCatalogEntry
+) -> None:
+    # maíz in crops.csv: water medium, drought tolerance low.
+    assert failure_reason(with_canicula(site, "high"), maiz, irrigation=False) == F2
