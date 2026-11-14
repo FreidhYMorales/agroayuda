@@ -1,0 +1,36 @@
+from contracts import CropCatalogEntry, Level, SiteProfile
+from engine.scoring import score_option
+
+
+def with_canicula(site: SiteProfile, level: Level) -> SiteProfile:
+    risks = [
+        risk.model_copy(update={"level": level}) if risk.id == "canicula" else risk
+        for risk in site.risks
+    ]
+    return site.model_copy(update={"risks": risks})
+
+
+def thirsty(frijol: CropCatalogEntry) -> CropCatalogEntry:
+    """Test-built: frijol with high water need (no crop in crops.csv has it today)."""
+    return frijol.model_copy(update={"water_need": "high"})
+
+
+def water_and_risk(
+    site: SiteProfile, primera: CropCatalogEntry, postrera: CropCatalogEntry, irrigation: bool
+) -> tuple[float, float]:
+    criteria = score_option(site, primera, postrera, irrigation)
+    return criteria["water"], criteria["risk"]
+
+
+def test_irrigation_adds_one_risk_point_to_a_thirsty_crop_and_no_water(
+    site: SiteProfile, frijol: CropCatalogEntry, crops: dict[str, CropCatalogEntry]
+) -> None:
+    """Canícula low. Thirsty frijol: water 7 - 6 = 1, risk 3 (+1 with irrigation = 4).
+
+    maicillo: water 5, risk 5. Water (1 + 5) / 2 = 3 both ways; risk min 3 -> 4.
+    """
+    low = with_canicula(site, "low")
+    maicillo = crops["maicillo"]
+
+    assert water_and_risk(low, thirsty(frijol), maicillo, irrigation=False) == (3.0, 3.0)
+    assert water_and_risk(low, thirsty(frijol), maicillo, irrigation=True) == (3.0, 4.0)
