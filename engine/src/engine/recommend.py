@@ -4,6 +4,7 @@ from contracts import (
     Criteria,
     CropCatalogEntry,
     CropId,
+    Delta,
     DeltaVsCurrent,
     RecommendationRequest,
     Rotation,
@@ -72,4 +73,28 @@ def recommend(
     slot2 = next(option for _, option in ranked if option is not slot1)
     if slot1.not_recommended_reason is None and slot1_rank > current_rank:
         slot1 = slot1.model_copy(update={"recommended": True})
-    return [current_option, slot1, slot2]
+    return [
+        current_option,
+        _with_deltas(slot1, current_option),
+        _with_deltas(slot2, current_option),
+    ]
+
+
+def _delta(option_score: int, current_score: int) -> Delta:
+    if option_score > current_score:
+        return "better"
+    if option_score < current_score:
+        return "worse"
+    return "same"
+
+
+def _with_deltas(option: RotationOption, current: RotationOption) -> RotationOption:
+    """Compare the rounded criteria shown on screen, so arrows always agree with the bars."""
+    mine, theirs = option.criteria, current.criteria
+    deltas = DeltaVsCurrent(
+        water=_delta(mine.water, theirs.water),
+        soil=_delta(mine.soil, theirs.soil),
+        income=_delta(mine.income, theirs.income),
+        risk=_delta(mine.risk, theirs.risk),
+    )
+    return option.model_copy(update={"delta_vs_current": deltas})
