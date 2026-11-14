@@ -58,3 +58,35 @@ def test_chiquimula_maize_bean_gets_current_then_two_scored_alternatives(
             [1, 2, 3, 4],
         ),
     ]
+
+
+def test_every_season_valid_rotation_gets_three_distinct_options_current_first(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    rotations = [
+        (primera.id, postrera.id)
+        for primera in crops.values()
+        if "primera" in primera.seasons
+        for postrera in crops.values()
+        if "postrera" in postrera.seasons
+    ]
+    # 7 primera-capable x 5 postrera-capable crops in crops.csv, none -> none included.
+    assert len(rotations) == 35
+    assert ("none", "none") in rotations
+
+    failures = []
+    for primera, postrera in rotations:
+        options = recommend(site, request_for(primera, postrera), list(crops.values()), templates)
+        sequences = [(o.sequence.primera, o.sequence.postrera) for o in options]
+        current_first = sequences[0] == (primera, postrera) and options[0].is_current
+        others_not_current = not any(o.is_current for o in options[1:])
+        if (
+            len(set(sequences)) != 3
+            or len(options) != 3
+            or not current_first
+            or not others_not_current
+        ):
+            failures.append((primera, postrera, sequences))
+    assert failures == []
