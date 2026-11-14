@@ -41,3 +41,16 @@ def test_every_option_cites_the_nasa_power_canicula_share(
     options = recommend_for(site, crops, templates)
 
     assert [o.evidence for o in options] == [[expected]] * 3
+
+
+def test_no_canicula_share_means_no_evidence(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    risks = [r.model_copy(update={"value": None}) if r.id == "canicula" else r for r in site.risks]
+    no_share = site.model_copy(update={"risks": risks})
+
+    options = recommend_for(no_share, crops, templates)
+
+    assert [o.evidence for o in options] == [[], [], []]
