@@ -219,12 +219,12 @@ make check        # must be green before you change anything
 
 ```powershell
 git switch main; git pull
-git switch -c feat/data-power
+git switch -c data/power-download
 # paste the AI's code into your files, then:
 make check
 git add data engine/src/engine/risks.py engine/tests/test_risks.py
 git commit -m "feat(data): fetch POWER daily with cache and backoff"
-git push -u origin feat/data-power
+git push -u origin data/power-download
 ```
 
 Open the PR on github.com. Conventional commits with module scope (`feat(data): ...`, `test(engine): ...`); no AI attribution or `Co-Authored-By` lines. Merge policy: you self-merge (squash) your own green PRs that touch only your files; from H2 the ubuntu CI check guards merges, from H8 branch protection requires it (0 approvals). PR description, 3 lines: what you did, what you could not do, what surprised you.
@@ -246,3 +246,37 @@ SHOULD 0: region mask `region_mask.geojson` (world ring with the region as holes
 - Ask for one file at a time, test first: "Write the failing pytest for `snap`, then the code."
 - Paste errors verbatim (pytest, `mypy --strict`, ruff). If the AI wants a new library, say no and ask for a stdlib/pandas version.
 - The AI cannot see the repo: paste the current file before asking for changes.
+
+## Lead notes
+
+Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
+
+### What already exists in `main`
+
+- Repo: https://github.com/FreidhYMorales/agroayuda (public). Accept the collaborator invite first, or `git push` fails.
+- `make check` is green. CI runs it on every PR; `main` only accepts PRs with a green `check`.
+- Contracts are frozen: models in `contracts/src/contracts/models.py`, fixtures in `contracts/examples/`, TS types in `web/src/contracts/contracts.ts` (generated, do not edit).
+- `CropId` is final: `maiz`, `frijol`, `maiz_frijol`, `maicillo`, `maiz_maicillo`, `caupi`, `canavalia`, `ajonjoli`, `ayote`, `none`.
+- Typed examples to copy: `data/src/data_pipeline/parquet_io.py` (Parquet with DuckDB), `api/src/api/repository.py` (DuckDB query), `web/src/api/client.ts` (fetch wrapper).
+- The API only has `/health` for now; `/site` and `/recommendations` are the lead's next task (L4). Until then, work against `contracts/examples/` and mocked `fetch`.
+- The crop values in `contracts/examples/crop_catalog.json` and the templates in `rotation_templates.json` are fake ("EXAMPLE FIXTURE"). Real values go in `data/catalog/*.csv`, always with a source.
+
+### Branches
+
+One short branch per task, named `data/<task>` (e.g. `data/power-download`). Merge it with "Squash and merge", delete it, `git switch main; git pull`, and start the next task on a new branch. Never keep working on a branch after it was merged. Commit messages stay `type(data): ...`.
+
+### Gotchas found while bootstrapping
+
+- Python test file names must be unique across the whole repo (pytest default import mode): use `data/tests/test_grid.py`, not a second `test_smoke.py`. If pytest says "import file mismatch", rename your file.
+- Do not add `__init__.py` to any `tests/` folder.
+- Lint and format for web is Biome (`npm --prefix web run lint`, `npm --prefix web run format`), not ESLint or Prettier.
+- Ruff line length is 100; `make fmt` fixes formatting.
+
+### Notes for you (data)
+
+- Write Parquet with DuckDB, as in `parquet_io.py`. `pandas.DataFrame.to_parquet` needs `pyarrow`, which is not an approved dependency: do not add it.
+- `write_site_data(rows, path)` already writes `sites.parquet` from `SiteData` models; call it from your `outputs.py` instead of writing your own. The lead's API reads that file with `find_site`.
+- `data_version` is a string (`"2026-11-14"`), not a date.
+- Your dependencies are installed: pandas, xarray, rioxarray, earthaccess, httpx, duckdb.
+- `data-pipeline` already depends on `engine`, so `from engine.risks import ...` works once `risks.py` exists.
+- Put recorded POWER and SoilGrids responses under `data/tests/fixtures/`; raw downloads go in `data/cache/` (gitignored).

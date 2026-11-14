@@ -197,11 +197,11 @@ At H2: `git clone <repo-url>`, `cd <repo-folder>`, `Copy-Item .env.example .env`
 
 ```powershell
 git switch main; git pull
-git switch -c feat/web-map
+git switch -c map/rain-layer
 make check
 git add web/src/features/map web/src/App.tsx
 git commit -m "feat(web): show rain layer and summary card"
-git push -u origin feat/web-map
+git push -u origin map/rain-layer
 ```
 
 Open the PR on github.com; check the Vercel preview on your phone. Conventional commits with module scope; no AI attribution or `Co-Authored-By` lines. Self-merge (squash) your own green PRs in your files; ubuntu CI from H2, branch protection (0 approvals) from H8. PR description, 3 lines: done, not done, surprises.
@@ -222,3 +222,46 @@ SHOULD 0: region mask (dimmed outside area from `region_mask.geojson`, with data
 - Create a Claude.ai Project (or ChatGPT Project); add this file as project knowledge. After H4 add the generated `web/src/contracts/*.ts`, `contracts/examples/*.json` and the lead's `web/src/api/client.ts`.
 - Ask for one component at a time, test first; ask it to mock `maplibre-gl` in tests (jsdom cannot draw maps).
 - Paste UI copy from this file; never let the AI rephrase it. Paste `tsc`/biome errors verbatim.
+
+## Lead notes
+
+Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
+
+### What already exists in `main`
+
+- Repo: https://github.com/FreidhYMorales/agroayuda (public). Accept the collaborator invite first, or `git push` fails.
+- `make check` is green. CI runs it on every PR; `main` only accepts PRs with a green `check`.
+- Contracts are frozen: models in `contracts/src/contracts/models.py`, fixtures in `contracts/examples/`, TS types in `web/src/contracts/contracts.ts` (generated, do not edit).
+- `CropId` is final: `maiz`, `frijol`, `maiz_frijol`, `maicillo`, `maiz_maicillo`, `caupi`, `canavalia`, `ajonjoli`, `ayote`, `none`.
+- Typed examples to copy: `data/src/data_pipeline/parquet_io.py` (Parquet with DuckDB), `api/src/api/repository.py` (DuckDB query), `web/src/api/client.ts` (fetch wrapper).
+- The API only has `/health` for now; `/site` and `/recommendations` are the lead's next task (L4). Until then, work against `contracts/examples/` and mocked `fetch`.
+- The crop values in `contracts/examples/crop_catalog.json` and the templates in `rotation_templates.json` are fake ("EXAMPLE FIXTURE"). Real values go in `data/catalog/*.csv`, always with a source.
+
+### Branches
+
+One short branch per task, named `map/<task>` (e.g. `map/rain-layer`). Merge it with "Squash and merge", delete it, `git switch main; git pull`, and start the next task on a new branch. Never keep working on a branch after it was merged. Commit messages stay `type(web): ...`.
+
+### Gotchas found while bootstrapping
+
+- Python test file names must be unique across the whole repo (pytest default import mode): use `data/tests/test_grid.py`, not a second `test_smoke.py`. If pytest says "import file mismatch", rename your file.
+- Do not add `__init__.py` to any `tests/` folder.
+- Lint and format for web is Biome (`npm --prefix web run lint`, `npm --prefix web run format`), not ESLint or Prettier.
+- Ruff line length is 100; `make fmt` fixes formatting.
+
+### Notes for you (web map)
+
+- Build `getSite` on top of the lead's client:
+
+  ```ts
+  import { requestJson } from "./client";
+  import type { SiteProfile } from "../contracts/contracts";
+
+  const result = await requestJson<SiteProfile>(`/site?lat=${lat}&lon=${lon}`, { signal, onSlow });
+  // result.ok ? result.data : result.error  -> map it to your SiteResult
+  ```
+
+- `requestJson` rethrows aborts on purpose: wrap the call and ignore the error when `isAbortError(e)` is true (latest request wins).
+- `web/src/api/client.test.ts` shows how to mock `fetch` and use fake timers for the 5 s "slow" state.
+- `App.tsx` and `App.test.tsx` are yours; the current heading is a placeholder, change both freely.
+- `maplibre-gl` and `recharts` are installed. Types come from `../contracts/contracts`.
+- Vercel: root directory `web`, Node 24, `VITE_API_URL` = the Render URL (the engine owner sends it).
