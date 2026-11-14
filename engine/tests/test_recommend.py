@@ -151,3 +151,21 @@ def test_water_first_ranks_bean_then_sorghum_first(
         ("frijol", "maicillo"),
         ("maiz_frijol", "maicillo"),
     ]
+
+
+def test_soil_first_ranks_maize_bean_intercrop_first(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    """1/5/1/1 on float criteria:
+
+    maiz_frijol -> maicillo (4, 3.5, 3, 1): (4 + 17.5 + 3 + 1) / 8 = 3.1875.
+    frijol -> maicillo (5, 2.5, 3, 3): (5 + 12.5 + 3 + 3) / 8 = 2.9375.
+    """
+    priorities = {"water": 1, "soil": 5, "income": 1, "risk": 1}
+
+    assert ranked_alternatives(site, crops, templates, priorities) == [
+        ("maiz_frijol", "maicillo"),
+        ("frijol", "maicillo"),
+    ]
