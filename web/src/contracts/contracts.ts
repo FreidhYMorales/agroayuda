@@ -10,16 +10,7 @@
  * via the `definition` "CropId".
  */
 export type CropId =
-  | "maiz"
-  | "frijol"
-  | "maiz_frijol"
-  | "maicillo"
-  | "maiz_maicillo"
-  | "caupi"
-  | "canavalia"
-  | "ajonjoli"
-  | "ayote"
-  | "none";
+  "maiz" | "frijol" | "maiz_frijol" | "maicillo" | "gandul" | "mucuna" | "canavalia" | "ajonjoli" | "ayote" | "none";
 
 export interface AgroAyudaContracts {
   [k: string]: unknown;

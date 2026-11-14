@@ -245,7 +245,7 @@ Space Apps requires stating where and how AI was used for code and data. Fill yo
 - Repo: https://github.com/FreidhYMorales/agroayuda (public). Accept the collaborator invite first, or `git push` fails.
 - `make check` is green. CI runs it on every PR; `main` only accepts PRs with a green `check`.
 - Contracts are frozen: models in `contracts/src/contracts/models.py`, fixtures in `contracts/examples/`, TS types in `web/src/contracts/contracts.ts` (generated, do not edit).
-- `CropId` is final: `maiz`, `frijol`, `maiz_frijol`, `maicillo`, `maiz_maicillo`, `caupi`, `canavalia`, `ajonjoli`, `ayote`, `none`.
+- `CropId` is final: `maiz`, `frijol`, `maiz_frijol`, `maicillo`, `gandul`, `mucuna`, `canavalia`, `ajonjoli`, `ayote`, `none` (changed Sat 10:40: `gandul` and `mucuna` replace `maiz_maicillo` and `caupi`, which had no Guatemalan source).
 - Typed examples to copy: `data/src/data_pipeline/parquet_io.py` (Parquet with DuckDB), `api/src/api/repository.py` (DuckDB query), `web/src/api/client.ts` (fetch wrapper).
 - The API only has `/health` for now; `/site` and `/recommendations` are the lead's next task (L4). Until then, work against `contracts/examples/` and mocked `fetch`.
 - The crop values in `contracts/examples/crop_catalog.json` and the templates in `rotation_templates.json` are fake ("EXAMPLE FIXTURE"). Real values go in `data/catalog/*.csv`, always with a source.
