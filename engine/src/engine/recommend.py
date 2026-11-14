@@ -13,20 +13,19 @@ from contracts import (
 )
 from engine.calendar import bare_months
 from engine.errors import InvalidRequestError
-from engine.scoring import round_half_up, score_option
+from engine.scoring import round_half_up, score_option, weighted_score
 
 
 def _option(
     site: SiteProfile,
     rotation: Rotation,
     crops: dict[CropId, CropCatalogEntry],
-    irrigation: bool,
+    request: RecommendationRequest,
     is_current: bool,
 ) -> tuple[float, RotationOption]:
     primera, postrera = crops[rotation.primera], crops[rotation.postrera]
-    scores = score_option(site, primera, postrera, irrigation)
-    # Equal weights until the farmer's priorities are wired in (story 02).
-    rank = sum(scores.values()) / len(scores)
+    scores = score_option(site, primera, postrera, request.constraints.irrigation)
+    rank = weighted_score(scores, request.priorities)
     option = RotationOption(
         sequence=rotation,
         is_current=is_current,
@@ -53,16 +52,15 @@ def recommend(
 ) -> list[RotationOption]:
     """Exactly 3 options: current, slot 1, slot 2."""
     by_id = {crop.id: crop for crop in crops}
-    irrigation = request.constraints.irrigation
     current = request.current_rotation
     for season, crop_id in (("primera", current.primera), ("postrera", current.postrera)):
         if crop_id not in by_id:
             raise InvalidRequestError(f"{crop_id} is not in the crop catalog")
         if season not in by_id[crop_id].seasons:
             raise InvalidRequestError(f"{crop_id} is not a {season} crop")
-    _, current_option = _option(site, current, by_id, irrigation, is_current=True)
+    _, current_option = _option(site, current, by_id, request, is_current=True)
     alternatives = [
-        _option(site, Rotation(primera=t.primera, postrera=t.postrera), by_id, irrigation, False)
+        _option(site, Rotation(primera=t.primera, postrera=t.postrera), by_id, request, False)
         for t in templates
         if (t.primera, t.postrera) != (current.primera, current.postrera)
     ]
