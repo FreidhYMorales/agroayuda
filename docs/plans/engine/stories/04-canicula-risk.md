@@ -34,3 +34,8 @@ Risk: none
 
 - L1 request: /flow:story 04
 - L2 user approved changing story 01's Chiquimula test expectation for frijol → maicillo risk from 3 to 2.
+- L3 test list approved; mode B (small, Risk: none).
+- L4 commits: ea5fd03 (test high + story 01 expectation 3 -> 2) -> 2dd19b4 (high penalty), e41fe4e -> 867c95f (medium), then one test commit for low/unknown/missing, fallow exemption and lower clamp (green on first run, each proven by a mutant: penalize low/unknown, drop the fallow exemption, drop the lower clamp).
+- L5 a mypy error (Level | None key) was caught by the make check gate before committing and fixed: a missing canícula risk reads as "unknown".
+- L6 make check green (Python and web). No verifier (Risk: none).
+- Risk: none
