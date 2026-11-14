@@ -82,7 +82,19 @@ def test_real_engine_gets_crops_and_templates_in_file_order(
 
     assert response.status_code == 200
     assert len(RecommendationResponse.model_validate(response.json()).options) == 3
-    assert [crop.id for crop in fake_engine["crops"]] == ["maiz", "frijol", "maicillo", "none"]
+    # The dev fixture serves the real data/catalog/crops.csv, in file order.
+    assert [crop.id for crop in fake_engine["crops"]] == [
+        "maiz",
+        "frijol",
+        "maiz_frijol",
+        "maicillo",
+        "gandul",
+        "mucuna",
+        "canavalia",
+        "ajonjoli",
+        "ayote",
+        "none",
+    ]
     assert [t.id for t in fake_engine["templates"]] == [
         "maiz_frijol__maicillo",
         "frijol__maicillo",
