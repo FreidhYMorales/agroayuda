@@ -240,6 +240,12 @@ SHOULD 0: full engine texts (several lines per section). Then ask the lead for t
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 11:45): the app is online
+
+- Web: https://agroayuda.vercel.app (every merge to `main` deploys; every PR gets its own Vercel preview link in the PR page).
+- API: https://agroayuda-api.onrender.com (try `/health` and `/docs`). It is free and sleeps when idle: the first call can take about a minute, which is the "Despertando el servidor…" state your screens show.
+- Until real data lands the API serves the dev fixture (only Chiquimula).
+
 ### New (Sat 11:35): the lead took the Render deploy (task 02e)
 
 You no longer own `render.yaml` or the Render service; skip that part of your milestones and spend the time on scoring. The API URL will be posted in the team chat.

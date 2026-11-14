@@ -2,6 +2,8 @@
 
 Crop rotation decision support for farmers in Guatemala's Dry Corridor, built with NASA POWER data. NASA Space Apps Challenge 2026, challenge "Field Shift: Adapting Farms with NASA Data".
 
+- **Live app:** https://agroayuda.vercel.app
+- **API:** https://agroayuda-api.onrender.com (docs at `/docs`; the free server sleeps, the first call can take about a minute)
 - Setup per OS: [docs/development.md](docs/development.md)
 - Architecture: [docs/architecture.md](docs/architecture.md)
 - Build rules (contracts, engine, screens): [docs/spec.md](docs/spec.md)
