@@ -47,3 +47,26 @@ jobs:
             echo "::error::Schema or TS types drifted. Run the export and 'npm --prefix web run contracts', then commit."
             exit 1
           }
+
+  # Same gate on Windows, the OS of 4 of 5 contributors. Not a required check yet.
+  check-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install make (as in docs/development.md)
+        run: winget install --id ezwinports.make --accept-source-agreements --accept-package-agreements --disable-interactivity || choco install make -y --no-progress
+
+      - run: uv sync --locked
+      - run: npm --prefix web ci
+      - run: make check

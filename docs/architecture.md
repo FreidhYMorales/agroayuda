@@ -131,7 +131,7 @@ Strict TDD: write the failing test first. Tests never hit the network; use fixtu
   2. Lint: `uv run ruff check .` and `npm --prefix web run lint` (`biome lint .`)
   3. Typecheck: `uv run mypy contracts/src engine/src api/src data/src` and `npm --prefix web run typecheck` (`tsc --noEmit`)
   4. Tests: `uv run pytest` and `npm --prefix web run test` (`vitest run`)
-- CI on every PR: `make check` on `ubuntu-latest` from H2 (`.github/workflows/check.yml`), with uv/npm caching; a `windows-latest` job is SHOULD 0 (until then Windows contributors run `make check` locally before each PR); a step fails when `contracts/` or `api/` changes and the PR author is not the lead; CI regenerates the TS types and fails on drift. The repo is public from H0 (branch protection on GitHub Free).
+- CI on every PR: `make check` on `ubuntu-latest` from H2 (`.github/workflows/check.yml`), with uv/npm caching; a `check-windows` job runs the same gate on `windows-latest` (added Sat 11:00, not a required check); a step fails when `contracts/`, `api/`, `web/src/contracts/` or `.github/` changes and the PR author is not the lead; CI regenerates the TS types and fails on drift. The repo is public from H0 (branch protection on GitHub Free).
 - Deploy target: `web/` on Vercel (auto-deploy from `main`, `VITE_API_URL` env var); `api/` on Render free web service (auto-deploy from `main`). Render free instances sleep when idle and take about a minute to wake: hit `/health` a few minutes before the demo.
 
 ## Observability & errors
