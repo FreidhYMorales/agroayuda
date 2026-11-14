@@ -32,7 +32,12 @@ def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: boo
 
 
 def confidence(site: SiteProfile, crops: list[CropCatalogEntry]) -> Confidence:
-    return "medium"
+    """Factors: 1 if any soil field is null, plus 1 per non-`none` crop without a local source."""
+    soil = site.soil
+    missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+    non_local = sum(1 for crop in crops if crop.id != "none" and not crop.local_source)
+    factors = int(missing_soil) + non_local
+    return "high" if factors == 0 else "medium" if factors == 1 else "low"
 
 
 def round_half_up(x: float) -> int:
