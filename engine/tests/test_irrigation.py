@@ -34,3 +34,17 @@ def test_irrigation_adds_one_risk_point_to_a_thirsty_crop_and_no_water(
 
     assert water_and_risk(low, thirsty(frijol), maicillo, irrigation=False) == (3.0, 3.0)
     assert water_and_risk(low, thirsty(frijol), maicillo, irrigation=True) == (3.0, 4.0)
+
+
+def test_irrigation_leaves_a_low_water_crop_unchanged(
+    site: SiteProfile, frijol: CropCatalogEntry, crops: dict[str, CropCatalogEntry]
+) -> None:
+    """Canícula low. Real frijol (water low): water (5 + 5) / 2 = 5, risk min(3, 5) = 3.
+
+    Same values with and without irrigation.
+    """
+    low = with_canicula(site, "low")
+    maicillo = crops["maicillo"]
+
+    assert water_and_risk(low, frijol, maicillo, irrigation=False) == (5.0, 3.0)
+    assert water_and_risk(low, frijol, maicillo, irrigation=True) == (5.0, 3.0)
