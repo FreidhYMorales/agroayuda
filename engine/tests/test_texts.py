@@ -1,4 +1,7 @@
+import pytest
+
 from contracts import (
+    Criteria,
     CropCatalogEntry,
     Priorities,
     RecommendationRequest,
@@ -7,6 +10,7 @@ from contracts import (
     SiteProfile,
 )
 from engine.recommend import recommend
+from engine.texts import reason_line
 
 
 def maize_bean(
@@ -41,3 +45,22 @@ def test_reasons_cite_the_top_priority_with_the_option_score(
         ["Su prioridad es cuidar el agua: esta opción saca 5 de 5."],
         ["Su prioridad es cuidar el agua: esta opción saca 4 de 5."],
     ]
+
+
+@pytest.mark.parametrize(
+    ("priorities", "expected"),
+    [
+        ((4, 4, 2, 2), "Su prioridad es cuidar el agua: esta opción saca 1 de 5."),
+        ((1, 4, 4, 1), "Su prioridad es cuidar el suelo: esta opción saca 2 de 5."),
+        ((1, 1, 5, 1), "Su prioridad es el ingreso: esta opción saca 3 de 5."),
+        ((1, 1, 1, 5), "Su prioridad es bajar el riesgo: esta opción saca 4 de 5."),
+    ],
+)
+def test_ties_break_water_soil_income_risk(
+    priorities: tuple[int, int, int, int], expected: str
+) -> None:
+    # Distinct criteria (water 1, soil 2, income 3, risk 4) show which one was picked.
+    water, soil, income, risk = priorities
+    chosen = Priorities(water=water, soil=soil, income=income, risk=risk)
+
+    assert reason_line(chosen, Criteria(water=1, soil=2, income=3, risk=4)) == expected
