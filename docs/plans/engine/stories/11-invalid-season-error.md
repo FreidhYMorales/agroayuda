@@ -35,3 +35,4 @@ Risk: item 3, 5 (the API's 422 contract and `/health`; merging switches the depl
 
 - L1 request: /flow:story 11
 - L2 user approved touching `api/tests/test_api_engine_adapter.py` (stub `/health` test) inside this story, and adding the missing-crop criterion.
+- L3 stop (design decision): with the real engine on, the API dev fixture fails (500, KeyError 'maiz_frijol'): contracts/examples/rotation_templates.json uses maiz_frijol but contracts/examples/crop_catalog.json has only maiz, frijol, maicillo, none. Waiting on the lead's call.
