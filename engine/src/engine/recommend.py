@@ -3,6 +3,7 @@
 from contracts import (
     Criteria,
     CropCatalogEntry,
+    CropId,
     DeltaVsCurrent,
     RecommendationRequest,
     Rotation,
@@ -17,7 +18,7 @@ from engine.scoring import round_half_up, score_option
 def _option(
     site: SiteProfile,
     rotation: Rotation,
-    crops: dict[str, CropCatalogEntry],
+    crops: dict[CropId, CropCatalogEntry],
     irrigation: bool,
     is_current: bool,
 ) -> tuple[float, RotationOption]:
