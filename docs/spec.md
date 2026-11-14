@@ -33,7 +33,7 @@ Flow: pick point -> site risks -> current rotation + priorities -> compare 3 str
 
 ## Contracts (frozen by the lead at H2)
 
-- `CropId` (frozen 2026-11-14): `maiz`, `frijol`, `maiz_frijol` (asocio), `maicillo`, `maiz_maicillo` (relevo), `caupi`, `canavalia` (abono verde), `ajonjoli`, `ayote`, `none`. A test checks `crops.csv` covers exactly these ids. Adding a crop is a contract change (lead): new id, regenerated schema and TS types, and the `crops.csv` row in the same PR.
+- `CropId` (frozen 2026-11-14): `maiz`, `frijol`, `maiz_frijol` (asocio), `maicillo`, `gandul`, `mucuna` (abono verde), `canavalia` (abono verde), `ajonjoli`, `ayote`, `none`. Every id is a crop grown in Guatemala with a cited source (`docs/crop-sources.md`). A test checks `crops.csv` covers exactly these ids. Adding a crop is a contract change (lead): new id, regenerated schema and TS types, and the `crops.csv` row in the same PR.
 - `Level = Literal["low", "medium", "high", "unknown"]`; `Confidence = Literal["low", "medium", "high"]`; `Tier = Literal["low", "medium", "high"]`; months are integers 1-12; scores are integers 1-5.
 - `Location { lat: float, lon: float }`; `Polygon { type: "Polygon", coordinates: float[][][] }` (hand-written, no new dependency).
 - `Priorities { water: 1-5, soil: 1-5, income: 1-5, risk: 1-5 }` (default 3 each).

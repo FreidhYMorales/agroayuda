@@ -29,7 +29,10 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 | ICTA, El cultivo del maíz en Guatemala (2002) | https://www.icta.gob.gt/publicaciones/Maiz/cultivoMaizManejoAgronomico.pdf | Maize cycle days, Dry Corridor zone | Engine |
 | CGIAR, Guía de buenas prácticas en el manejo del cultivo de frijol en Guatemala (2024) | https://cgspace.cgiar.org/server/api/core/bitstreams/9964fd5e-e848-4cf3-963b-1b2c72516e3c/content | Bean varieties, postrera sowing window | Engine |
 | ICTA, Memoria de Labores 2019 | https://www.icta.gob.gt/publicaciones/Memoriasicta/Memoria%20labores%202019.pdf | Sorghum variety ICTA Rendidor | Engine |
-| Rodríguez Sandoval, Aspectos socioeconómicos de los sistemas de cultivos con maicillos criollos (CEIBA, Zamorano) | https://revistas.zamorano.edu/CEIBA/article/download/986/930/2409 | Maize-maicillo relay calendar | Engine |
+| ICTA, Boletín octubre 2022 (abonos verdes) | https://www.icta.gob.gt/publicaciones%202022/boletines/Bolet%C3%ADn%20octubre%202022.pdf | Gandul, mucuna and canavalia in the Dry Corridor | Engine |
+| CECEG/USAC, study of southeastern Jutiapa | https://ceceg.usac.edu.gt/wp-content/uploads/2024/02/3.pdf | Traditional crops (crop list) | Lead |
+| MAGA, Ajonjolí, Agro en Cifras 2016 | https://www.maga.gob.gt/sitios/diplan/download/informacion_del_sector/agro_en_cifras/2016/individuales/Ajonjoli%20Agro%20en%20Cifras%202016.pdf | Sesame in Guatemala (crop list) | Lead |
+| USAC, INF-2011-33 (ayote, Jalapa) | https://digi.usac.edu.gt/bvirtual/informes/rapidos2011/INF-2011-33.pdf | Ayote in the milpa (crop list) | Lead |
 | FAO Irrigation and Drainage Paper 56, Table 22 | https://www.fao.org/4/x0490e/x0490e0e.htm | Root depth and depletion fraction per crop | Engine |
 | FAO ECOCROP | https://ecocrop.apps.fao.org/ecocrop/srv/en/ | Crop cycle and tolerances (data sheets linked in `docs/crop-sources.md`) | Engine |
 | Canícula reference [7] (Revista CYTES, USAC) | https://revistas.usac.edu.gt/index.php/cytes/article/download/1284/993/6098 | Dry-spell length N | Data |
