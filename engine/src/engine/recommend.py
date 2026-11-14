@@ -21,6 +21,7 @@ from engine.scoring import (
     score_option,
     weighted_score,
 )
+from engine.texts import reason_line
 
 
 def _option(
@@ -33,16 +34,17 @@ def _option(
     primera, postrera = crops[rotation.primera], crops[rotation.postrera]
     scores = score_option(site, primera, postrera, request.constraints.irrigation)
     rank = weighted_score(scores, request.priorities)
+    criteria = Criteria(**{name: round_half_up(value) for name, value in scores.items()})
     option = RotationOption(
         sequence=rotation,
         is_current=is_current,
         recommended=False,
         not_recommended_reason=failure_reason(site, primera, request.constraints.irrigation),
         bare_months=bare_months(primera, postrera),
-        criteria=Criteria(**{name: round_half_up(value) for name, value in scores.items()}),
+        criteria=criteria,
         delta_vs_current=DeltaVsCurrent(water="same", soil="same", income="same", risk="same"),
         confidence=confidence(site, [primera, postrera]),
-        reasons=[],
+        reasons=[reason_line(request.priorities, criteria)],
         evidence=[],
         benefits=[],
         data_gaps=[],
