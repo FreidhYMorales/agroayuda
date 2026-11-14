@@ -33,3 +33,8 @@ Risk: none
 ## Log
 
 - L1 request: /flow:story 06
+- L2 test list approved; mode B (small, Risk: none).
+- L3 commits: 06180a0 -> 63f2919 (+1 risk for high-water crops with irrigation, water unchanged), 531c1d1 (low-water crop unchanged; green on first run, proven by a "+1 for every crop" mutant), f70e5eb -> 0a81c4b (irrigation turns off F1/F2), then one test commit for Chiquimula with irrigation (green on first run, proven by an "ignore irrigation in recommend" mutant).
+- L4 the make check gate caught an unformatted source line before the 63f2919 commit (fixed with ruff format, no commit with a failing check).
+- L5 make check green (Python and web). No verifier (Risk: none).
+- Risk: none
