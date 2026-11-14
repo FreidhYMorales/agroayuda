@@ -19,7 +19,7 @@ def canicula_level(site: SiteProfile) -> Level:
 
 def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
     """F1/F2: why the primera crop is likely lost in a high canícula, or None."""
-    if canicula_level(site) != "high":
+    if irrigation or canicula_level(site) != "high":
         return None
     if primera.water_need == "high":
         return "Necesita mucha agua justo en la canícula"
@@ -72,6 +72,10 @@ def score_option(
     # The canícula falls in the primera cycle; fallow has nothing to lose.
     if primera.id != "none":
         first["risk"] -= CANICULA_PENALTY.get(canicula_level(site), 0.0)
+    if irrigation:
+        for crop, criteria in ((primera, first), (postrera, second)):
+            if crop.water_need == "high":
+                criteria["risk"] += 1.0
     combined = {name: (first[name] + second[name]) / 2 for name in ("water", "soil", "income")}
     combined["risk"] = min(first["risk"], second["risk"])
     return {name: _clamp(value) for name, value in combined.items()}
