@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from contracts import CropCatalogEntry, SiteProfile
+from contracts import CropCatalogEntry, RotationTemplate, SiteProfile
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CROPS_CSV = REPO_ROOT / "data" / "catalog" / "crops.csv"
@@ -40,3 +40,25 @@ def frijol(crops: dict[str, CropCatalogEntry]) -> CropCatalogEntry:
 def site() -> SiteProfile:
     path = REPO_ROOT / "contracts" / "examples" / "site_profile.json"
     return SiteProfile.model_validate_json(path.read_text("utf-8"))
+
+
+def template(primera: str, postrera: str) -> RotationTemplate:
+    return RotationTemplate.model_validate(
+        {
+            "id": f"{primera}__{postrera}",
+            "primera": primera,
+            "postrera": postrera,
+            "description_es": "Plantilla de prueba.",
+            "source": "test only: stub until package 04 lands rotation_templates.csv",
+        }
+    )
+
+
+@pytest.fixture
+def templates() -> list[RotationTemplate]:
+    """Stub templates from the lead's curated list, in CSV order."""
+    return [
+        template("maiz_frijol", "maicillo"),
+        template("frijol", "maicillo"),
+        template("maiz", "frijol"),
+    ]
