@@ -22,3 +22,9 @@ def test_high_canicula_costs_the_primera_crop_one_risk_point(
 ) -> None:
     # frijol (drought medium) 3 - 1 = 2; maicillo in postrera keeps 5; min = 2.
     assert risk(with_canicula(site, "high"), crops, "frijol", "maicillo") == 2.0
+
+
+def test_medium_canicula_costs_half_a_point(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    assert risk(with_canicula(site, "medium"), crops, "frijol", "maicillo") == 2.5
