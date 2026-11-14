@@ -8,6 +8,7 @@ import pytest
 from contracts import CropCatalogEntry, DemoPoint, RainCellProperties, RotationTemplate, SiteData
 from data_pipeline.outputs import (
     DEMO_POINTS,
+    RainCell,
     rain_geojson,
     read_catalog_csv,
     region_geojson,
@@ -101,8 +102,9 @@ def test_region_geojson_carries_the_data_version() -> None:
 
 def test_rain_geojson_has_one_feature_per_cell_with_contract_properties() -> None:
     site = example_site()
+    cell = RainCell(lat=site.lat, lon=site.lon, annual_mm=sum(site.monthly_precip_mm))
 
-    geojson = rain_geojson([site], "2026-11-14")
+    geojson = rain_geojson([cell], "2026-11-14")
 
     assert geojson["type"] == "FeatureCollection"
     assert geojson["data_version"] == "2026-11-14"

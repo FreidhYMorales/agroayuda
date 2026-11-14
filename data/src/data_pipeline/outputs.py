@@ -8,14 +8,15 @@ carries the same value per row (written by parquet_io.write_site_data).
 import csv
 import json
 from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Final
 
 import duckdb
 from pydantic import BaseModel
 
-from contracts import CropCatalogEntry, RainCellProperties, RotationTemplate, SiteData
-from data_pipeline.grid import Ring, cell_resolution_km
+from contracts import CropCatalogEntry, RainCellProperties, RotationTemplate
+from data_pipeline.grid import Ring, cell_id, cell_polygon, cell_resolution_km
 
 RAIN_SOURCE: Final = "NASA POWER (PRECTOTCORR diario, 1991-2020)"
 
@@ -94,22 +95,31 @@ def write_region_parquet(rings: Sequence[Ring], path: Path) -> None:
 # --- rain layer ----------------------------------------------------------------------------------
 
 
-def rain_geojson(sites: Iterable[SiteData], data_version: str) -> dict[str, object]:
+@dataclass(frozen=True)
+class RainCell:
+    """What the rain layer needs from one POWER cell: its node and the annual rain normal."""
+
+    lat: float
+    lon: float
+    annual_mm: float  # sum of monthly_precip_mm, 1991-2020
+
+
+def rain_geojson(cells: Iterable[RainCell], data_version: str) -> dict[str, object]:
     """One Polygon feature per cell (feature id = cell_id) with RainCellProperties."""
     features = []
-    for site in sites:
+    for cell in cells:
         properties = RainCellProperties(
-            value_mm=round(sum(site.monthly_precip_mm), 1),
+            value_mm=round(cell.annual_mm, 1),
             unit="mm/año",
             source=RAIN_SOURCE,
-            resolution_km=cell_resolution_km(site.lat),
+            resolution_km=cell_resolution_km(cell.lat),
         )
         features.append(
             {
                 "type": "Feature",
-                "id": site.cell_id,
+                "id": cell_id(cell.lat, cell.lon),
                 "properties": properties.model_dump(),
-                "geometry": site.cell_polygon.model_dump(),
+                "geometry": cell_polygon(cell.lat, cell.lon),
             }
         )
     return {"type": "FeatureCollection", "data_version": data_version, "features": features}
