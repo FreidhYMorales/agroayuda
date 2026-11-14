@@ -12,10 +12,10 @@
 
 01. [x] 300aadf As a farmer, I want to enter my current rotation and see it next to two alternatives scored on water, soil, income and risk so that I can compare them.
 02. [x] 95ca738 As a farmer, I want my priorities to change how the alternatives rank so that the comparison fits what matters to me. Requires: #01
-03. [ ] As a farmer, I want to see which months each option leaves the field bare, and lose soil points at 6+ months, so that I see the erosion cost. Requires: #01
+03. [x] 46fe44e As a farmer, I want to see which months each option leaves the field bare, and lose soil points at 6+ months, so that I see the erosion cost. Requires: #01
 04. [x] 2678b1b As a farmer, I want the canícula at my site to lower the risk of primera crops so that the options reflect the dry spell. Requires: #01
 05. [x] e9ae637 As a farmer, I want a warning on options that fail in the canícula (F1/F2) so that I do not plant something likely to be lost. Requires: #04
-06. [x] 0a81c4b As a farmer with irrigation, I want high-water crops to gain risk points and lose the canícula warnings so that my irrigation counts. Requires: #05
+06. [x] e2ab82e As a farmer with irrigation, I want high-water crops to gain risk points and lose the canícula warnings so that my irrigation counts. Requires: #05
 07. [-] split → #13, #14
 08. [ ] As a farmer, I want better/same/worse arrows versus my current rotation so that differences are clear at a glance. Requires: #01
 09. [ ] As a farmer on low-carbon soil, I want nitrogen-fixing crops to earn extra soil points with SoilGrids evidence so that the soil advice fits my plot. Requires: #01
