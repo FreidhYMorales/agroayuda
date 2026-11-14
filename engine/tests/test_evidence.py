@@ -68,3 +68,13 @@ def test_full_soil_and_local_crops_only_note_the_regional_rain(
     current = recommend_for(site, crops, templates)[0]
 
     assert current.data_gaps == [POWER_GAP]
+
+
+def test_missing_soil_is_noted_first(
+    site_null_soil: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    current = recommend_for(site_null_soil, crops, templates)[0]
+
+    assert current.data_gaps == [SOIL_GAP, POWER_GAP]
