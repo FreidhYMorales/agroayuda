@@ -21,7 +21,7 @@ from engine.scoring import (
     score_option,
     weighted_score,
 )
-from engine.texts import LOCAL_REVIEW_ES, reason_line
+from engine.texts import LOCAL_REVIEW_ES, canicula_evidence, data_gaps, reason_line
 
 
 def _option(
@@ -45,9 +45,9 @@ def _option(
         delta_vs_current=DeltaVsCurrent(water="same", soil="same", income="same", risk="same"),
         confidence=confidence(site, [primera, postrera]),
         reasons=[reason_line(request.priorities, criteria)],
-        evidence=[],
+        evidence=canicula_evidence(site),
         benefits=[],
-        data_gaps=[],
+        data_gaps=data_gaps(site, [primera, postrera]),
         local_review=[LOCAL_REVIEW_ES],
     )
     return rank, option
