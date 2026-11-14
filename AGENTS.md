@@ -46,6 +46,7 @@ docs/       architecture, spec, development, ADRs, work-packages
 - Never paste secrets, tokens or `.env` contents into an AI chat.
 - Review what the AI wrote before committing: run the tests, read the diff, and make sure it did not touch contracts or other owners' files.
 - AI-generated images or video need a visible "AI-generated" watermark; AI audio is acknowledged in the description and video metadata. No NASA logos.
+- Every external resource (dataset, document, library, image, font, icon, tool) gets a row in `docs/resources.md` in the same PR; the submission confirms that list is complete.
 - SI disclosure is required for code and data too: each owner fills their row in `docs/si-usage.md` (tool used and how). Keep README's "Use of Super Intelligence (SI)" section when editing README.
 
 ## Do not

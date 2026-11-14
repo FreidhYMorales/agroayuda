@@ -232,6 +232,10 @@ SHOULD 2: glossary ("¿Qué significa esto? ›", static Spanish copy in `web/`)
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 10:30): resources list
+
+The submission form asks for every external resource (data, documents, libraries, images, fonts, tools), even open source. When you add one, add its row to `docs/resources.md` in the same PR. Rows marked _verify_ need you to confirm the licence on the provider's page.
+
 ### New (Sat 10:15): SI disclosure
 
 Space Apps requires stating where and how AI was used for code and data. Fill your row in `docs/si-usage.md` (which AI tool you use and for what) in one of your PRs; that file and the README section are what judges see.
