@@ -1,4 +1,11 @@
-from contracts import CropCatalogEntry, Level, SiteProfile
+from contracts import (
+    CropCatalogEntry,
+    Level,
+    RecommendationRequest,
+    RotationTemplate,
+    SiteProfile,
+)
+from engine.recommend import recommend
 from engine.scoring import failure_reason, score_option
 
 
@@ -54,3 +61,27 @@ def test_irrigation_turns_off_f1(site: SiteProfile, frijol: CropCatalogEntry) ->
     high = with_canicula(site, "high")
 
     assert failure_reason(high, thirsty(frijol), irrigation=True) is None
+
+
+def test_irrigated_farm_sees_no_canicula_warnings(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    """Example site (canícula high): without irrigation maíz and maiz_frijol carry F2."""
+    request = RecommendationRequest.model_validate(
+        {
+            "location": {"lat": 14.70, "lon": -89.50},
+            "current_rotation": {"primera": "maiz", "postrera": "frijol"},
+            "constraints": {"irrigation": True},
+        }
+    )
+    options = recommend(site, request, list(crops.values()), templates)
+
+    assert [
+        (o.sequence.primera, o.sequence.postrera, o.not_recommended_reason) for o in options
+    ] == [
+        ("maiz", "frijol", None),
+        ("frijol", "maicillo", None),
+        ("maiz_frijol", "maicillo", None),
+    ]
