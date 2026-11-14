@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from contracts import CropCatalogEntry
+from contracts import CropCatalogEntry, SiteProfile
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CROPS_CSV = REPO_ROOT / "data" / "catalog" / "crops.csv"
@@ -34,3 +34,9 @@ def maiz(crops: dict[str, CropCatalogEntry]) -> CropCatalogEntry:
 @pytest.fixture
 def frijol(crops: dict[str, CropCatalogEntry]) -> CropCatalogEntry:
     return crops["frijol"]
+
+
+@pytest.fixture
+def site() -> SiteProfile:
+    path = REPO_ROOT / "contracts" / "examples" / "site_profile.json"
+    return SiteProfile.model_validate_json(path.read_text("utf-8"))
