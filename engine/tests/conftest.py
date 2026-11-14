@@ -68,3 +68,9 @@ def templates() -> list[RotationTemplate]:
 @pytest.fixture
 def make_template() -> Callable[[str, str], RotationTemplate]:
     return template
+
+
+@pytest.fixture
+def site_null_soil() -> SiteProfile:
+    path = REPO_ROOT / "contracts" / "examples" / "site_profile_null_soil.json"
+    return SiteProfile.model_validate_json(path.read_text("utf-8"))

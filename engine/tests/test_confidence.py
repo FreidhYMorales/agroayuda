@@ -21,3 +21,24 @@ def test_two_non_local_crops_give_low_and_all_local_give_high(
         "low",
         "high",
     )
+
+
+def test_fallow_never_counts_as_a_non_local_crop(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # Real none -> ajonjolí: only ajonjolí counts (1). A test-built none marked non-local
+    # must still not count, since the rule only counts non-`none` crops.
+    non_local_none = crops["none"].model_copy(update={"local_source": False})
+
+    assert rate(site, crops, "none", "ajonjoli") == "medium"
+    assert confidence(site, [non_local_none, crops["ajonjoli"]]) == "medium"
+
+
+def test_missing_soil_adds_one_factor(
+    site_null_soil: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # Null soil (1) + all local (0) = medium; null soil (1) + ayote (1) = low.
+    assert (
+        rate(site_null_soil, crops, "maiz", "frijol"),
+        rate(site_null_soil, crops, "ayote", "frijol"),
+    ) == ("medium", "low")
