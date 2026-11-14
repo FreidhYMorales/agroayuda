@@ -12,6 +12,9 @@ PRIORITY_LABEL_ES = {
 }
 
 
+LOCAL_REVIEW_ES = "Consulte con un técnico local antes de cambiar su siembra."
+
+
 def top_priority(priorities: Priorities) -> str:
     """The highest priority; max() keeps the first in PRIORITY_ORDER on a tie."""
     weights = priorities.model_dump()
