@@ -24,3 +24,23 @@ def find_site(parquet_path: Path, cell_id: str) -> SiteData | None:
     if row is None:
         return None
     return SiteData.model_validate(dict(zip(names, row, strict=True)))
+
+
+def read_region_rings(parquet_path: Path) -> list[list[list[float]]]:
+    """region.parquet: one row per ring, column `ring` = [[lon, lat], ...] (even-odd rule)."""
+    with duckdb.connect() as con:
+        rows: list[tuple[Any, ...]] = con.execute(
+            "SELECT ring FROM read_parquet(?)", [parquet_path.as_posix()]
+        ).fetchall()
+    return [row[0] for row in rows]
+
+
+def read_data_version(parquet_path: Path) -> str | None:
+    """The pipeline run date stored in sites.parquet, or None before the first pipeline run."""
+    if not parquet_path.exists():
+        return None
+    with duckdb.connect() as con:
+        row: tuple[Any, ...] | None = con.execute(
+            "SELECT max(data_version) FROM read_parquet(?)", [parquet_path.as_posix()]
+        ).fetchone()
+    return None if row is None else row[0]
