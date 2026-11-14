@@ -33,3 +33,7 @@ Risk: none
 
 - L1 request: /flow:story 16
 - L2 user approved the story and the copy (soil gap line, non-local crop line).
+- L3 test list approved; mode B (small, Risk: none).
+- L4 commits: cb744f4 -> 24bd990 (canícula evidence; years rounded half up like the criteria), one test commit for "no share, no evidence" (green on first run because mypy forced the None guard; proven by a "no None guard" mutant), 005bee9 -> 43002c5 (POWER regional gap), 1631597 -> f610317 (missing soil first), a37e6c0 -> 623e649 (non-local crop line). The make check gate caught an import-order lint before the last commit.
+- L5 make check green: 179 passed (Python), web green. No verifier (Risk: none).
+- Risk: none
