@@ -202,11 +202,11 @@ At H2: `git clone <repo-url>`, `cd <repo-folder>`, `Copy-Item .env.example .env`
 
 ```powershell
 git switch main; git pull
-git switch -c feat/web-comparison
+git switch -c results/comparison
 make check
 git add web/src/features/comparison
 git commit -m "feat(web): show comparison table with badges"
-git push -u origin feat/web-comparison
+git push -u origin results/comparison
 ```
 
 Open the PR on github.com; check the Vercel preview on your phone. Conventional commits with module scope (`feat(data): add rotation templates`); no AI attribution or `Co-Authored-By` lines. Self-merge (squash) your own green PRs in your files; ubuntu CI from H2, branch protection (0 approvals) from H8. PR description, 3 lines: done, not done, surprises.
@@ -227,3 +227,47 @@ SHOULD 2: glossary ("¿Qué significa esto? ›", static Spanish copy in `web/`)
 - Create a Claude.ai Project (or ChatGPT Project); add this file as project knowledge. After H4 add the generated `web/src/contracts/*.ts`, `contracts/examples/*.json`, `web/src/lib/urlState.ts` and the lead's `web/src/api/client.ts`.
 - Ask for one component at a time, test first. Paste UI copy from this file; never let the AI rephrase it.
 - For the project page, paste the official field list and this file's facts; check every claim against the app.
+
+## Lead notes
+
+Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
+
+### What already exists in `main`
+
+- Repo: https://github.com/FreidhYMorales/agroayuda (public). Accept the collaborator invite first, or `git push` fails.
+- `make check` is green. CI runs it on every PR; `main` only accepts PRs with a green `check`.
+- Contracts are frozen: models in `contracts/src/contracts/models.py`, fixtures in `contracts/examples/`, TS types in `web/src/contracts/contracts.ts` (generated, do not edit).
+- `CropId` is final: `maiz`, `frijol`, `maiz_frijol`, `maicillo`, `maiz_maicillo`, `caupi`, `canavalia`, `ajonjoli`, `ayote`, `none`.
+- Typed examples to copy: `data/src/data_pipeline/parquet_io.py` (Parquet with DuckDB), `api/src/api/repository.py` (DuckDB query), `web/src/api/client.ts` (fetch wrapper).
+- The API only has `/health` for now; `/site` and `/recommendations` are the lead's next task (L4). Until then, work against `contracts/examples/` and mocked `fetch`.
+- The crop values in `contracts/examples/crop_catalog.json` and the templates in `rotation_templates.json` are fake ("EXAMPLE FIXTURE"). Real values go in `data/catalog/*.csv`, always with a source.
+
+### Branches
+
+One short branch per task, named `results/<task>` (e.g. `results/form`). Merge it with "Squash and merge", delete it, `git switch main; git pull`, and start the next task on a new branch. Never keep working on a branch after it was merged. Commit messages stay `type(web): ...`.
+
+### Gotchas found while bootstrapping
+
+- Python test file names must be unique across the whole repo (pytest default import mode): use `data/tests/test_grid.py`, not a second `test_smoke.py`. If pytest says "import file mismatch", rename your file.
+- Do not add `__init__.py` to any `tests/` folder.
+- Lint and format for web is Biome (`npm --prefix web run lint`, `npm --prefix web run format`), not ESLint or Prettier.
+- Ruff line length is 100; `make fmt` fixes formatting.
+
+### Notes for you (web results)
+
+- Build `postRecommendations` on top of the lead's client:
+
+  ```ts
+  import { requestJson } from "./client";
+  import type { RecommendationRequest, RecommendationResponse } from "../contracts/contracts";
+
+  const result = await requestJson<RecommendationResponse>("/recommendations", {
+    method: "POST", body: req, signal, onSlow,
+  });
+  ```
+
+- `requestJson` rethrows aborts on purpose; ignore the error when `isAbortError(e)` is true.
+- Fixtures for your screens: `contracts/examples/recommendation_response.json` and the four `error_response_*.json`.
+- `rotation_templates.csv` columns = `RotationTemplate` fields; every crop id must be in `CropId` and valid for its season in `crops.csv` (engine owner): agree on seasons early.
+- `README.md` at the root is a placeholder from the lead; it is yours to turn into the judge README (keep the links to the docs).
+- Ship `FormScreen.tsx` and `ComparisonScreen.tsx` stubs early (by H4) so the web-map owner can wire them in `App.tsx`.

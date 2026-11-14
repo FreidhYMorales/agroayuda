@@ -210,11 +210,11 @@ At H2: `git clone <repo-url>`, `cd <repo-folder>`, `Copy-Item .env.example .env`
 
 ```powershell
 git switch main; git pull
-git switch -c feat/engine-scoring
+git switch -c engine/scoring
 make check
 git add engine data/catalog/crops.csv data/tests/test_crops_catalog.py render.yaml
 git commit -m "feat(engine): score options with Scoring v1"
-git push -u origin feat/engine-scoring
+git push -u origin engine/scoring
 ```
 
 Open the PR on github.com. Conventional commits with module scope; no AI attribution or `Co-Authored-By` lines. You self-merge (squash) your own green PRs in your files; ubuntu CI guards merges from H2, branch protection (0 approvals) from H8. PR description, 3 lines: done, not done, surprises.
@@ -235,3 +235,36 @@ SHOULD 0: full engine texts (several lines per section). Then ask the lead for t
 - Paste the Scoring v1 table and ask for the test of one row at a time, then the code.
 - Paste `crops.csv` when asking for golden tests; check every AI-suggested crop value against a real source before using it.
 - Paste errors verbatim. If the AI wants a new library or file I/O in `engine/src/`, say no.
+
+## Lead notes
+
+Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
+
+### What already exists in `main`
+
+- Repo: https://github.com/FreidhYMorales/agroayuda (public). Accept the collaborator invite first, or `git push` fails.
+- `make check` is green. CI runs it on every PR; `main` only accepts PRs with a green `check`.
+- Contracts are frozen: models in `contracts/src/contracts/models.py`, fixtures in `contracts/examples/`, TS types in `web/src/contracts/contracts.ts` (generated, do not edit).
+- `CropId` is final: `maiz`, `frijol`, `maiz_frijol`, `maicillo`, `maiz_maicillo`, `caupi`, `canavalia`, `ajonjoli`, `ayote`, `none`.
+- Typed examples to copy: `data/src/data_pipeline/parquet_io.py` (Parquet with DuckDB), `api/src/api/repository.py` (DuckDB query), `web/src/api/client.ts` (fetch wrapper).
+- The API only has `/health` for now; `/site` and `/recommendations` are the lead's next task (L4). Until then, work against `contracts/examples/` and mocked `fetch`.
+- The crop values in `contracts/examples/crop_catalog.json` and the templates in `rotation_templates.json` are fake ("EXAMPLE FIXTURE"). Real values go in `data/catalog/*.csv`, always with a source.
+
+### Branches
+
+One short branch per task, named `engine/<task>` (e.g. `engine/crops-catalog`). Merge it with "Squash and merge", delete it, `git switch main; git pull`, and start the next task on a new branch. Never keep working on a branch after it was merged. Commit messages stay `type(engine): ...`.
+
+### Gotchas found while bootstrapping
+
+- Python test file names must be unique across the whole repo (pytest default import mode): use `data/tests/test_grid.py`, not a second `test_smoke.py`. If pytest says "import file mismatch", rename your file.
+- Do not add `__init__.py` to any `tests/` folder.
+- Lint and format for web is Biome (`npm --prefix web run lint`, `npm --prefix web run format`), not ESLint or Prettier.
+- Ruff line length is 100; `make fmt` fixes formatting.
+
+### Notes for you (engine)
+
+- `CropId` is final (list above). `crops.csv` needs exactly one row per id, columns = `CropCatalogEntry` fields in that order.
+- Import contract types with `from contracts import CropCatalogEntry, RotationOption, SiteProfile, ...`.
+- Fixtures for your tests: `contracts/examples/site_profile.json` and `site_profile_null_soil.json` (the null-soil variant for the confidence tests).
+- Render (by H8): build command `uv sync --package api --no-dev --frozen`; start command `uv run --package api fastapi run api/src/api/main.py --host 0.0.0.0 --port $PORT`; health check path `/health`.
+- `rotation_templates.csv` (package 04) must be season-valid against your `seasons` column: agree on each crop's seasons with the web-results owner early.
