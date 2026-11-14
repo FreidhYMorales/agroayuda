@@ -33,3 +33,8 @@ Risk: none
 ## Log
 
 - L1 request: /flow:story 02
+- L2 test list approved; mode B (small, Risk: none).
+- L3 commits: 83ac966 -> a774178 + 8c563c2 (weighted score; mypy fix), 615c341 (water-first, green on first run since equal weights already rank it first; test 3 triangulates), 51fffc2 -> 2bf5893 (soil-first ranking by priorities).
+- L4 deviation: a774178 was committed with a mypy error (the commit was chained after make check with `;`), fixed in 8c563c2; commits are now gated on the make check exit code.
+- L5 make check: 135 passed (Python), 9 passed (web), mypy/ruff/biome/tsc clean. No verifier (Risk: none).
+- Risk: none
