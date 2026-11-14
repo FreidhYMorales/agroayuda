@@ -47,7 +47,7 @@ def _option(
         reasons=[reason_line(request.priorities, criteria)],
         evidence=canicula_evidence(site),
         benefits=[],
-        data_gaps=data_gaps(site),
+        data_gaps=data_gaps(site, [primera, postrera]),
         local_review=[LOCAL_REVIEW_ES],
     )
     return rank, option

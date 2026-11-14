@@ -1,6 +1,6 @@
 """One-line Spanish texts for each option (Guatemala, usted). Copy approved in story 15."""
 
-from contracts import Criteria, Evidence, Priorities, SiteProfile
+from contracts import Criteria, CropCatalogEntry, Evidence, Priorities, SiteProfile
 from engine.scoring import round_half_up
 
 # NASA POWER daily rain covers 1991-2020; the canícula share is a share of those years.
@@ -46,8 +46,13 @@ POWER_GAP_ES = "La lluvia de NASA POWER es una estimación regional."
 SOIL_GAP_ES = "No hay datos de suelo para este punto."
 
 
-def data_gaps(site: SiteProfile) -> list[str]:
-    """What the option's advice cannot rest on: missing soil, then the regional rain."""
+def data_gaps(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
+    """What the advice cannot rest on: missing soil, non-local crops, then the regional rain."""
     soil = site.soil
     missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
-    return [*([SOIL_GAP_ES] if missing_soil else []), POWER_GAP_ES]
+    general = [
+        f"{crop.name_es}: valor general, validar localmente."
+        for crop in crops
+        if crop.id != "none" and not crop.local_source
+    ]
+    return [*([SOIL_GAP_ES] if missing_soil else []), *general, POWER_GAP_ES]
