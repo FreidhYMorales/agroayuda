@@ -1,6 +1,10 @@
 """One-line Spanish texts for each option (Guatemala, usted). Copy approved in story 15."""
 
-from contracts import Criteria, Priorities
+from contracts import Criteria, Evidence, Priorities, SiteProfile
+from engine.scoring import round_half_up
+
+# NASA POWER daily rain covers 1991-2020; the canícula share is a share of those years.
+POWER_YEARS = 30
 
 # Tie order from docs/spec.md: water > soil > income > risk.
 PRIORITY_ORDER = ("water", "soil", "income", "risk")
@@ -26,3 +30,13 @@ def reason_line(priorities: Priorities, criteria: Criteria) -> str:
     name = top_priority(priorities)
     score = criteria.model_dump()[name]
     return f"Su prioridad es {PRIORITY_LABEL_ES[name]}: esta opción saca {score} de 5."
+
+
+def canicula_evidence(site: SiteProfile) -> list[Evidence]:
+    """The NASA POWER canícula share, in the data owner's own words; none without a share."""
+    for risk in site.risks:
+        if risk.id == "canicula" and risk.value is not None:
+            years = round_half_up(risk.value * POWER_YEARS)
+            value = f"{years} de {POWER_YEARS} años"
+            return [Evidence(text_es=risk.explanation_es, dataset="NASA POWER", value=value)]
+    return []
