@@ -72,6 +72,10 @@ def score_option(
     # The canícula falls in the primera cycle; fallow has nothing to lose.
     if primera.id != "none":
         first["risk"] -= CANICULA_PENALTY.get(canicula_level(site), 0.0)
+    if irrigation:
+        for crop, criteria in ((primera, first), (postrera, second)):
+            if crop.water_need == "high":
+                criteria["risk"] += 1.0
     combined = {name: (first[name] + second[name]) / 2 for name in ("water", "soil", "income")}
     combined["risk"] = min(first["risk"], second["risk"])
     return {name: _clamp(value) for name, value in combined.items()}
