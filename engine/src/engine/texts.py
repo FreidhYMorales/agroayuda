@@ -40,3 +40,11 @@ def canicula_evidence(site: SiteProfile) -> list[Evidence]:
             value = f"{years} de {POWER_YEARS} años"
             return [Evidence(text_es=risk.explanation_es, dataset="NASA POWER", value=value)]
     return []
+
+
+POWER_GAP_ES = "La lluvia de NASA POWER es una estimación regional."
+
+
+def data_gaps() -> list[str]:
+    """What the option's advice cannot rest on."""
+    return [POWER_GAP_ES]

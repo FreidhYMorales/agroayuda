@@ -21,7 +21,7 @@ from engine.scoring import (
     score_option,
     weighted_score,
 )
-from engine.texts import LOCAL_REVIEW_ES, canicula_evidence, reason_line
+from engine.texts import LOCAL_REVIEW_ES, canicula_evidence, data_gaps, reason_line
 
 
 def _option(
@@ -47,7 +47,7 @@ def _option(
         reasons=[reason_line(request.priorities, criteria)],
         evidence=canicula_evidence(site),
         benefits=[],
-        data_gaps=[],
+        data_gaps=data_gaps(),
         local_review=[LOCAL_REVIEW_ES],
     )
     return rank, option
