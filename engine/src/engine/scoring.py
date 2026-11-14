@@ -2,7 +2,7 @@
 
 import math
 
-from contracts import CropCatalogEntry, SiteProfile, Tier
+from contracts import CropCatalogEntry, Priorities, SiteProfile, Tier
 
 TIER_NUMBER: dict[Tier, int] = {"low": 1, "medium": 2, "high": 3}
 # Fallow saves water but leaves the soil bare and earns nothing.
@@ -28,6 +28,12 @@ def crop_criteria(crop: CropCatalogEntry) -> dict[str, float]:
         "income": _tier_to_score(crop.market_tier),
         "risk": _tier_to_score(crop.drought_tolerance),
     }
+
+
+def weighted_score(criteria: dict[str, float], priorities: Priorities) -> float:
+    """sum(priority x criterion) / sum(priority), on the clamped float criteria."""
+    weights = priorities.model_dump()
+    return sum(weights[name] * value for name, value in criteria.items()) / sum(weights.values())
 
 
 def _clamp(x: float) -> float:
