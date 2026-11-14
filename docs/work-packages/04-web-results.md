@@ -232,6 +232,10 @@ SHOULD 2: glossary ("¿Qué significa esto? ›", static Spanish copy in `web/`)
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 12:15): the uptime pinger is done
+
+The lead set up an UptimeRobot monitor on `https://agroayuda-api.onrender.com/health` every 5 minutes, so the free Render API stays awake and the lead gets an email if it goes down. Skip the pinger task in your milestones.
+
 ### New (Sat 11:45): the app is online
 
 - Web: https://agroayuda.vercel.app (every merge to `main` deploys; every PR gets its own Vercel preview link in the PR page).
