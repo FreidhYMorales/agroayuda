@@ -263,6 +263,8 @@ One short branch per task, named `engine/<task>` (e.g. `engine/crops-catalog`). 
 
 ### Notes for you (engine)
 
+- **Sources to start `crops.csv` (Sat 09:50):** `docs/crop-sources.md` has verified sources per crop (ICTA, CGIAR, FAO-56 Table 22, ECOCROP) with page or table references, a suggested `local_source` per crop, and an open modelling question about `maiz_maicillo` (relay). Tiers are still your call; cite the source in each row.
+
 - `CropId` is final (list above). `crops.csv` needs exactly one row per id, columns = `CropCatalogEntry` fields in that order.
 - Import contract types with `from contracts import CropCatalogEntry, RotationOption, SiteProfile, ...`.
 - Fixtures for your tests: `contracts/examples/site_profile.json` and `site_profile_null_soil.json` (the null-soil variant for the confidence tests).
