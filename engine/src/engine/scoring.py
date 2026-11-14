@@ -17,6 +17,13 @@ def canicula_level(site: SiteProfile) -> Level:
     return next((risk.level for risk in site.risks if risk.id == "canicula"), "unknown")
 
 
+def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
+    """F1/F2: why the primera crop is likely lost in a high canícula, or None."""
+    if canicula_level(site) == "high" and primera.water_need == "high":
+        return "Necesita mucha agua justo en la canícula"
+    return None
+
+
 def round_half_up(x: float) -> int:
     """Round .5 up (Python's round() rounds half to even, so 2.5 would become 2)."""
     return math.floor(x + 0.5)
