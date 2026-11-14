@@ -58,7 +58,7 @@ def recommend(
             raise InvalidRequestError(f"{crop_id} is not in the crop catalog")
         if season not in by_id[crop_id].seasons:
             raise InvalidRequestError(f"{crop_id} is not a {season} crop")
-    _, current_option = _option(site, current, by_id, request, is_current=True)
+    current_rank, current_option = _option(site, current, by_id, request, is_current=True)
     alternatives = [
         _option(site, Rotation(primera=t.primera, postrera=t.postrera), by_id, request, False)
         for t in templates
@@ -66,4 +66,7 @@ def recommend(
     ]
     # sorted() is stable, so equal scores keep template (CSV) order.
     ranked = sorted(alternatives, key=lambda pair: pair[0], reverse=True)
-    return [current_option, ranked[0][1], ranked[1][1]]
+    slot1_rank, slot1 = ranked[0]
+    if slot1.not_recommended_reason is None and slot1_rank > current_rank:
+        slot1 = slot1.model_copy(update={"recommended": True})
+    return [current_option, slot1, ranked[1][1]]
