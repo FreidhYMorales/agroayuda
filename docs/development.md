@@ -8,7 +8,7 @@ Anyone must be able to go from a fresh clone to a green `make check` with this f
 
 | OS | Status | Notes |
 |---|---|---|
-| Windows 11 | supported | 4 contributors. Native PowerShell; no WSL needed. Run `make check` locally before each PR (the `windows-latest` CI job is SHOULD 0 during the event). |
+| Windows 11 | supported | 4 contributors. Native PowerShell; no WSL needed. Run `make check` locally before each PR (CI also runs a `check-windows` job on `windows-latest` since Sat 11:00). |
 | Arch Linux | supported | Lead's machine. Checked in CI (`ubuntu-latest`). |
 | macOS 14+ | best effort | Untested; `brew install uv fnm make` should work. |
 

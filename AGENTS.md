@@ -41,7 +41,7 @@ docs/       architecture, spec, development, ADRs, work-packages
 
 - Each teammate owns one work package in `docs/work-packages/`. Give your AI that file as context (a Claude.ai/ChatGPT Project, or point your CLI agent at it) and start with its "Paste this at the top of your AI chat" block.
 - Only create or edit the files your package lists under "Files to deliver". If a change seems needed elsewhere, ask the owner or the lead.
-- Branch per task, then PR. Self-merge only green PRs inside your own files. On Windows, run `make check` locally before every PR (there is no Windows CI job during the event).
+- Branch per task, then PR. Self-merge only green PRs inside your own files. On Windows, run `make check` locally before every PR (CI also runs a `check-windows` job since Sat 11:00).
 - Before H2 (Sat 10:00) there is no repo: work in a scratch folder with the inline contracts from your package; move the code in after you clone.
 - Never paste secrets, tokens or `.env` contents into an AI chat.
 - Review what the AI wrote before committing: run the tests, read the diff, and make sure it did not touch contracts or other owners' files.
