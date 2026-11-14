@@ -35,3 +35,7 @@ Risk: none
 - L1 request: /flow:story 12
 - L2 user approved splitting 12 into #15 (this story), #16 (evidence, data gaps) and #17 (benefits). The Spanish copy in the criteria is proposed here for the user's approval.
 - L3 user approved the story and the Spanish copy (labels, reasons and local_review lines).
+- L4 test list approved; mode B (small, Risk: none).
+- L5 commits: 29e7d55 -> 316d3c6 (reasons line, water only), a9a07be -> e8518d2 (labels and tie order water > soil > income > risk), bd18107 -> fe36c22 (local_review on every option). Every test was red before its code.
+- L6 make check green: 174 passed (Python), web green. No verifier (Risk: none).
+- Risk: none
