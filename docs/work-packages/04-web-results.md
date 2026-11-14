@@ -232,6 +232,10 @@ SHOULD 2: glossary ("¿Qué significa esto? ›", static Spanish copy in `web/`)
 
 Updated Sat 2026-11-14 09:20. The lead adds new notes at the top of this section; `git pull` to get them.
 
+### New (Sat 10:15): SI disclosure
+
+Space Apps requires stating where and how AI was used for code and data. Fill your row in `docs/si-usage.md` (which AI tool you use and for what) in one of your PRs; that file and the README section are what judges see.
+
 ### What already exists in `main`
 
 - Repo: https://github.com/FreidhYMorales/agroayuda (public). Accept the collaborator invite first, or `git push` fails.
