@@ -3,6 +3,7 @@
 import math
 
 from contracts import CropCatalogEntry, Level, Priorities, SiteProfile, Tier
+from engine.calendar import bare_months
 
 TIER_NUMBER: dict[Tier, int] = {"low": 1, "medium": 2, "high": 3}
 # Fallow saves water but leaves the soil bare and earns nothing.
@@ -10,6 +11,8 @@ NONE_ROW = {"water": 5.0, "soil": 1.0, "income": 1.0, "risk": 5.0}
 
 
 CANICULA_PENALTY: dict[Level, float] = {"high": 1.0, "medium": 0.5}
+# Soil loses 0.5 when an option leaves this many months bare, or more.
+BARE_MONTHS_LIMIT = 6
 
 
 def canicula_level(site: SiteProfile) -> Level:
@@ -78,4 +81,6 @@ def score_option(
                 criteria["risk"] += 1.0
     combined = {name: (first[name] + second[name]) / 2 for name in ("water", "soil", "income")}
     combined["risk"] = min(first["risk"], second["risk"])
+    if len(bare_months(primera, postrera)) >= BARE_MONTHS_LIMIT:
+        combined["soil"] -= 0.5
     return {name: _clamp(value) for name, value in combined.items()}
