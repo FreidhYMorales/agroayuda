@@ -78,7 +78,7 @@ Only the person working on `data/` needs a real `EARTHDATA_TOKEN` in `.env` (cre
 
 | Task | Command |
 |---|---|
-| Run the API | `uv run fastapi dev api/src/api/main.py` (http://localhost:8000/docs) |
+| Run the API | `uv run fastapi dev api/src/api/main.py` (http://localhost:8000/docs)  Until `data/output/sites.parquet` exists it serves the dev fixture in `api/dev-data/` (Chiquimula cell only; `/health` says `dev-fixture`). |
 | Run the web app | `npm --prefix web run dev` (http://localhost:5173) |
 | Rebuild data | `uv run --package data-pipeline python -m data_pipeline` |
 | Export contract schema | `uv run --package contracts python -m contracts.export` |
