@@ -34,7 +34,10 @@ def test_round_half_up_rounds_just_below_half_down() -> None:
 
 def test_worked_example_combines_seasons(site: SiteProfile) -> None:
     # Worked example tiers: maize-like primera, bean-like postrera (canícula is story 04).
-    primera = illustrative_crop("medium", False, "medium", "low", "medium")
+    # 120 days (May-Aug) like real maize, so bare months are Dec-Apr = 5: no soil penalty.
+    primera = illustrative_crop("medium", False, "medium", "low", "medium").model_copy(
+        update={"cycle_days": 120}
+    )
     postrera = illustrative_crop("low", True, "low", "medium", "high")
 
     criteria = score_option(site, primera, postrera, irrigation=False)
