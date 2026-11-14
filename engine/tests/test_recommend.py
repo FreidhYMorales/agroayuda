@@ -4,6 +4,7 @@ import pytest
 
 from contracts import (
     CropCatalogEntry,
+    Priorities,
     RecommendationRequest,
     RotationTemplate,
     SiteProfile,
@@ -119,3 +120,34 @@ def test_tied_alternatives_keep_template_order(
     options = recommend(site, request_for("maiz", "frijol"), list(crops.values()), templates)
 
     assert [(o.sequence.primera, o.sequence.postrera) for o in options[1:]] == [first, second]
+
+
+def ranked_alternatives(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+    priorities: dict[str, int],
+) -> list[tuple[str, str]]:
+    request = request_for("maiz", "frijol").model_copy(
+        update={"priorities": Priorities(**priorities)}
+    )
+    options = recommend(site, request, list(crops.values()), templates)
+    return [(o.sequence.primera, o.sequence.postrera) for o in options[1:]]
+
+
+def test_water_first_ranks_bean_then_sorghum_first(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    """5/1/1/1 on float criteria (crops.csv, story 01 docstring values):
+
+    frijol -> maicillo (5, 2.5, 3, 3): (25 + 2.5 + 3 + 3) / 8 = 4.1875.
+    maiz_frijol -> maicillo (4, 3.5, 3, 1): (20 + 3.5 + 3 + 1) / 8 = 3.4375.
+    """
+    priorities = {"water": 5, "soil": 1, "income": 1, "risk": 1}
+
+    assert ranked_alternatives(site, crops, templates, priorities) == [
+        ("frijol", "maicillo"),
+        ("maiz_frijol", "maicillo"),
+    ]
