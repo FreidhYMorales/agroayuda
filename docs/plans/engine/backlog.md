@@ -19,8 +19,11 @@
 07. [-] split → #13, #14
 08. [x] 1537931 As a farmer, I want better/same/worse arrows versus my current rotation so that differences are clear at a glance. Requires: #01
 09. [ ] As a farmer on low-carbon soil, I want nitrogen-fixing crops to earn extra soil points with SoilGrids evidence so that the soil advice fits my plot. Requires: #01
-10. [x] 32cfbf5 As a farmer, I want a confidence level per option so that I know how much to trust it. Requires: #01
+10. [x] 3e9bc5e As a farmer, I want a confidence level per option so that I know how much to trust it. Requires: #01
 11. [x] 561d7c9 As a farmer who edited the link, I want a clear error when a crop is in a season it does not support so that I am not shown nonsense. Requires: #01
-12. [ ] As a farmer, I want one short line in Spanish for reasons, evidence, benefits, local review and data gaps so that I understand each option. Requires: #13, #09, #10
+12. [-] split → #15, #16, #17
 13. [x] 6bc3ccd As a farmer, I want one option marked recommended only when it passes the canícula check and beats my current rotation so that I know if changing is worth it. Requires: #02, #05
 14. [ ] As a farmer, I want water-first and income-first priorities to recommend different rotations at Chiquimula on the real templates so that my priorities visibly matter. Requires: #13
+15. [~] As a farmer, I want one line saying how each option does on my top priority, and a reminder to check with a local technician, so that I understand and verify the advice. Requires: #13
+16. [ ] As a farmer, I want NASA evidence and the data that is missing for each option so that I know what the advice rests on. Requires: #10
+17. [ ] As a farmer, I want one line naming what each option improves over my rotation so that I see its benefit. Requires: #08
