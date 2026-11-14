@@ -19,5 +19,5 @@ def test_postrera_only_crop_in_primera_is_rejected(
     crops: dict[str, CropCatalogEntry],
     templates: list[RotationTemplate],
 ) -> None:
-    with pytest.raises(InvalidRequestError, match="^maicillo is not a primera crop$"):
+    with pytest.raises(InvalidRequestError, match=r"^maicillo is not a primera crop$"):
         recommend(site, request_for("maicillo", "frijol"), list(crops.values()), templates)
