@@ -35,3 +35,7 @@ Risk: none
 
 - L1 request: /flow:story 07
 - L2 user approved splitting 07 into #13 (this story) and #14 (golden on the real templates, blocked on package 04).
+- L3 test list approved; mode B (small, Risk: none). User approved moving story 02's water-first and soil-first tests to a low-canícula copy of the site (c91b162; expected orders unchanged, docstrings exact again).
+- L4 commits: 40aaf66 -> 970264d (recommend slot 1 when it passes and beats the current), e7074d7 -> 207d950 (best passing alternative takes slot 1), then one test commit for "current scores best" and "nothing passes" (green on first run; proven by mutants: ignore the current's score, recommend a failing slot 1).
+- L5 make check green (Python and web). No verifier (Risk: none).
+- Risk: none

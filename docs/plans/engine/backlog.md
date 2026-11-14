@@ -22,5 +22,5 @@
 10. [ ] As a farmer, I want a confidence level per option so that I know how much to trust it. Requires: #01
 11. [x] 561d7c9 As a farmer who edited the link, I want a clear error when a crop is in a season it does not support so that I am not shown nonsense. Requires: #01
 12. [ ] As a farmer, I want one short line in Spanish for reasons, evidence, benefits, local review and data gaps so that I understand each option. Requires: #13, #09, #10
-13. [~] As a farmer, I want one option marked recommended only when it passes the canícula check and beats my current rotation so that I know if changing is worth it. Requires: #02, #05
+13. [x] 207d950 As a farmer, I want one option marked recommended only when it passes the canícula check and beats my current rotation so that I know if changing is worth it. Requires: #02, #05
 14. [ ] As a farmer, I want water-first and income-first priorities to recommend different rotations at Chiquimula on the real templates so that my priorities visibly matter. Requires: #13
