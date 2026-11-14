@@ -78,3 +78,14 @@ def test_missing_soil_is_noted_first(
     current = recommend_for(site_null_soil, crops, templates)[0]
 
     assert current.data_gaps == [SOIL_GAP, POWER_GAP]
+
+
+def test_non_local_crop_is_marked_as_a_general_value(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    # ayote has no local source in crops.csv; frijol does.
+    current = recommend_for(site, crops, templates, primera="ayote", postrera="frijol")[0]
+
+    assert current.data_gaps == ["Ayote: valor general, validar localmente.", POWER_GAP]
