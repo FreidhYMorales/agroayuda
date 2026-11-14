@@ -33,3 +33,7 @@ Risk: none
 ## Log
 
 - L1 request: /flow:story 05
+- L2 test list approved; mode B (small, Risk: none).
+- L3 commits: 09e7601 -> 33324b3 (F1), 23b9509 -> 64c5fc5 (F2), one test commit for "F1 wins" and "no warning below high" (green on first run; proven by mutants: F2 checked before F1, warn on medium/missing), 5d54ff3 -> e1a05ca (warnings on every option via recommend).
+- L4 make check green (Python and web). No verifier (Risk: none).
+- Risk: none
