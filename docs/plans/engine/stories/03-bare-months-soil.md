@@ -33,3 +33,4 @@ Risk: none
 ## Log
 
 - L1 request: /flow:story 03
+- L2 stop (existing test would change): the bare-month penalty breaks test_scoring.py::test_worked_example_combines_seasons. Its illustrative crops use cycle_days 90 (May-Jul + Sep-Nov), which leaves 6 bare months, while the work package's worked example says bare Dec-Apr = 5 (no penalty). My hand check missed it. Code left uncommitted; waiting on the user's call.
