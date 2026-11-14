@@ -35,3 +35,10 @@ Risk: item 3 (`recommend()` output and `crops.csv` are consumed by the API and t
 ## Log
 
 - L1 request: /flow:story 01
+- L2 test list approved: catalog coverage, calendar (maize-bean, fallow, past December), half-up rounding, worked example + fallow row, recommend Chiquimula maize-bean, every season-valid rotation, tie-break by template order.
+- L3 crops.csv tiers approved row by row; "(team)" in `source` marks judgment tiers.
+- L4 commits: ec8dbe5 -> 936054a (catalog), e85cd62 -> fb5d5c4 (calendar), 6cb2177 (calendar triangulation), 0c725e8 -> 3f656f2 (rounding), 2f91d35 -> c35f610 (scoring), c0f6fb1 -> e3a2ebe -> 2a60fcf (recommend + mypy fix), 5e1af5d (every rotation), 640907b (ties).
+- L5 deviations: 6cb2177, 5e1af5d, 640907b were green on first run (logic already existed); each was proven by a mutant. e3a2ebe was committed with 2 mypy errors, fixed in 2a60fcf.
+- L6 make check: 128 passed (Python), 9 passed (web), mypy/ruff/biome clean.
+- L7 verifier: PASS (8 mutants caught; contract round-trip through read_catalog_csv and parquet OK). Notes: the API stays on the stub engine until `engine/errors.py` exists (story 11), so placeholders do not go live yet; recommend() raises IndexError with fewer than 2 differing templates, so rerun the every-rotation test against the real rotation_templates.csv when package 04 lands it.
+- Risk: item 3 (`recommend()` output and `crops.csv` are consumed by the API and the data pipeline)
