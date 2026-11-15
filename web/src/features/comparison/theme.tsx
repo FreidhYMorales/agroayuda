@@ -57,7 +57,10 @@ font-weight:700;line-height:1.3}
 .ag-badge[data-badge="recommended"]{background:#cfe8d5;color:#14532d}
 .ag-badge-icon{width:28px;height:28px;padding:0;display:flex;align-items:center;justify-content:center;
 border-radius:50%;font-size:16px}
-.ag-recommended-line{background:#cfe8d5;color:#14532d;border-radius:12px;padding:10px 14px;font-weight:700;margin:0 0 12px}
+.ag-note{border-radius:12px;padding:10px 14px;font-weight:700;margin:0 0 8px}
+.ag-note[data-badge="recommended"]{background:#cfe8d5;color:#14532d}
+.ag-note[data-badge="warning"]{background:#fff0c9;color:#6b4300}
+.ag-note[data-badge="not_recommended"]{background:#fbe3e0;color:#8a1f17}
 .ag-badge[data-badge="not_recommended"]{background:#fbe3e0;color:#8a1f17}
 .ag-badge[data-badge="warning"]{background:#fff0c9;color:#6b4300}
 .ag-bar{display:flex;align-items:center;gap:6px}

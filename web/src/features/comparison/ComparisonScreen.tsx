@@ -37,31 +37,43 @@ function ScoreBar({ value }: { value: number }) {
   );
 }
 
+// A column is ~65 px on a 360-390 px phone: "Recomendada" overflowed and the
+// reasons took 5-6 lines. The column shows only the badge icon; the words are
+// in the notes above the table (columnNotes). Screen readers still hear the
+// full badge text here.
 function BadgeView({ badge }: { badge: Badge }) {
   if (badge.kind === "none") return null;
-  if (badge.kind === "recommended") {
-    // "Recomendada" does not fit a ~65 px column on a 360-390 px phone: the
-    // column shows the ✓ and the word is in the line above the table
-    // (recommendedLine). Screen readers still hear it here.
-    return (
-      <span className="ag-badge ag-badge-icon" data-badge={badge.kind}>
-        <span aria-hidden="true">✓</span>
-        <span style={visuallyHidden}> Recomendada</span>
-      </span>
-    );
-  }
+  const [icon, ...rest] = Array.from(badge.text);
   return (
-    <span className="ag-badge" data-badge={badge.kind}>
-      {badge.text}
+    <span className="ag-badge ag-badge-icon" data-badge={badge.kind}>
+      <span aria-hidden="true">{icon}</span>
+      <span style={visuallyHidden}>{rest.join("")}</span>
     </span>
   );
 }
 
-/** "✓ Recomendada: Op.1 (Gandul → Nada)", or null when no column is recommended. */
-function recommendedLine(columns: RotationOption[]): string | null {
-  const index = columns.findIndex((option) => columnBadge(option).kind === "recommended");
-  if (index === -1) return null;
-  return `✓ Recomendada: ${COLUMN_TITLES[index]} (${sequenceLabel(columns[index].sequence)})`;
+type ColumnNote = { kind: Badge["kind"]; text: string };
+
+/**
+ * One note per column badge, in column order after the recommended one:
+ * "✓ Recomendada: Op.1 (Gandul → Nada)", "⚠ Actual: <reason>",
+ * "✗ Op.2 no recomendada: <reason>".
+ */
+function columnNotes(columns: RotationOption[]): ColumnNote[] {
+  const notes: ColumnNote[] = [];
+  columns.forEach((option, index) => {
+    const kind = columnBadge(option).kind;
+    const title = COLUMN_TITLES[index];
+    const reason = option.not_recommended_reason ?? "";
+    if (kind === "recommended") {
+      notes.unshift({ kind, text: `✓ Recomendada: ${title} (${sequenceLabel(option.sequence)})` });
+    } else if (kind === "warning") {
+      notes.push({ kind, text: `⚠ ${title}: ${reason}` });
+    } else if (kind === "not_recommended") {
+      notes.push({ kind, text: `✗ ${title} no recomendada: ${reason}` });
+    }
+  });
+  return notes;
 }
 
 type ComparisonTableProps = {
@@ -267,12 +279,16 @@ function ResultsView(props: ResultsViewProps) {
   }
 
   const summary = summaryMessage(state.options);
-  const recommended = recommendedLine(columns);
+  const notes = columnNotes(columns);
   return (
     <Page>
       {back}
       {summary ? <p className="ag-info">{summary}</p> : null}
-      {recommended ? <p className="ag-recommended-line">{recommended}</p> : null}
+      {notes.map((note) => (
+        <p key={note.text} className="ag-note" data-badge={note.kind}>
+          {note.text}
+        </p>
+      ))}
       <div className="ag-card" style={{ padding: "8px 4px" }}>
         <ComparisonTable options={state.options} onSelect={setSelected} />
       </div>

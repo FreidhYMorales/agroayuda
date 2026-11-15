@@ -99,6 +99,34 @@ test("the recommended column shows only a ✓, with Recomendada kept for screen 
   expect(badge?.textContent).toBe("✓ Recomendada");
 });
 
+// Reasons are full sentences: in a ~65 px column they took 5-6 lines and
+// "No recomendada:" overflowed. The column keeps the icon; the reason moves
+// to a note above the table.
+test("warning and not-recommended columns show only their icon, full text for screen readers", () => {
+  render(<ComparisonTable options={FIXTURE_OPTIONS} onSelect={vi.fn()} />);
+
+  const headers = screen.getAllByRole("columnheader");
+  const warning = headers[1].querySelector("[data-badge='warning']");
+  const rejected = headers[3].querySelector("[data-badge='not_recommended']");
+
+  expect(warning?.querySelector("[aria-hidden='true']")?.textContent).toBe("⚠");
+  expect(rejected?.querySelector("[aria-hidden='true']")?.textContent).toBe("✗");
+  expect(warning?.textContent).toBe("⚠ Aguanta poco la sequía de la canícula");
+  expect(rejected?.textContent).toBe("✗ No recomendada: Aguanta poco la sequía de la canícula");
+});
+
+test("notes above the table give each column's reason", async () => {
+  fetchMock.mockImplementation(async () => okResponse());
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  const warning = await screen.findByText("⚠ Actual: Aguanta poco la sequía de la canícula");
+  const rejected = screen.getByText("✗ Op.2 no recomendada: Aguanta poco la sequía de la canícula");
+  const table = screen.getByRole("table");
+  for (const note of [warning, rejected]) {
+    expect(note.compareDocumentPosition(table) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  }
+});
+
 test("a line above the table names the recommended option", async () => {
   fetchMock.mockImplementation(async () => okResponse());
   render(<ComparisonScreen request={REQUEST} {...handlers()} />);
