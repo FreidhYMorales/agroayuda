@@ -2,7 +2,8 @@
 import type { CSSProperties } from "react";
 import type { SiteRisk } from "../../contracts/contracts";
 import { buttonStyle } from "../../ui/buttonStyles";
-import { RISKS_COPY } from "./copy";
+import { risksCopy } from "./copy";
+import { useLang } from "../../lib/urlState";
 import { RiskRow } from "./RiskRow";
 import { sortRisks } from "./riskTitle";
 
@@ -34,6 +35,7 @@ const skeletonStyle: CSSProperties = {
 };
 
 function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClose">) {
+  const copy = risksCopy(useLang());
   if (view.status === "loading") {
     return (
       <div>
@@ -47,7 +49,7 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
   if (view.status === "error") {
     return (
       <button type="button" style={buttonStyle("secondary")} onClick={onRetry}>
-        {RISKS_COPY.retry}
+        {copy.retry}
       </button>
     );
   }
@@ -57,7 +59,7 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
 
   return (
     <>
-      {!hasHighRisk && <p>{RISKS_COPY.noStrongRisk}</p>}
+      {!hasHighRisk && <p>{copy.noStrongRisk}</p>}
       {risks.length > 0 && (
         <ul style={{ padding: 0, margin: 0 }}>
           {risks.map((risk) => (
@@ -70,13 +72,14 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
         style={{ ...buttonStyle("primary", { fullWidth: true }), marginTop: 16 }}
         onClick={onContinue}
       >
-        {RISKS_COPY.continue}
+        {copy.continue}
       </button>
     </>
   );
 }
 
 export function RisksScreen({ view, onClose, onRetry, onContinue }: RisksScreenProps) {
+  const copy = risksCopy(useLang());
   return (
     <section
       style={screenStyle}
@@ -84,11 +87,11 @@ export function RisksScreen({ view, onClose, onRetry, onContinue }: RisksScreenP
       aria-busy={view.status === "loading"}
     >
       <header style={headerStyle}>
-        <h2 id="risks-title">{RISKS_COPY.header}</h2>
+        <h2 id="risks-title">{copy.header}</h2>
         <button
           type="button"
           style={buttonStyle("secondary")}
-          aria-label={RISKS_COPY.close}
+          aria-label={copy.close}
           onClick={onClose}
         >
           ✕

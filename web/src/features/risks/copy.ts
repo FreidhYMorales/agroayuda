@@ -21,6 +21,3 @@ const EN: typeof ES = {
 export function risksCopy(lang: Lang): typeof ES {
   return lang === "en" ? EN : ES;
 }
-
-// Spanish texts, for the callers that do not follow the language yet.
-export const RISKS_COPY = ES;
