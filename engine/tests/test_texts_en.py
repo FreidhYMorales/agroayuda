@@ -2,8 +2,8 @@
 
 import pytest
 
-from contracts import Criteria, DeltaVsCurrent, Priorities
-from engine.texts import benefits_en, reason_line_en
+from contracts import Criteria, CropCatalogEntry, DeltaVsCurrent, Priorities, SiteProfile
+from engine.texts import benefits_en, data_gaps_en, reason_line_en
 
 CRITERIA = Criteria(water=4, soil=2, income=3, risk=5)
 
@@ -45,3 +45,23 @@ def test_reason_line_in_english(priorities: Priorities, expected: str) -> None:
 )
 def test_benefits_in_english(deltas: DeltaVsCurrent, expected: list[str]) -> None:
     assert benefits_en(deltas) == expected
+
+
+POWER_GAP_EN = "NASA POWER rain is a regional estimate."
+
+
+def test_data_gaps_in_english_with_full_soil_and_local_crops(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    assert data_gaps_en(site, [crops["maiz"], crops["frijol"]]) == [POWER_GAP_EN]
+
+
+def test_data_gaps_in_english_name_missing_soil_and_general_crops(
+    site_null_soil: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # ayote has no local source in crops.csv; frijol does.
+    assert data_gaps_en(site_null_soil, [crops["ayote"], crops["frijol"]]) == [
+        "There is no soil data for this point.",
+        "Squash: general value, check locally.",
+        POWER_GAP_EN,
+    ]
