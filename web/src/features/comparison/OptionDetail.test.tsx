@@ -136,3 +136,35 @@ test("bare months in English, singular and none", () => {
   expect(bareMonthsText(1, "en")).toBe("Leaves the field without a crop for 1 month (estimated)");
   expect(bareMonthsText(1)).toBe("Deja el terreno sin cultivo 1 mes (estimado)");
 });
+
+test("with lang=en the detail shows the engine's English texts", () => {
+  inEnglish();
+  detail(1, "Opt. 1");
+
+  expect(screen.getByText("Saves more water, which matters most to you.")).toBeVisible();
+  expect(screen.getByText("Beans grown together add nitrogen to the soil.")).toBeVisible();
+  expect(screen.getByText("Ask a technician which sorghum variety suits you.")).toBeVisible();
+  expect(screen.getByText("General value for sorghum; check locally.")).toBeVisible();
+  expect(screen.queryByText("Ahorra más agua, que es lo más importante para usted.")).toBeNull();
+});
+
+test("with lang=en the evidence uses its English text and value", () => {
+  inEnglish();
+  const option = {
+    ...FIXTURE_OPTIONS[1],
+    evidence: [
+      {
+        text_es: "Racha seca larga en 21 de 30 años.",
+        text_en: "Long dry spell in 21 of 30 years.",
+        dataset: "NASA POWER",
+        value: "21 de 30 años",
+        value_en: "21 of 30 years",
+      },
+    ],
+  };
+  render(<OptionDetail option={option} title="Opt. 1" onBack={vi.fn()} />);
+
+  expect(
+    screen.getByText("Long dry spell in 21 of 30 years. (NASA POWER: 21 of 30 years)"),
+  ).toBeVisible();
+});
