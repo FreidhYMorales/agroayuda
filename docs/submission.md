@@ -47,7 +47,7 @@ The complete list with licences is in `docs/resources.md`; copy the two tables f
 - Final project: https://agroayuda.vercel.app
 - Repository: https://github.com/FreidhYMorales/agroayuda
 - Team: AgroAyuda
-- Members: Freidh Yannel Morales Gonzalesz, Francisco David Diego Noriega, Fernando Rene Villatoro Samayoa, Wilder Estiven Cruz Garcia, Sheyla Mishel Argueta Cobón
+- Members: Freidh Yannel Morales González, Francisco David Diego Noriega, Fernando Rene Villatoro Samayoa, Wilder Estiven Cruz Garcia, Sheyla Mishel Argueta Cobón
 
 ## Before the final save (checklist)
 
