@@ -91,7 +91,7 @@ const region: RegionCollection = {
   ],
 };
 
-const loaded: MapDataResult = { ok: true, data: { rain, region } };
+const loaded: MapDataResult = { ok: true, data: { rain, region, mask: null } };
 const READY: SiteState = { status: "ready", site: chiquimulaSite };
 
 // Browser callbacks of the latest getCurrentPosition call, so each test

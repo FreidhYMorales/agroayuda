@@ -61,12 +61,47 @@ const json = (body: unknown, status = 200) =>
     headers: { "Content-Type": "application/json" },
   });
 
+const maskBody = {
+  type: "FeatureCollection",
+  data_version: "2026-11-14",
+  features: [
+    {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-180, -90],
+            [180, -90],
+            [180, 90],
+            [-180, 90],
+            [-180, -90],
+          ],
+          [
+            [-89.9, 15.1],
+            [-89.8, 15.2],
+            [-89.8, 15.1],
+            [-89.9, 15.1],
+          ],
+        ],
+      },
+    },
+  ],
+};
+
 const isRain = (url: unknown) => String(url).endsWith("/data/layers/rain.geojson");
+const isMask = (url: unknown) => String(url).endsWith("/data/region_mask.geojson");
+const notFound = () => new Response("", { status: 404 });
 
 // Answers each static file with the response its factory builds. A factory
-// that throws becomes a rejected fetch.
-function serve(rain: () => Response, region: () => Response) {
-  fetchMock.mockImplementation(async (url: unknown) => (isRain(url) ? rain() : region()));
+// that throws becomes a rejected fetch. The mask is optional: 404 by default.
+function serve(rain: () => Response, region: () => Response, mask: () => Response = notFound) {
+  fetchMock.mockImplementation(async (url: unknown) => {
+    if (isRain(url)) return rain();
+    if (isMask(url)) return mask();
+    return region();
+  });
 }
 
 const options = () => ({ signal: new AbortController().signal });
@@ -90,9 +125,10 @@ describe("loadMapData", () => {
     await loadMapData(options());
 
     const urls = fetchMock.mock.calls.map(([url]) => String(url));
-    expect(urls).toHaveLength(2);
+    expect(urls).toHaveLength(3);
     expect(urls).toContain("/data/layers/rain.geojson");
     expect(urls).toContain("/data/region.geojson");
+    expect(urls).toContain("/data/region_mask.geojson");
   });
 
   test("passes the abort signal to both requests", async () => {
@@ -117,7 +153,51 @@ describe("loadMapData", () => {
 
     const result = await loadMapData(options());
 
-    expect(result).toEqual({ ok: true, data: { rain: rainBody, region: regionBody } });
+    expect(result).toEqual({
+      ok: true,
+      data: { rain: rainBody, region: regionBody, mask: null },
+    });
+  });
+
+  test("returns the region mask when the file exists", async () => {
+    serve(
+      () => json(rainBody),
+      () => json(regionBody),
+      () => json(maskBody),
+    );
+
+    const result = await loadMapData(options());
+
+    expect(result).toEqual({
+      ok: true,
+      data: { rain: rainBody, region: regionBody, mask: maskBody },
+    });
+  });
+
+  // The mask only dims the area outside the region: without it the map still works.
+  test.each([
+    ["is missing", notFound],
+    ["is not valid JSON", () => new Response("{", { status: 200 })],
+    ["is not a FeatureCollection", () => json({ type: "Feature" })],
+    [
+      "cannot be fetched",
+      () => {
+        throw new TypeError("network");
+      },
+    ],
+  ])("still loads the map without a mask when the mask file %s", async (_case, mask) => {
+    serve(
+      () => json(rainBody),
+      () => json(regionBody),
+      mask,
+    );
+
+    const result = await loadMapData(options());
+
+    expect(result).toEqual({
+      ok: true,
+      data: { rain: rainBody, region: regionBody, mask: null },
+    });
   });
 
   test("fails when the rain file cannot be fetched", async () => {
