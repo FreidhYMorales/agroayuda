@@ -53,19 +53,32 @@ def reason_line_en(priorities: Priorities, criteria: Criteria) -> str:
     return f"Your top priority is {PRIORITY_LABEL_EN[name]}: this option scores {score} of 5."
 
 
+# English of the canícula text in engine/risks.py, built from the stored level and share.
+CANICULA_LEAD_EN = {
+    "high": "Long dry spell (canícula) in July and August in most years.",
+    "medium": "Long dry spell (canícula) in July and August in some years.",
+    "low": "Few long dry spells in July and August.",
+}
+REGIONAL_NOTE_EN = (
+    "NASA POWER rain is a regional estimate (MERRA-2 model), not a measurement on your plot."
+)
+
+
 def canicula_evidence(site: SiteProfile) -> list[Evidence]:
     """The NASA POWER canícula share, in the data owner's own words; none without a share."""
     for risk in site.risks:
         if risk.id == "canicula" and risk.value is not None:
             years = round_half_up(risk.value * POWER_YEARS)
-            value = f"{years} de {POWER_YEARS} años"
+            spell = f"There was a long dry spell in {years} of {POWER_YEARS} years (1991-2020)."
+            lead = CANICULA_LEAD_EN.get(risk.level)
+            text_en = " ".join(part for part in (lead, spell, REGIONAL_NOTE_EN) if part)
             return [
                 Evidence(
                     text_es=risk.explanation_es,
-                    text_en="",
+                    text_en=text_en,
                     dataset="NASA POWER",
-                    value=value,
-                    value_en="",
+                    value=f"{years} de {POWER_YEARS} años",
+                    value_en=f"{years} of {POWER_YEARS} years",
                 )
             ]
     return []
