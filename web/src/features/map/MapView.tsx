@@ -10,7 +10,7 @@ import {
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { type CSSProperties, useEffect, useRef } from "react";
 import type { SiteProfile } from "../../contracts/contracts";
-import type { RegionCollection } from "./mapData";
+import type { MaskCollection, RegionCollection } from "./mapData";
 import { fallbackStyle, OPENFREEMAP_STYLE_URL, regionBounds, selectedCellData } from "./mapGeo";
 import {
   NEUTRAL_RAIN_COLOR,
@@ -28,6 +28,8 @@ export interface MapViewProps {
   // Both collections are loaded before the map is mounted and read once.
   rain: RainCollection;
   region: RegionCollection;
+  // Dims everything outside the region; null draws no mask.
+  mask: MaskCollection | null;
   // The site whose native cell is highlighted, or null for no selection.
   site: SiteProfile | null;
   onSelectPoint: (point: MapPoint) => void;
@@ -37,6 +39,7 @@ export interface MapViewProps {
 
 const RAIN_SOURCE = "rain";
 const REGION_SOURCE = "region";
+const MASK_SOURCE = "region-mask";
 const SELECTED_SOURCE = "selected-cell";
 
 // [lon, lat] over the Dry Corridor.
@@ -48,6 +51,7 @@ const containerStyle: CSSProperties = { width: "100%", height: "100%", minHeight
 interface OverlayData {
   rain: RainCollection;
   region: RegionCollection;
+  mask: MaskCollection | null;
   site: SiteProfile | null;
 }
 
@@ -64,8 +68,8 @@ function addOverlays(map: MapLibreMap, data: OverlayData): void {
   map.addSource(REGION_SOURCE, { type: "geojson", data: data.region });
   map.addSource(SELECTED_SOURCE, { type: "geojson", data: selectedCellData(data.site) });
 
-  // Layers are drawn in the order they are added: cells, then the region
-  // outline above them, then the selected cell above both.
+  // Layers are drawn in the order they are added: cells, then the mask that
+  // dims the outside, then the region outline, then the selected cell on top.
   map.addLayer({
     id: "rain-fill",
     type: "fill",
@@ -74,6 +78,15 @@ function addOverlays(map: MapLibreMap, data: OverlayData): void {
     // a valid "step" expression as a plain array, so it is cast at this boundary.
     paint: { "fill-color": fillColor as never, "fill-opacity": 0.65 },
   });
+  if (data.mask !== null) {
+    map.addSource(MASK_SOURCE, { type: "geojson", data: data.mask });
+    map.addLayer({
+      id: "region-mask-fill",
+      type: "fill",
+      source: MASK_SOURCE,
+      paint: { "fill-color": "#1a1a1a", "fill-opacity": 0.35 },
+    });
+  }
   map.addLayer({
     id: "region-outline",
     type: "line",
@@ -90,15 +103,15 @@ function addOverlays(map: MapLibreMap, data: OverlayData): void {
   });
 }
 
-export function MapView({ rain, region, site, onSelectPoint, onError }: MapViewProps) {
+export function MapView({ rain, region, mask, site, onSelectPoint, onError }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
 
   // The map is created once, so its event handlers read the latest props
   // through this ref instead of capturing the first render's values.
-  const latest = useRef({ rain, region, site, onSelectPoint, onError });
+  const latest = useRef({ rain, region, mask, site, onSelectPoint, onError });
   useEffect(() => {
-    latest.current = { rain, region, site, onSelectPoint, onError };
+    latest.current = { rain, region, mask, site, onSelectPoint, onError };
   });
 
   useEffect(() => {

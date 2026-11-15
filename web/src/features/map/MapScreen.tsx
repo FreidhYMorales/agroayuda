@@ -169,6 +169,7 @@ export function MapScreen({
           <MapView
             rain={mapData.data.rain}
             region={mapData.data.region}
+            mask={mapData.data.mask}
             site={selectedSite}
             onSelectPoint={selectFromMap}
             onError={() => setMapError(true)}
