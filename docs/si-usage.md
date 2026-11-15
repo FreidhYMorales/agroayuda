@@ -6,7 +6,7 @@ NASA Space Apps requires teams to state where and how SI tools (chatbots, large 
 
 ## Before the event
 
-Before the event, we used an AI assistant to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build. The planning documents in `docs/` (architecture, ADRs, spec, work packages) and `AGENTS.md` were written with AI assistance and carry a dated preface saying so.
+Before the event, we used an AI assistant (Claude) to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build. The planning documents in `docs/` (architecture, ADRs, spec, work packages) and `AGENTS.md` were written with AI assistance and carry a dated preface saying so.
 
 ## During the event
 
@@ -43,9 +43,10 @@ The app itself does not call any AI service: every recommendation comes from fix
 | Asset | SI use | How it is marked |
 |---|---|---|
 | Demo video voice-over | English AI-generated voice from the team's script | Stated in the video description and in the video file metadata |
-| Images or video frames | Only if SI-generated | Visible "AI-generated" watermark on each one |
+| AgroAyuda logo | Generated with ChatGPT and Gemini from the team's prompts | Visible "AI-generated" watermark |
+| Other images and video frames | None: made by the team | Not needed |
 | NASA branding | None | No NASA logos, flags or mission identifiers; text "Datos: NASA POWER" only |
 
 ## Text for the submission form ("Use of Super Intelligence")
 
-> We used AI assistants (Claude Code and other chat assistants) to organize and review our plan before the event, and during the event to help write code, tests and documentation; a human reviewed and merged every change, and all code passes strict tests and type checks. The idea, product decisions, agronomic rules and crop values are the team's own; crop values come from cited sources (ICTA, CGIAR, FAO). NASA POWER, SoilGrids and geoBoundaries data are not SI-generated. The app does not call any AI at run time. The video uses an English AI-generated voice-over, stated in its description and metadata; any SI-generated image carries a visible watermark. No NASA branding is used. Full details: docs/si-usage.md in our repository.
+> We used an AI assistant (Claude) to organize and review our plan before the event, and AI assistants during the event to help write code, tests and documentation; a human reviewed and merged every change, and all code passes strict tests and type checks. The idea, product decisions, agronomic rules and crop values are the team's own; crop values come from cited sources (ICTA, CGIAR, FAO). NASA POWER, SoilGrids and geoBoundaries data are not SI-generated. The app does not call any AI at run time. The video uses an English AI-generated voice-over, stated in its description and metadata; the logo was generated with ChatGPT and Gemini and carries a visible "AI-generated" watermark; all other images are the team's own. No NASA branding is used. Full details: docs/si-usage.md in our repository.

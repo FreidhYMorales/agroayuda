@@ -22,9 +22,9 @@ Everything is precomputed from NASA POWER (1991-2020), SoilGrids and geoBoundari
 
 ## SI (Super Intelligence) use disclosure
 
-Before the event, we used an AI assistant to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build.
+Before the event, we used an AI assistant (Claude) to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build.
 
-During the event, AI was used as a coding assistant (code, tests and documentation), and the English voice-over of the demo video was generated with AI (also stated in the video metadata). A human reviewed and merged every change. Details per module: docs/si-usage.md in the repository.
+During the event, AI was used as a coding assistant (code, tests and documentation), and the English voice-over of the demo video was generated with AI (also stated in the video metadata), and the logo was generated with ChatGPT and Gemini (marked "AI-generated"). A human reviewed and merged every change. Details per module: docs/si-usage.md in the repository.
 
 ## NASA data used
 
