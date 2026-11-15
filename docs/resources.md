@@ -54,6 +54,7 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 | Pydantic 2.14 | https://github.com/pydantic/pydantic | MIT |
 | DuckDB 2.0 | https://duckdb.org | MIT |
 | httpx 0.28 | https://github.com/encode/httpx | BSD-3-Clause |
+| Shapely 2.2 | https://github.com/shapely/shapely | BSD-3-Clause |
 | pandas 3.1 | https://pandas.pydata.org | BSD-3-Clause |
 | NumPy | https://numpy.org | BSD-3-Clause (and others, see package) |
 | xarray | https://docs.xarray.dev | Apache-2.0 |

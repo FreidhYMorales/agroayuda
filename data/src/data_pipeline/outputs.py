@@ -16,6 +16,10 @@ from typing import Any, Final
 
 import duckdb
 from pydantic import BaseModel
+from shapely import make_valid  # type: ignore[import-untyped]
+from shapely.geometry import Polygon  # type: ignore[import-untyped]
+from shapely.geometry.polygon import orient  # type: ignore[import-untyped]
+from shapely.ops import unary_union  # type: ignore[import-untyped]
 
 from contracts import CropCatalogEntry, RainCellProperties, RotationTemplate
 from data_pipeline.grid import Ring, _point_in_rings, cell_id, cell_polygon, cell_resolution_km
@@ -229,39 +233,19 @@ def region_geojson(
 
 
 def dissolve(rings: Sequence[Ring]) -> list[Ring]:
-    """Merge polygons that share borders into their outlines, without a geometry library.
+    """Outer outlines of the union of the rings, counterclockwise, never overlapping.
 
-    geoBoundaries' simplified departments share identical border vertices, so an edge used by
-    two rings is an inner border: drop it, then chain the remaining edges back into rings.
-    Directions are kept, so counterclockwise inputs give counterclockwise outlines.
+    ADM1 departments and ADM2 municipalities come from different geoBoundaries files, so their
+    borders need not share vertices; a real polygon union (shapely) merges them anyway. Gaps
+    inside the union are left out: an outline inside another would make the mask invalid.
     """
-    Point = tuple[float, float]
-    uses: dict[frozenset[Point], int] = {}
-    for ring in rings:
-        for a, b in pairwise(ring):
-            key = frozenset({(a[0], a[1]), (b[0], b[1])})
-            uses[key] = uses.get(key, 0) + 1
-    next_points: dict[Point, list[Point]] = {}
-    for ring in rings:
-        for a, b in pairwise(ring):
-            start, end = (a[0], a[1]), (b[0], b[1])
-            if uses[frozenset({start, end})] == 1:
-                next_points.setdefault(start, []).append(end)
-    outlines: list[Ring] = []
-    while next_points:
-        start = next(iter(next_points))
-        outline = [start]
-        current = start
-        while True:
-            following = next_points[current].pop()
-            if not next_points[current]:
-                del next_points[current]
-            outline.append(following)
-            current = following
-            if current == start:
-                break
-        outlines.append([[x, y] for x, y in outline])
-    return outlines
+    union = unary_union([make_valid(Polygon(ring)) for ring in rings if len(ring) >= 4])
+    parts = getattr(union, "geoms", [union])
+    return [
+        [[x, y] for x, y in orient(part, sign=1.0).exterior.coords]
+        for part in parts
+        if isinstance(part, Polygon) and not part.is_empty
+    ]
 
 
 def region_mask_geojson(rings: Sequence[Ring], data_version: str) -> dict[str, object]:
