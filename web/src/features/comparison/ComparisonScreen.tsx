@@ -12,7 +12,6 @@ import { Page, visuallyHidden } from "./theme";
 export const SLOW_MESSAGE = "Despertando el servidor…";
 export const RETRY_LABEL = "Intentar de nuevo";
 
-const DETAIL_TITLES = ["Actual", "Opción 1", "Opción 2"] as const;
 // The labels come from comparisonCopy, by key.
 const CRITERIA = [
   { key: "water", icon: "💧" },
@@ -67,7 +66,8 @@ function columnNotes(columns: RotationOption[], lang: Lang): ColumnNote[] {
   columns.forEach((option, index) => {
     const kind = columnBadge(option).kind;
     const title = copy.columnTitles[index] ?? "";
-    const reason = option.not_recommended_reason ?? "";
+    const reason =
+      (lang === "en" ? option.not_recommended_reason_en : option.not_recommended_reason) ?? "";
     if (kind === "recommended") {
       notes.unshift({
         kind,
@@ -282,7 +282,7 @@ function ResultsView(props: ResultsViewProps) {
     return (
       <OptionDetail
         option={columns[selected]}
-        title={DETAIL_TITLES[selected]}
+        title={copy.detailTitles[selected] ?? ""}
         onBack={() => setSelected(null)}
       />
     );
