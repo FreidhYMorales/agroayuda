@@ -6,9 +6,9 @@
 
 ## Acceptance criteria
 
-- [ ] Given English is chosen, when the options are loading, then the screen reader hears "Loading the options…" and, if the server is slow, I see "Waking up the server, one moment…".
-- [ ] Given English is chosen, when the options cannot be loaded, then I see "We could not get your options." and a "Try again" button (no button when the place has no data, as today).
-- [ ] Given English is chosen, when the answers are rejected by the server, then the form shows "Check your answers"; in Spanish every loading, error and notice text stays as it is today.
+- [x] Given English is chosen, when the options are loading, then the screen reader hears "Loading the options…" and, if the server is slow, I see "Waking up the server, one moment…".
+- [x] Given English is chosen, when the options cannot be loaded, then I see "We could not get your options." and a "Try again" button (no button when the place has no data, as today).
+- [x] Given English is chosen, when the answers are rejected by the server, then the form shows "Check your answers"; in Spanish every loading, error and notice text stays as it is today.
 
 ## Plan
 
@@ -36,3 +36,6 @@ Risk: none
 - L1 request: /flow:story 06
 - L2 finding: map, form and risks states are already bilingual; only the comparison loading/slow/error/retry texts and the form's invalid-request notice are Spanish-only. The results flow's outside-region notice is never shown (no caller passes `onBackToMap`).
 - L3 approved by the user.
+- L4 built with /flow:pair 06 in mode B on branch `story/06-states-english`; 3 test/feat pairs f68eab7..929f668. Comparison loading/slow/error/retry texts moved into `comparisonCopy`; the unused `SLOW_MESSAGE`/`RETRY_LABEL` exports were removed; the results flow keeps only "invalid" as state so the notice follows the language. No existing test changed.
+- L5 evidence: `make check` exit 0; web `Tests 390 passed (390)`. No manual criterion; no verifier (Risk: none).
+- Risk: none
