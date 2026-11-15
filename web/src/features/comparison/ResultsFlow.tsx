@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { toRequest, useAppState } from "../../lib/urlState";
+import { toRequest, useAppState, useLang } from "../../lib/urlState";
 import { FormScreen } from "../form/FormScreen";
 import { ComparisonScreen } from "./ComparisonScreen";
 
-export const INVALID_NOTICE = "Revise sus respuestas";
+export const INVALID_NOTICE = { es: "Revise sus respuestas", en: "Check your answers" } as const;
 export const OUTSIDE_NOTICE = "Por ahora solo cubrimos el Corredor Seco";
 
 export type ResultsFlowProps = {
@@ -18,7 +18,9 @@ export type ResultsFlowProps = {
  */
 export function ResultsFlow({ onBackToMap }: ResultsFlowProps) {
   const [state, setState] = useAppState();
-  const [notice, setNotice] = useState<string | null>(null);
+  const lang = useLang();
+  // Only the kind of notice is kept, so its text follows the current language.
+  const [invalid, setInvalid] = useState(false);
   const [focusPriorities, setFocusPriorities] = useState(false);
 
   const request = state.step === "results" ? toRequest(state) : null;
@@ -36,7 +38,7 @@ export function ResultsFlow({ onBackToMap }: ResultsFlowProps) {
           setState({ step: "form" });
         }}
         onInvalidRequest={() => {
-          setNotice(INVALID_NOTICE);
+          setInvalid(true);
           setFocusPriorities(false);
           setState({ step: "form" });
         }}
@@ -56,7 +58,7 @@ export function ResultsFlow({ onBackToMap }: ResultsFlowProps) {
         priorities: state.priorities,
         irrigation: state.irrigation,
       }}
-      notice={notice}
+      notice={invalid ? INVALID_NOTICE[lang] : null}
       focusPriorities={focusPriorities}
       onChange={(patch) => setState(patch)}
       onBack={() => {
@@ -64,7 +66,7 @@ export function ResultsFlow({ onBackToMap }: ResultsFlowProps) {
         onBackToMap?.();
       }}
       onSubmit={() => {
-        setNotice(null);
+        setInvalid(false);
         setFocusPriorities(false);
         // Without a place on the map there is nothing to send: go back and pick one.
         setState({ step: toRequest(state) ? "results" : "map" });

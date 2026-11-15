@@ -9,9 +9,6 @@ import { sequenceLabel } from "./cropLabels";
 import { OptionDetail } from "./OptionDetail";
 import { Page, visuallyHidden } from "./theme";
 
-export const SLOW_MESSAGE = "Despertando el servidor…";
-export const RETRY_LABEL = "Intentar de nuevo";
-
 // The labels come from comparisonCopy, by key.
 const CRITERIA = [
   { key: "water", icon: "💧" },
@@ -166,10 +163,10 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
   );
 }
 
-function TableSkeleton() {
+function TableSkeleton({ label }: { label: string }) {
   return (
     <div aria-busy="true">
-      <span style={visuallyHidden}>Cargando las opciones…</span>
+      <span style={visuallyHidden}>{label}</span>
       {[0, 1, 2, 3, 4].map((row) => (
         <div
           key={row}
@@ -251,10 +248,10 @@ function ResultsView(props: ResultsViewProps) {
     return (
       <Page>
         {back}
-        <TableSkeleton />
+        <TableSkeleton label={copy.loading} />
         {state.slow ? (
           <output className="ag-info" style={{ display: "block" }}>
-            {SLOW_MESSAGE}
+            {copy.slow}
           </output>
         ) : null}
       </Page>
@@ -266,10 +263,10 @@ function ResultsView(props: ResultsViewProps) {
       <Page>
         {back}
         <div className="ag-card">
-          <p>No pudimos traer sus opciones.</p>
+          <p>{copy.loadError}</p>
           {state.error === "not_found" ? null : (
             <button type="button" className="ag-btn ag-primary" onClick={onRetry}>
-              {RETRY_LABEL}
+              {copy.retry}
             </button>
           )}
         </div>
