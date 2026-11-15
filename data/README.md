@@ -105,6 +105,7 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 | `data/output/crops.parquet`, `rotation_templates.parquet` | `data/catalog/*.csv`, CSV row order kept |
 | `web/public/data/layers/rain.geojson` | One Polygon per cell, feature `id` = `cell_id`, `RainCellProperties` (annual normal in mm/año), top-level `data_version` |
 | `web/public/data/region.geojson` | The 5 departments, top-level `data_version` |
+| `web/public/data/region_mask.geojson` | World ring with the region as one hole (the 5 departments merged by dropping their shared borders), to dim the area outside the region; top-level `data_version` |
 | `web/public/data/crops.json`, `rotation_templates.json`, `demo_points.json` | Catalogs and the 2 demo points |
 
 ## Sources and licences

@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { SiteProfile } from "../../contracts/contracts";
-import type { RegionCollection } from "./mapData";
+import type { MaskCollection, RegionCollection } from "./mapData";
 import { fallbackStyle, OPENFREEMAP_STYLE_URL, selectedCellData } from "./mapGeo";
 import { MapView } from "./MapView";
 import { type RainCollection, rainFillExpression } from "./rainLayer";
@@ -138,6 +138,34 @@ const region: RegionCollection = {
   ],
 };
 
+const mask: MaskCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-180, -90],
+            [180, -90],
+            [180, 90],
+            [-180, 90],
+            [-180, -90],
+          ],
+          [
+            [-89.9, 15.1],
+            [-89.8, 15.2],
+            [-89.8, 15.1],
+            [-89.9, 15.1],
+          ],
+        ],
+      },
+    },
+  ],
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.handlers.clear();
@@ -153,13 +181,14 @@ function emit(event: string, payload?: unknown) {
   });
 }
 
-function renderMap(site: SiteProfile | null = null) {
+function renderMap(site: SiteProfile | null = null, regionMask: MaskCollection | null = null) {
   const onSelectPoint = vi.fn();
   const onError = vi.fn();
   const view = (current: SiteProfile | null) => (
     <MapView
       rain={rain}
       region={region}
+      mask={regionMask}
       site={current}
       onSelectPoint={onSelectPoint}
       onError={onError}
@@ -265,6 +294,31 @@ describe("MapView overlays", () => {
     emit("style.load");
 
     expect(layerIds()).toEqual(["rain-fill", "region-outline", "selected-cell-outline"]);
+  });
+
+  test("dims the area outside the region between the cells and the outline", () => {
+    renderMap(null, mask);
+
+    emit("style.load");
+
+    expect(sourceCalls("region-mask")[0][1]).toEqual({ type: "geojson", data: mask });
+    expect(layerIds()).toEqual([
+      "rain-fill",
+      "region-mask-fill",
+      "region-outline",
+      "selected-cell-outline",
+    ]);
+    const maskLayer = mocks.api.addLayer.mock.calls[1][0];
+    expect(maskLayer).toMatchObject({ type: "fill", source: "region-mask" });
+  });
+
+  test("adds no mask source or layer when there is no mask", () => {
+    renderMap(null, null);
+
+    emit("style.load");
+
+    expect(sourceCalls("region-mask")).toHaveLength(0);
+    expect(layerIds()).not.toContain("region-mask-fill");
   });
 
   test("colors the cells with the rain scale of the loaded data", () => {

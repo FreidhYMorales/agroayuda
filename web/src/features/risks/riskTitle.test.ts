@@ -2,7 +2,7 @@
 import { describe, expect, test } from "vitest";
 import { riskTitle, sortRisks } from "./riskTitle";
 
-// Solo importan `id` y `level`; el resto del SiteRisk no interviene aquí.
+// Only `id` and `level` matter; the rest of SiteRisk plays no part here.
 const risk = (id: string, level: string) => ({ id, level }) as never;
 
 test("high canícula reads fuerte", () => {

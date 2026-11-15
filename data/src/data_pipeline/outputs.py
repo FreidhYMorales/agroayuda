@@ -9,6 +9,7 @@ import csv
 import json
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
+from itertools import pairwise
 from pathlib import Path
 from typing import Any, Final
 
@@ -82,6 +83,57 @@ def region_geojson(
         for f in _selected(boundaries, iso_codes)
     ]
     return {"type": "FeatureCollection", "data_version": data_version, "features": features}
+
+
+def dissolve(rings: Sequence[Ring]) -> list[Ring]:
+    """Merge polygons that share borders into their outlines, without a geometry library.
+
+    geoBoundaries' simplified departments share identical border vertices, so an edge used by
+    two rings is an inner border: drop it, then chain the remaining edges back into rings.
+    Directions are kept, so counterclockwise inputs give counterclockwise outlines.
+    """
+    Point = tuple[float, float]
+    uses: dict[frozenset[Point], int] = {}
+    for ring in rings:
+        for a, b in pairwise(ring):
+            key = frozenset({(a[0], a[1]), (b[0], b[1])})
+            uses[key] = uses.get(key, 0) + 1
+    next_points: dict[Point, list[Point]] = {}
+    for ring in rings:
+        for a, b in pairwise(ring):
+            start, end = (a[0], a[1]), (b[0], b[1])
+            if uses[frozenset({start, end})] == 1:
+                next_points.setdefault(start, []).append(end)
+    outlines: list[Ring] = []
+    while next_points:
+        start = next(iter(next_points))
+        outline = [start]
+        current = start
+        while True:
+            following = next_points[current].pop()
+            if not next_points[current]:
+                del next_points[current]
+            outline.append(following)
+            current = following
+            if current == start:
+                break
+        outlines.append([[x, y] for x, y in outline])
+    return outlines
+
+
+def region_mask_geojson(rings: Sequence[Ring], data_version: str) -> dict[str, object]:
+    """World ring with the dissolved region as holes (clockwise), to dim the outside area."""
+    world = [[-180.0, -90.0], [180.0, -90.0], [180.0, 90.0], [-180.0, 90.0], [-180.0, -90.0]]
+    holes = []
+    for outline in dissolve(rings):
+        area = sum(a[0] * b[1] - b[0] * a[1] for a, b in pairwise(outline))
+        holes.append(outline if area < 0 else outline[::-1])
+    feature = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {"type": "Polygon", "coordinates": [world, *holes]},
+    }
+    return {"type": "FeatureCollection", "data_version": data_version, "features": [feature]}
 
 
 def write_region_parquet(rings: Sequence[Ring], path: Path) -> None:

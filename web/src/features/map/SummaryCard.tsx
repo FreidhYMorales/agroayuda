@@ -8,7 +8,7 @@ import { useLang } from "../../lib/urlState";
 
 export interface SummaryCardProps {
   site: SiteProfile;
-  placeName?: string | undefined; // nombre del lugar de demo; si no hay, "Su zona"
+  placeName?: string | undefined; // demo place name; "Su zona" when there is none
   onViewRisks: () => void;
   onViewRecommendations: () => void;
   onPickPlace: () => void;
