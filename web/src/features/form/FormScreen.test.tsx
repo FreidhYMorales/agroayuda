@@ -253,4 +253,18 @@ describe("FormScreen in English", () => {
     expect(within(irrigation).getByRole("radio", { name: "No" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Compare options →" })).toBeVisible();
   });
+
+  test("the crop buttons show their English names, Nothing included", async () => {
+    setup();
+    const primeraTitle = "What do you plant in the first season (primera)?";
+    await screen.findByRole("heading", { name: primeraTitle });
+
+    const primera = block(primeraTitle);
+    const postrera = block("And in the second season (postrera)?");
+
+    expect(within(primera).getByRole("button", { name: "Maize with beans" })).toBeVisible();
+    expect(within(postrera).getByRole("button", { name: "Sorghum" })).toBeVisible();
+    expect(within(postrera).getByRole("button", { name: "Nothing" })).toBeVisible();
+    expect(within(postrera).queryByRole("button", { name: /Maicillo/ })).toBeNull();
+  });
 });
