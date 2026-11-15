@@ -98,6 +98,7 @@ Matching errors (missing name, duplicate match) and the MultiPolygon split are t
 
 ## Coordination
 
+- **Region mask (from `data/region-mask`, if merged).** `dissolve` in `outputs.py` drops a border only when two rings share exactly the same vertices. That holds between ADM1 departments of one file, but ADM2 municipalities come from another geoBoundaries file and may not match ADM1 vertex by vertex, which would leave slivers or overlapping holes in `region_mask.geojson`. Add a test with an ADM1 fixture plus an adjacent ADM2 fixture from the real files, and tell the lead if the mask breaks; do not change `dissolve` without the data owner.
 - Lead: confirm the source (step 1) and the final list (step 2) before you write code; merge only after judging ends.
 - Package 05 owner: one source for both lists; review their base PR (you will build on it); tell them when your list PR is in `main` so they can check the final run on a phone.
 - Web map owner (package 03): with a wider region the first map view zooms out; check that cells stay tappable at phone width and report it if they do not (a web change is theirs, not part of this package).
