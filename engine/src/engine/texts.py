@@ -89,11 +89,27 @@ def data_gaps(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
 CRITERION_NAME_ES = {"water": "agua", "soil": "suelo", "income": "ingreso", "risk": "riesgo"}
 
 
+CRITERION_NAME_EN = {"water": "water", "soil": "soil", "income": "income", "risk": "risk"}
+
+
+def _better(deltas: DeltaVsCurrent, names: dict[str, str], conjunction: str) -> str | None:
+    """The better criteria as "a, b and c", in priority order; None when nothing is better."""
+    marks = deltas.model_dump()
+    better = [names[name] for name in PRIORITY_ORDER if marks[name] == "better"]
+    if not better:
+        return None
+    if len(better) < 3:
+        return f" {conjunction} ".join(better)
+    return f"{', '.join(better[:-1])} {conjunction} {better[-1]}"
+
+
 def benefits(deltas: DeltaVsCurrent) -> list[str]:
     """One line naming the criteria that are better than the current rotation."""
-    marks = deltas.model_dump()
-    better = [CRITERION_NAME_ES[name] for name in PRIORITY_ORDER if marks[name] == "better"]
-    if not better:
-        return []
-    listed = " y ".join(better) if len(better) < 3 else f"{', '.join(better[:-1])} y {better[-1]}"
-    return [f"Mejora frente a su rotación en: {listed}."]
+    listed = _better(deltas, CRITERION_NAME_ES, "y")
+    return [f"Mejora frente a su rotación en: {listed}."] if listed else []
+
+
+def benefits_en(deltas: DeltaVsCurrent) -> list[str]:
+    """English version of benefits."""
+    listed = _better(deltas, CRITERION_NAME_EN, "and")
+    return [f"Better than your rotation in: {listed}."] if listed else []
