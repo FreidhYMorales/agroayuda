@@ -6,6 +6,7 @@ docs/work-packages/06-dry-corridor-rest.md).
 """
 
 import json
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +14,13 @@ from test_pipeline import VERSION, fake_daily, fake_soil, write_catalogs
 
 from data_pipeline.__main__ import MUNICIPALITIES, Paths, run
 from data_pipeline.grid import _point_in_rings, cell_id
-from data_pipeline.outputs import DEMO_POINTS, _rings_of, region_rings, select_adm2
+from data_pipeline.outputs import (
+    DEMO_POINTS,
+    _rings_of,
+    region_mask_geojson,
+    region_rings,
+    select_adm2,
+)
 from data_pipeline.parquet_io import read_site_data
 
 RECORDED = Path(__file__).resolve().parent / "fixtures" / "geoboundaries_region_subset.json"
@@ -153,3 +160,37 @@ def test_run_writes_sites_for_cells_only_the_new_municipalities_reach(tmp_path: 
     # Recorded subset: 14 cells before, 16 after; the new ones are north Quiché / Baja Verapaz
     # (Uspantán, Chicamán, Cubulco) and south Chimaltenango / Totonicapán.
     assert after - before == {cell_id(15.5, -90.625), cell_id(14.5, -91.25)}
+
+
+def _segments_cross(a: list[float], b: list[float], c: list[float], d: list[float]) -> bool:
+    def side(p: list[float], q: list[float], r: list[float]) -> float:
+        return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+
+    return side(c, d, a) * side(c, d, b) < 0 and side(a, b, c) * side(a, b, d) < 0
+
+
+def test_map_mask_holes_never_cross_on_the_real_borders() -> None:
+    """Real ADM1 and ADM2 borders do not share vertices; crossing holes make an invalid polygon
+    that MapLibre draws as dark wedges (seen on the phase C preview)."""
+    holes = region_mask_geojson(
+        rings_with_the_list(), VERSION
+    )[
+        "features"
+    ][
+        0
+    ][
+        "geometry"
+    ][  # type: ignore[index]
+        "coordinates"
+    ][1:]
+    segments = [(index, a, b) for index, hole in enumerate(holes) for a, b in pairwise(hole)]
+
+    crossings = [
+        (s[0], t[0])
+        for i, s in enumerate(segments)
+        for t in segments[i + 1 :]
+        if s[0] != t[0] and _segments_cross(s[1], s[2], t[1], t[2])
+    ]
+
+    assert len(holes) >= 2  # Huehuetenango is apart from the eastern departments
+    assert crossings == []
