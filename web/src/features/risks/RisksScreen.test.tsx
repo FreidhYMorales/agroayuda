@@ -82,6 +82,30 @@ describe("RisksScreen ready", () => {
     expect(screen.getByRole("listitem").textContent).toContain("⚠");
   });
 
+  // ◐ is missing from common phone fonts and showed as ◖: the badge draws a
+  // circle with CSS and only uses glyphs every font has.
+  test("each level shows a drawn badge with a plain glyph", () => {
+    renderReady([makeRisk(), bareField(), makeRisk({ level: "low" })]);
+
+    const badges = screen.getAllByTestId("level-badge");
+    expect(badges.map((badge) => badge.textContent)).toEqual(["⚠", "!", "✓"]);
+    expect(badges.map((badge) => badge.dataset.level)).toEqual(["high", "medium", "low"]);
+    expect(document.body.textContent).not.toContain("◐");
+  });
+
+  test("the badge is a circle whose color differs by level", () => {
+    renderReady([makeRisk(), bareField(), makeRisk({ level: "low" })]);
+
+    const badges = screen.getAllByTestId("level-badge");
+    for (const badge of badges) {
+      expect(badge.style.borderRadius).toBe("50%");
+      // Color plus text, never color alone: the badge is decoration.
+      expect(badge.getAttribute("aria-hidden")).toBe("true");
+    }
+    const colors = new Set(badges.map((badge) => badge.style.backgroundColor));
+    expect(colors.size).toBe(3);
+  });
+
   test("the missing data row does not repeat the ❔ icon", () => {
     renderReady([missingData()]);
 
