@@ -166,7 +166,7 @@ Run: `uv run pytest engine data/tests/test_crops_catalog.py` then `make check`.
 | Current wins | a current rotation that beats every alternative | no option has `recommended` true |
 | Ties | two templates with equal score | the earlier CSV row wins |
 | Invalid season | a crop in a season not in its `seasons` | raises `InvalidRequestError` |
-| Golden (pinned H2-H3) | Chiquimula, maíz -> frijol, priorities 5/3/3/3 vs 3/3/5/3 (or more extreme vectors such as 5/1/1/1 vs 1/1/5/1, or another current rotation, pinned from hand-computed scores) | each returns a non-null recommended option, and the two differ |
+| Golden (pinned 2026-11-14, story 14) | Chiquimula (real canícula low), maíz -> maicillo, priorities 5/3/3/3 vs 1/1/5/1, real templates (gandul -> none vs maíz -> frijol, from hand-computed scores) | each returns a non-null recommended option, and the two differ |
 
 ```python
 # engine/tests/test_calendar.py
@@ -180,7 +180,7 @@ Record the hand computation for the golden vectors in the golden test's docstrin
 
 ## Render (by H8) and H20 check
 
-`render.yaml` at the repo root: one free web service for `api/`, Python 3.13, build `uv sync --package api --no-dev --frozen`, start the FastAPI app on `$PORT` (confirm the exact start command against the lead's skeleton), health check path `/health`, auto-deploy from `main`. Give the public URL to the web-map owner for `VITE_API_URL`. Free instances sleep; the web-results owner sets up the pinger. H20 (Sun 04:00, 15 min, whoever of you and the lead is awake): on the Vercel preview, Chiquimula -> risks -> form maíz -> frijol, water first -> comparison; then income first; compare `data_version` in `/health` and the static files; post the result in the team chat.
+`render.yaml` at the repo root: one free web service for `api/`, Python 3.13, build `uv sync --package api --no-dev --frozen`, start the FastAPI app on `$PORT` (confirm the exact start command against the lead's skeleton), health check path `/health`, auto-deploy from `main`. Give the public URL to the web-map owner for `VITE_API_URL`. Free instances sleep; the web-results owner sets up the pinger. H20 (Sun 04:00, 15 min, whoever of you and the lead is awake): on the Vercel preview, Chiquimula -> risks -> form maíz -> maicillo, water first (5/3/3/3) -> comparison; then income first (1/1/5/1); compare `data_version` in `/health` and the static files; post the result in the team chat.
 
 ## Setup (Windows 11, PowerShell)
 
