@@ -27,3 +27,4 @@
 15. [x] 04e0fc7 As a farmer, I want one line saying how each option does on my top priority, and a reminder to check with a local technician, so that I understand and verify the advice. Requires: #13
 16. [x] a31cd4c As a farmer, I want NASA evidence and the data that is missing for each option so that I know what the advice rests on. Requires: #10
 17. [x] 7649473 As a farmer, I want one line naming what each option improves over my rotation so that I see its benefit. Requires: #08
+18. [~] As a farmer choosing a long-cycle crop (gandul, canavalia) with "Nada" in postrera, I want the engine to treat postrera as that crop still in the field, not fallow, so that its soil benefit is not halved. Requires: #03
