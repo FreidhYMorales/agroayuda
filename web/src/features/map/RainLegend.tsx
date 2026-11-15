@@ -1,6 +1,7 @@
 // web/src/features/map/RainLegend.tsx
 import type { CSSProperties } from "react";
-import { MAP_COPY } from "./copy";
+import { mapCopy } from "./copy";
+import { useLang } from "../../lib/urlState";
 import { rainLegendGradient } from "./rainLayer";
 
 const legendStyle: CSSProperties = { padding: "4px 8px" };
@@ -17,13 +18,14 @@ const labelsStyle: CSSProperties = {
 };
 
 export function RainLegend() {
+  const copy = mapCopy(useLang());
   return (
     <div style={legendStyle}>
       {/* The words carry the meaning, so the color bar is hidden from assistive tech. */}
       <div data-testid="rain-legend-bar" aria-hidden="true" style={barStyle} />
       <div style={labelsStyle}>
-        <span>{MAP_COPY.rainLow}</span>
-        <span>{MAP_COPY.rainHigh}</span>
+        <span>{copy.rainLow}</span>
+        <span>{copy.rainHigh}</span>
       </div>
     </div>
   );

@@ -2,7 +2,8 @@
 import type { CSSProperties } from "react";
 import type { DemoPoint } from "../../contracts/contracts";
 import { buttonStyle } from "../../ui/buttonStyles";
-import { MAP_COPY } from "./copy";
+import { mapCopy } from "./copy";
+import { useLang } from "../../lib/urlState";
 import { DemoPlaceList } from "./DemoPlaceList";
 import type { SiteState } from "./useSite";
 
@@ -38,6 +39,7 @@ export function MapStates({
   onRetry,
   onPickPlace,
 }: MapStatesProps) {
+  const copy = mapCopy(useLang());
   // The empty message would mislead when a more specific notice is already shown.
   const showEmpty = site.status === "empty" && !geolocationDenied && !mapError;
   // The list is the no-map fallback: shown whenever the text says "elija un lugar".
@@ -45,24 +47,24 @@ export function MapStates({
 
   return (
     <>
-      {mapError && <p role="alert">{MAP_COPY.mapError}</p>}
-      {geolocationDenied && <p role="alert">{MAP_COPY.geolocationDenied}</p>}
-      {showEmpty && <p>{MAP_COPY.empty}</p>}
+      {mapError && <p role="alert">{copy.mapError}</p>}
+      {geolocationDenied && <p role="alert">{copy.geolocationDenied}</p>}
+      {showEmpty && <p>{copy.empty}</p>}
 
       {site.status === "loading" && (
         <div>
           <div data-testid="map-loading-card" aria-busy="true" style={loadingCardStyle} />
-          {site.slow && <p role="status">{MAP_COPY.slow}</p>}
+          {site.slow && <p role="status">{copy.slow}</p>}
         </div>
       )}
 
       {site.status === "error" && site.error === "outside_region" && (
-        <p role="alert">{MAP_COPY.outsideRegion}</p>
+        <p role="alert">{copy.outsideRegion}</p>
       )}
       {site.status === "error" && site.error !== "outside_region" && (
         <div style={panelStyle}>
           <button type="button" style={retryStyle} onClick={onRetry}>
-            {MAP_COPY.retry}
+            {copy.retry}
           </button>
         </div>
       )}

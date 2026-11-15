@@ -139,3 +139,18 @@ describe("useAppState", () => {
     expect(result.current[0]).toMatchObject({ step: "form", lat: 14.7, lon: -89.5 });
   });
 });
+
+describe("language in the URL", () => {
+  test("lang=en reads as English and is written back", () => {
+    const state = readState("?step=map&lang=en");
+
+    expect(state.lang).toBe("en");
+    expect(new URLSearchParams(toSearch(state)).get("lang")).toBe("en");
+  });
+
+  test("no lang or an unknown value reads as Spanish", () => {
+    expect(readState("?step=map").lang).toBeUndefined();
+    expect(readState("?step=map&lang=fr").lang).toBeUndefined();
+    expect(new URLSearchParams(toSearch(readState("?step=map"))).has("lang")).toBe(false);
+  });
+});

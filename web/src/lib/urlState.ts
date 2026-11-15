@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { CropId, Priorities, RecommendationRequest } from "../contracts/contracts";
 
 export type Step = "map" | "risks" | "form" | "results";
+export type Lang = "es" | "en";
 
 export interface AppState {
   step: Step;
@@ -13,6 +14,7 @@ export interface AppState {
   postrera?: CropId;
   priorities: Priorities;
   irrigation?: boolean;
+  lang?: "en"; // Spanish is the default, so only English is kept in the URL.
 }
 
 const STEPS: readonly Step[] = ["map", "risks", "form", "results"];
@@ -65,6 +67,8 @@ export function readState(search: string): AppState {
   if (irr === "1") state.irrigation = true;
   else if (irr === "0") state.irrigation = false;
 
+  if (params.get("lang") === "en") state.lang = "en";
+
   return state;
 }
 
@@ -81,6 +85,7 @@ export function toSearch(state: AppState): string {
   params.set("i", String(state.priorities.income));
   params.set("r", String(state.priorities.risk));
   if (state.irrigation !== undefined) params.set("irr", state.irrigation ? "1" : "0");
+  if (state.lang !== undefined) params.set("lang", state.lang);
   return `?${params.toString()}`;
 }
 
@@ -126,4 +131,10 @@ export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
   }, []);
 
   return [state, update];
+}
+
+// The current language, Spanish unless the URL says lang=en.
+export function useLang(): Lang {
+  const [state] = useAppState();
+  return state.lang ?? "es";
 }

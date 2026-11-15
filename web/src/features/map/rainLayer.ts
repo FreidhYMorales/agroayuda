@@ -1,6 +1,7 @@
 // web/src/features/map/rainLayer.ts
 import type { Polygon, RainCellProperties } from "../../contracts/contracts";
-import { MAP_COPY } from "./copy";
+import { mapCopy } from "./copy";
+import type { Lang } from "../../lib/urlState";
 
 export interface RainCollection {
   type: "FeatureCollection";
@@ -68,6 +69,6 @@ export function rainLegendGradient(): string {
 }
 
 // Detail shown when the farmer opens the source line.
-export function rainSourceDetail(properties: RainCellProperties): string {
-  return `${properties.source} · ${MAP_COPY.rainCells(properties.resolution_km)}`;
+export function rainSourceDetail(properties: RainCellProperties, lang: Lang = "es"): string {
+  return `${properties.source} · ${mapCopy(lang).rainCells(properties.resolution_km)}`;
 }

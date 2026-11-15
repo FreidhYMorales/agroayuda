@@ -467,3 +467,59 @@ describe("MapScreen geolocation and taps", () => {
     expectPointWithoutPlace(onSelectPoint.mock.calls[0][0], 14.7, -89.5);
   });
 });
+
+describe("MapScreen language", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("with lang=en in the URL the map texts are in English", async () => {
+    window.history.replaceState(null, "", "/?step=map&lang=en");
+
+    await renderScreen();
+
+    expect(screen.getByRole("button", { name: "📍 Where is your plot?" })).toBeTruthy();
+    expect(screen.getByText("Tap the map or pick a place from the list")).toBeTruthy();
+    expect(screen.getByText("little rain")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Data: NASA POWER ›" })).toBeTruthy();
+    expect(screen.queryByText(EMPTY_TEXT)).toBeNull();
+  });
+
+  test("with lang=en the summary card and the source detail are in English", async () => {
+    window.history.replaceState(null, "", "/?step=map&lang=en");
+
+    await renderScreen({
+      site: { ...READY, site: { ...chiquimulaSite, cell_resolution_km: 61.7 } },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Data: NASA POWER ›" }));
+
+    expect(screen.getByRole("heading", { name: "Your area" })).toBeTruthy();
+    expect(screen.getByText("Area about 60 km across (regional data, not your plot)")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "See risks" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "See recommendations →" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Or pick a place: ›" })).toBeTruthy();
+    expect(
+      screen.getByText("NASA POWER (PRECTOTCORR diario, 1991-2020) · cells of about 60 km"),
+    ).toBeTruthy();
+  });
+});
+
+describe("MapScreen language toggle", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("EN switches the map to English and puts lang=en in the URL; ES switches back", async () => {
+    await renderScreen();
+
+    fireEvent.click(screen.getByRole("button", { name: "English" }));
+
+    expect(screen.getByRole("button", { name: "📍 Where is your plot?" })).toBeTruthy();
+    expect(new URLSearchParams(window.location.search).get("lang")).toBe("en");
+
+    fireEvent.click(screen.getByRole("button", { name: "Español" }));
+
+    expect(screen.getByRole("button", { name: LOCATE_LABEL })).toBeTruthy();
+    expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
+  });
+});

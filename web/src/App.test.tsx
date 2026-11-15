@@ -1,5 +1,5 @@
 // web/src/App.test.tsx
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, type MockInstance, test, vi } from "vitest";
 import { App } from "./App";
 import { getSite, type SiteResult } from "./api/site";
@@ -361,5 +361,47 @@ describe("App error boundary", () => {
     fireEvent.click(retry);
 
     expect(screen.getByTestId("risks-screen")).toBeTruthy();
+  });
+});
+
+describe("App language", () => {
+  afterEach(() => {
+    document.documentElement.lang = "es-GT";
+  });
+
+  test("lang=en makes the page English; no lang keeps it Spanish (Guatemala)", () => {
+    goTo("?lang=en");
+    renderApp();
+
+    expect(document.documentElement.lang).toBe("en");
+
+    cleanup();
+    goTo("");
+    renderApp();
+
+    expect(document.documentElement.lang).toBe("es-GT");
+  });
+
+  test("English is kept when going to the risks screen and back, also with browser back", () => {
+    goTo(`?${POINT}&lang=en`);
+    renderApp();
+
+    fireEvent.click(screen.getByText("view-risks"));
+    fireEvent.click(screen.getByText("risks-close"));
+
+    expect(screen.getByTestId("map-screen")).toBeTruthy();
+    expect(params().get("lang")).toBe("en");
+    expect(document.documentElement.lang).toBe("en");
+
+    fireEvent.click(screen.getByText("view-risks"));
+    act(() => {
+      window.history.back();
+    });
+
+    return waitFor(() => {
+      expect(screen.getByTestId("map-screen")).toBeTruthy();
+      expect(params().get("lang")).toBe("en");
+      expect(document.documentElement.lang).toBe("en");
+    });
   });
 });

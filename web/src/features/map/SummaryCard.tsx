@@ -3,7 +3,8 @@ import type { CSSProperties } from "react";
 import type { SiteProfile } from "../../contracts/contracts";
 import { riskTitle, sortRisks } from "../risks/riskTitle";
 import { buttonStyle } from "../../ui/buttonStyles";
-import { MAP_COPY } from "./copy";
+import { mapCopy } from "./copy";
+import { useLang } from "../../lib/urlState";
 
 export interface SummaryCardProps {
   site: SiteProfile;
@@ -26,24 +27,25 @@ export function SummaryCard({
   onViewRecommendations,
   onPickPlace,
 }: SummaryCardProps) {
+  const copy = mapCopy(useLang());
   const topRisk = sortRisks(site.risks)[0];
   const showTopRisk = topRisk !== undefined && topRisk.level === "high";
 
   return (
     <section style={cardStyle}>
-      <h2 style={titleStyle}>{placeName ?? MAP_COPY.defaultTitle}</h2>
-      <p>{MAP_COPY.zoneLine(site.cell_resolution_km)}</p>
+      <h2 style={titleStyle}>{placeName ?? copy.defaultTitle}</h2>
+      <p>{copy.zoneLine(site.cell_resolution_km)}</p>
       {showTopRisk && <p>{`⚠ ${riskTitle(topRisk)}`}</p>}
       <div style={actionsStyle}>
         <button type="button" style={buttonStyle("secondary")} onClick={onViewRisks}>
-          {MAP_COPY.viewRisks}
+          {copy.viewRisks}
         </button>
         <button type="button" style={buttonStyle("primary")} onClick={onViewRecommendations}>
-          {MAP_COPY.viewRecommendations}
+          {copy.viewRecommendations}
         </button>
       </div>
       <button type="button" style={{ ...buttonStyle("link"), marginTop: 8 }} onClick={onPickPlace}>
-        {MAP_COPY.pickPlace}
+        {copy.pickPlace}
       </button>
     </section>
   );
