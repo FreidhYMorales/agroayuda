@@ -1,5 +1,6 @@
 // web/src/features/risks/riskTitle.ts
 import type { SiteRisk } from "../../contracts/contracts";
+import type { Lang } from "../../lib/urlState";
 
 // Lower number = more severe. "unknown" goes last.
 const SEVERITY: Record<SiteRisk["level"], number> = {
@@ -16,7 +17,37 @@ const BARE_FIELD_LEVEL: Partial<Record<SiteRisk["level"], string>> = {
   low: "bajo",
 };
 
-export function riskTitle(risk: SiteRisk): string {
+// English names the level with the same words for every risk; canícula keeps
+// the local word so it matches the map and the data.
+const LEVEL_EN: Partial<Record<SiteRisk["level"], string>> = {
+  high: "Strong",
+  medium: "Moderate",
+  low: "Mild",
+};
+const BARE_FIELD_LEVEL_EN: Partial<Record<SiteRisk["level"], string>> = {
+  high: "high",
+  medium: "moderate",
+  low: "low",
+};
+
+function riskTitleEn(risk: SiteRisk): string {
+  const level = LEVEL_EN[risk.level];
+  switch (risk.id) {
+    case "canicula":
+      return level === undefined ? "Dry spell (canícula)" : `${level} dry spell (canícula)`;
+    case "bare_field": {
+      const bare = BARE_FIELD_LEVEL_EN[risk.level];
+      return bare === undefined ? "Bare field" : `Bare field · ${bare}`;
+    }
+    case "heat":
+      return level === undefined ? "Heat" : `${level} heat`;
+    case "missing_data":
+      return "❔ Soil: no data";
+  }
+}
+
+export function riskTitle(risk: SiteRisk, lang: Lang = "es"): string {
+  if (lang === "en") return riskTitleEn(risk);
   switch (risk.id) {
     case "canicula":
       if (risk.level === "high") return "Canícula fuerte";
