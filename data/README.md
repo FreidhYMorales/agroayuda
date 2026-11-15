@@ -95,8 +95,13 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
   from geoBoundaries gbOpen GTM ADM2 at the same commit, matched on name and department. Source of
   the list: SESAN (2016), *Plan de Respuesta para la Atención del Hambre Estacional 2016*, Anexo 1
   "Departamentos, municipios y población del Corredor Seco", pp. 28-30. Huehuetenango: Aguacatán,
-  Huehuetenango, Malacatancito (p. 29). Whole municipalities are added, even where the annex says
-  only part of the population lives inside the corridor.
+  Huehuetenango, Malacatancito (p. 29). Rest of the annex: 29 municipalities in Baja Verapaz (7),
+  Chimaltenango (3), Guatemala (5), Quiché (10) and Totonicapán (4). The annex's south-coast
+  departments (Escuintla, Retalhuleu, San Marcos, Santa Rosa, Suchitepéquez; 16 municipalities)
+  are left out: the plan adds them as "otros departamentos afectados", outside the
+  11-department Dry Corridor of its section 4.1. Whole municipalities are added, even where the
+  annex says only part of the population lives inside the corridor. Four names follow
+  geoBoundaries, not the annex: Comalapa, San Raimundo, Uspantán, San Bartolo.
 - Mountain terrain: a POWER cell is about 56 x 67 km, so in Huehuetenango one cell mixes dry
   valleys and highlands; the regional rain and dry-spell data are less faithful there than in the
   eastern lowlands.
