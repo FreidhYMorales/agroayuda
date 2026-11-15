@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import type { SiteRisk } from "../../contracts/contracts";
 import { RisksScreen } from "./RisksScreen";
+import { nullSoilSite } from "../map/siteFixture";
 
 afterEach(cleanup);
 
@@ -174,5 +175,26 @@ describe("RisksScreen loading and error", () => {
     fireEvent.click(screen.getByRole("button", { name: "Intentar de nuevo" }));
 
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("RisksScreen with the null soil example", () => {
+  test("lists canícula, suelo sin cultivo and suelo sin dato in that order", () => {
+    renderReady(nullSoilSite.risks);
+
+    const rows = screen.getAllByRole("listitem");
+
+    expect(rows).toHaveLength(3);
+    expect(rows[0].textContent).toContain("Canícula fuerte");
+    expect(rows[1].textContent).toContain("Suelo sin cultivo");
+    expect(rows[2].textContent).toContain("Suelo: sin dato");
+  });
+
+  test("the missing data row names its source without the parenthesis", () => {
+    renderReady(nullSoilSite.risks);
+
+    expect(
+      screen.getByText("Dato: SoilGrids · muestra cerca del centro de la zona"),
+    ).toBeTruthy();
   });
 });
