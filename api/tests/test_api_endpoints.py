@@ -3,10 +3,10 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import duckdb
 import pytest
 from fastapi.testclient import TestClient
 
+from api.dev_data import build_data_dir
 from api.main import app, get_data_dir
 from contracts import ErrorResponse, RecommendationResponse, SiteProfile
 
@@ -24,17 +24,7 @@ NO_DATA_CELL = {"lat": 14.70, "lon": -90.8}
 @pytest.fixture
 def data_dir(tmp_path: Path) -> Path:
     """Parquet fixtures built from the frozen examples (stand-in for the data pipeline)."""
-    con = duckdb.connect()
-    site_example = (EXAMPLES / "site_data.json").as_posix()
-    con.execute(
-        "COPY (SELECT * REPLACE (CAST(data_version AS VARCHAR) AS data_version) "
-        f"FROM read_json('{site_example}')) TO '{(tmp_path / 'sites.parquet').as_posix()}' "
-        "(FORMAT parquet)"
-    )
-    con.execute("CREATE TABLE region (ring DOUBLE[][])")
-    con.executemany("INSERT INTO region VALUES (?)", [[ring] for ring in REGION_RINGS])
-    con.execute(f"COPY region TO '{(tmp_path / 'region.parquet').as_posix()}' (FORMAT parquet)")
-    con.close()
+    build_data_dir(tmp_path, REGION_RINGS)
     return tmp_path
 
 
@@ -63,7 +53,7 @@ def test_health_reports_the_data_version(client: TestClient) -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "data_version": "2026-11-14"}
+    assert response.json() == {"status": "ok", "data_version": "2026-11-14", "engine": "real"}
 
 
 def test_site_returns_the_profile_of_the_tapped_cell(client: TestClient) -> None:
@@ -143,3 +133,13 @@ def test_cors_allows_vercel_and_localhost_only(
 def test_error_fixtures_match_the_api_shape() -> None:
     for path in EXAMPLES.glob("error_response_*.json"):
         ErrorResponse.model_validate(json.loads(path.read_text("utf-8")))
+
+
+def test_real_engine_rejects_a_postrera_only_crop_in_primera(client: TestClient) -> None:
+    response = client.post("/recommendations", json=request_body(CHIQUIMULA, primera="maicillo"))
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "error": "invalid_request",
+        "detail": "maicillo is not a primera crop",
+    }

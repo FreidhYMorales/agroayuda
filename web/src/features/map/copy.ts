@@ -5,6 +5,7 @@ export const MAP_COPY = {
   viewRisks: "Ver riesgos",
   viewRecommendations: "Ver recomendaciones →",
   pickPlace: "O elija un lugar: ›",
+  locate: "📍 ¿Dónde está su parcela?",
   zoneLine: (km: number) => `Zona de unos ${km} km de lado (dato regional, no de su parcela)`,
   empty: "Toque el mapa o elija un lugar de la lista",
   slow: "Despertando el servidor, un momento…",

@@ -17,7 +17,7 @@ AI coding assistants helped write code in every module. A human chose what to bu
 | Module | Owner | SI tool(s) used | How |
 |---|---|---|---|
 | `contracts/`, `api/`, CI, repo setup | Lead | Claude Code (Anthropic) | Scaffolding, contract models from the team's spec, API endpoints, tests written first |
-| `data/` pipeline, `engine/src/engine/risks.py` | Data owner | _fill in_ | _fill in_ |
+| `data/` pipeline, `engine/src/engine/risks.py` | Data owner | Claude Code (Anthropic) | Pipeline and risk code and tests written test-first with the assistant from the work package; the owner chose N, the cut-offs and the SoilGrids depth, and the region-wide dry-day check was run on real POWER data before any rule was fixed |
 | `engine/` | Engine owner | _fill in_ | _fill in_ |
 | `web/` map and risks | Web-map owner | _fill in_ | _fill in_ |
 | `web/` form and comparison | Web-results owner | _fill in_ | _fill in_ |

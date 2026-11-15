@@ -17,8 +17,8 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 
 | Name | URL | Used for | Licence | Owner |
 |---|---|---|---|---|
-| SoilGrids (ISRIC) | https://soilgrids.org/ | Soil clay, sand, pH and organic carbon at cell centers | _verify_ | Data |
-| geoBoundaries (ADM1 Guatemala) | https://www.geoboundaries.org/ | Dry Corridor region outline | _verify_ | Data |
+| SoilGrids (ISRIC) | https://soilgrids.org/ | Soil clay, sand, pH and organic carbon at cell centers | CC BY 4.0 | Data |
+| geoBoundaries (ADM1 Guatemala) | https://www.geoboundaries.org/ | Dry Corridor region outline | ODbL 1.0 (source OpenStreetMap, per the geoBoundaries GTM ADM1 metadata) | Data |
 | OpenFreeMap tiles | https://openfreemap.org/ | Basemap tiles | _verify_ | Web map |
 | OpenStreetMap data (via OpenFreeMap) | https://www.openstreetmap.org/copyright | Basemap content; attribution shown on the map | ODbL (see link) | Web map |
 

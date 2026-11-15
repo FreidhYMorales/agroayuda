@@ -145,7 +145,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 │ Zona de unos 60 km de    │
 │ lado (dato regional, no  │
 │ de su parcela)           │
-│ ⚠ Canícula fuerte        │
+│ ● Canícula baja          │
 │ [ Ver riesgos ]          │
 │ [ Ver recomendaciones → ]│
 │ O elija un lugar: ›      │
@@ -181,10 +181,10 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 │ ═  Chiquimula        ✕   │
 │ Riesgos de esta zona     │
 │──────────────────────────│
-│ ⚠ Canícula fuerte      › │
-│   mediados jul-ago       │
 │ ⚠ Suelo sin cultivo    › │
 │   dic-abr (estimado)     │
+│ ● Canícula baja        › │
+│   1 de 30 años, jul-ago  │
 │ ● Calor moderado *     › │
 │ ❔ Suelo: sin dato **   › │
 │──────────────────────────│
@@ -198,7 +198,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 - Risks first, detail one tap away. Sorted by severity; tapping a risk shows a plain explanation, period and "¿De dónde sale este dato?" (source, value, threshold).
 - Bare-field period is an estimate and says "estimado". Soil says "muestra cerca del centro de la zona".
-- Risk wording is generated from `level` (e.g. "fuerte" for high, "moderada" for medium); mocks and the video script follow the real level found in the H0-H2 check. ❔ rows appear only for data the system tried to load and did not get.
+- Risk wording is generated from `level` (e.g. "fuerte" for high, "moderada" for medium, "baja" for low); mocks and the video script follow the real level found in the H0-H2 check. ❔ rows appear only for data the system tried to load and did not get.
 - States: no strong risks -> "No encontramos riesgos fuertes en esta zona"; loading -> grey rows; error -> "Intentar de nuevo".
 
 | UI element | Backend demand |
@@ -293,7 +293,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ## Demo data
 
-- Golden point: Chiquimula (14.70 N, -89.50 W), snapping to the POWER cell centered at (14.5, -89.375); its id goes in `data/README.md`. Expected: canícula risk at least "medium"; current rotation maíz (primera) -> frijol (postrera); exactly 3 options; water-first and income-first priorities recommend different options.
+- Golden point: Chiquimula (14.70 N, -89.50 W), snapping to the POWER cell centered at (14.5, -89.375); its id goes in `data/README.md`. Expected: canícula risk equals the documented rule applied to the cell's real data (H0-H2 check, 2026-11-14: "low", 1 of 30 years with a 20+ day dry spell; every region cell is low, see `data/README.md`); current rotation maíz (primera) -> frijol (postrera); exactly 3 options; water-first and income-first priorities recommend different options.
 - If the golden cell is not high, the demo uses the highest-share cell in the region (its name in `demo_points.json`); if no cell is high, the demo shows the comparison without F1/F2 badges. Cut-offs are never tuned.
 - Contrast for tests: a synthetic wetter fixture (not a real cell).
 - ❔ demo: only if a null-soil cell exists once the grid exists; otherwise uncertainty shows through "estimado" (bare field) and the confidence row.
