@@ -3,6 +3,7 @@
 from contracts import (
     Criteria,
     CropCatalogEntry,
+    CropId,
     DeltaVsCurrent,
     Evidence,
     Priorities,
@@ -84,6 +85,35 @@ def data_gaps(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
         if crop.id != "none" and not crop.local_source
     ]
     return [*([SOIL_GAP_ES] if missing_soil else []), *general, POWER_GAP_ES]
+
+
+POWER_GAP_EN = "NASA POWER rain is a regional estimate."
+SOIL_GAP_EN = "There is no soil data for this point."
+# The catalog only carries the Spanish name; same English names as the web form.
+CROP_NAME_EN: dict[CropId, str] = {
+    "maiz": "Maize",
+    "frijol": "Beans",
+    "maiz_frijol": "Maize with beans",
+    "maicillo": "Sorghum",
+    "gandul": "Pigeon pea",
+    "mucuna": "Velvet bean",
+    "canavalia": "Jack bean",
+    "ajonjoli": "Sesame",
+    "ayote": "Squash",
+    "none": "Nothing",
+}
+
+
+def data_gaps_en(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
+    """English version of data_gaps."""
+    soil = site.soil
+    missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+    general = [
+        f"{CROP_NAME_EN[crop.id]}: general value, check locally."
+        for crop in crops
+        if crop.id != "none" and not crop.local_source
+    ]
+    return [*([SOIL_GAP_EN] if missing_soil else []), *general, POWER_GAP_EN]
 
 
 CRITERION_NAME_ES = {"water": "agua", "soil": "suelo", "income": "ingreso", "risk": "riesgo"}
