@@ -56,6 +56,11 @@ vi.mock("./features/map/useDemoPlaces", () => {
   return { useDemoPlaces: () => places };
 });
 
+// Package 04 owns the form and results flow; here we only check that App shows it.
+vi.mock("./features/comparison/ResultsFlow", () => ({
+  ResultsFlow: () => <div data-testid="results-flow" />,
+}));
+
 vi.mock("./features/risks/RisksScreen", () => ({
   RisksScreen: (props: RisksScreenProps) => {
     if (crash.risks) throw new Error("risks screen crashed");
@@ -250,7 +255,7 @@ describe("App form and results steps", () => {
     fireEvent.click(screen.getByText("view-recommendations"));
 
     expect(params().get("step")).toBe("form");
-    expect(screen.getByTestId("form-placeholder")).toBeTruthy();
+    expect(screen.getByTestId("results-flow")).toBeTruthy();
     expect(screen.queryByTestId("map-screen")).toBeNull();
   });
 
@@ -261,23 +266,23 @@ describe("App form and results steps", () => {
     fireEvent.click(screen.getByText("risks-continue"));
 
     expect(params().get("step")).toBe("form");
-    expect(screen.getByTestId("form-placeholder")).toBeTruthy();
+    expect(screen.getByTestId("results-flow")).toBeTruthy();
   });
 
-  test("a form URL with a point shows the form placeholder", () => {
+  test("a form URL with a point shows the form and results flow", () => {
     goTo(`?step=form&${POINT}`);
 
     renderApp();
 
-    expect(screen.getByTestId("form-placeholder")).toBeTruthy();
+    expect(screen.getByTestId("results-flow")).toBeTruthy();
   });
 
-  test("a results URL with a point shows the results placeholder", () => {
+  test("a results URL with a point shows the form and results flow", () => {
     goTo(`?step=results&${POINT}&p=maiz&s=frijol`);
 
     renderApp();
 
-    expect(screen.getByTestId("results-placeholder")).toBeTruthy();
+    expect(screen.getByTestId("results-flow")).toBeTruthy();
   });
 
   test.each(["risks", "form", "results"])(
@@ -289,8 +294,7 @@ describe("App form and results steps", () => {
 
       expect(screen.getByTestId("map-screen")).toBeTruthy();
       expect(screen.queryByTestId("risks-screen")).toBeNull();
-      expect(screen.queryByTestId("form-placeholder")).toBeNull();
-      expect(screen.queryByTestId("results-placeholder")).toBeNull();
+      expect(screen.queryByTestId("results-flow")).toBeNull();
       expect(getSiteMock).not.toHaveBeenCalled();
     },
   );

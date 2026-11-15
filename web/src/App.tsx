@@ -1,5 +1,6 @@
 // web/src/App.tsx
 import { Component, type ReactNode } from "react";
+import { ResultsFlow } from "./features/comparison/ResultsFlow";
 import { MAP_COPY } from "./features/map/copy";
 import { MapScreen, type MapSelection } from "./features/map/MapScreen";
 import { useDemoPlaces } from "./features/map/useDemoPlaces";
@@ -68,9 +69,9 @@ function Screens() {
     );
   }
 
-  // Placeholders until package 04 delivers FormScreen and ComparisonScreen.
-  if (step === "form") return <div data-testid="form-placeholder" />;
-  if (step === "results") return <div data-testid="results-placeholder" />;
+  // Package 04: form -> comparison -> detail. It reads and writes the same URL
+  // state, so it picks the form or the results from `step` itself.
+  if (step === "form" || step === "results") return <ResultsFlow />;
 
   return (
     <MapScreen
