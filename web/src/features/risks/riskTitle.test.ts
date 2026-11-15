@@ -35,8 +35,15 @@ describe("riskTitle", () => {
     expect(riskTitle(risk("canicula", "unknown"))).toBe("Canícula");
   });
 
-  test("heat falls back to the base title", () => {
-    expect(riskTitle(risk("heat", "high"))).toBe("Calor");
+  // "Calor moderado" comes from the risks wireframe in docs/spec.md.
+  test("heat names its level", () => {
+    expect(riskTitle(risk("heat", "high"))).toBe("Calor fuerte");
+    expect(riskTitle(risk("heat", "medium"))).toBe("Calor moderado");
+    expect(riskTitle(risk("heat", "low"))).toBe("Calor bajo");
+  });
+
+  test("unknown heat falls back to the base title", () => {
+    expect(riskTitle(risk("heat", "unknown"))).toBe("Calor");
   });
 });
 
