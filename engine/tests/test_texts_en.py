@@ -131,3 +131,13 @@ def test_high_canicula_evidence_in_english(site: SiteProfile) -> None:
         f"There was a long dry spell in 21 of 30 years (1991-2020). {REGIONAL_NOTE_EN}"
     )
     assert evidence.value_en == "21 of 30 years"
+
+
+def test_medium_canicula_evidence_in_english(site: SiteProfile) -> None:
+    [evidence] = canicula_evidence(with_share(site, "medium", 0.5))
+
+    assert evidence.text_en == (
+        "Long dry spell (canícula) in July and August in some years. "
+        f"There was a long dry spell in 15 of 30 years (1991-2020). {REGIONAL_NOTE_EN}"
+    )
+    assert evidence.value_en == "15 of 30 years"
