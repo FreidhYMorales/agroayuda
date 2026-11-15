@@ -41,6 +41,7 @@ from data_pipeline.outputs import (
     region_geojson,
     region_mask_geojson,
     region_rings,
+    union_rings,
     write_catalog_parquet,
     write_json,
     write_region_parquet,
@@ -177,7 +178,7 @@ def run(
 
     paths.output.mkdir(parents=True, exist_ok=True)
     write_site_data(sites, paths.output / "sites.parquet")
-    write_region_parquet(rings, paths.output / "region.parquet")
+    write_region_parquet(union_rings(rings), paths.output / "region.parquet")
     write_catalog_parquet(crops, paths.output / "crops.parquet")
     write_catalog_parquet(templates, paths.output / "rotation_templates.parquet")
 
