@@ -102,3 +102,10 @@ Matching errors (missing name, duplicate match) and the MultiPolygon split are t
 - Lead: confirm the source (step 1) and the final list (step 2) before you write code; merge only after judging ends.
 - Package 05 owner: one source for both lists; review their base PR (you will build on it); tell them when your list PR is in `main` so they can check the final run on a phone.
 - Web map owner (package 03): with a wider region the first map view zooms out; check that cells stay tappable at phone width and report it if they do not (a web change is theirs, not part of this package).
+
+## Lead decisions (2026-11-15)
+
+- **Source confirmed:** SESAN, *Plan de Respuesta para la Atención del Hambre Estacional 2016*, Anexo 1, printed pages 28-30 (https://portal.siinsan.gob.gt/wp-content/uploads/Plan-de-Respuesta-para-la-Atencion-del-Hambre-Estacional-2016.pdf). Same source as package 05.
+- **South coast out.** The plan defines the Dry Corridor as 11 departments (section 4.1) and adds Escuintla, Retalhuleu, San Marcos, Santa Rosa and Suchitepéquez only as "otros departamentos afectados". Those 16 municipalities are not listed. Your list is the 29 municipalities of Baja Verapaz (7), Chimaltenango (3), Guatemala (5), Quiché (10) and Totonicapán (4) from Anexo 1.
+- **Whole municipalities, no threshold.** List every Anexo 1 municipality of those departments, even when only part of it is inside the corridor; the `data/README.md` mountain-terrain note covers it.
+- **geoBoundaries spelling** (checked against the ADM2 file at `9469f09`): use "Comalapa", "San Raimundo", "Uspantán" and "San Bartolo"; the other 25 match the Anexo 1 names. Ciudad de Guatemala (14.63, -90.51) stays outside the region with this list.
