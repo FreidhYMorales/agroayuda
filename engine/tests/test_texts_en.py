@@ -2,8 +2,8 @@
 
 import pytest
 
-from contracts import Criteria, Priorities
-from engine.texts import reason_line_en
+from contracts import Criteria, DeltaVsCurrent, Priorities
+from engine.texts import benefits_en, reason_line_en
 
 CRITERIA = Criteria(water=4, soil=2, income=3, risk=5)
 
@@ -27,3 +27,21 @@ CRITERIA = Criteria(water=4, soil=2, income=3, risk=5)
 )
 def test_reason_line_in_english(priorities: Priorities, expected: str) -> None:
     assert reason_line_en(priorities, CRITERIA) == expected
+
+
+@pytest.mark.parametrize(
+    ("deltas", "expected"),
+    [
+        (
+            DeltaVsCurrent(water="better", soil="better", income="same", risk="worse"),
+            ["Better than your rotation in: water and soil."],
+        ),
+        (
+            DeltaVsCurrent(water="better", soil="worse", income="better", risk="better"),
+            ["Better than your rotation in: water, income and risk."],
+        ),
+        (DeltaVsCurrent(water="same", soil="worse", income="same", risk="same"), []),
+    ],
+)
+def test_benefits_in_english(deltas: DeltaVsCurrent, expected: list[str]) -> None:
+    assert benefits_en(deltas) == expected
