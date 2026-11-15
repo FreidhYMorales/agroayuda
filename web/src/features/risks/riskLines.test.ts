@@ -100,3 +100,25 @@ describe("riskPeriod in English", () => {
     expect(riskPeriod(makeRisk({ id: "heat", period_months: [4] }), "en")).toBe("Apr");
   });
 });
+
+describe("riskSourceLine in English", () => {
+  test("canícula says in how many of the 30 years", () => {
+    expect(riskSourceLine(makeRisk({ value: 0.4 }), "en")).toBe(
+      "Data: NASA POWER · in 12 of 30 years",
+    );
+  });
+
+  test("missing data says where the soil sample is", () => {
+    const risk = makeRisk({ id: "missing_data", level: "unknown", source: "SoilGrids 2.0" });
+
+    expect(riskSourceLine(risk, "en")).toBe(
+      "Data: SoilGrids 2.0 · sample near the center of the zone",
+    );
+  });
+
+  test("other risks show only the source", () => {
+    expect(riskSourceLine(makeRisk({ id: "heat", source: "NASA POWER (T2M_MAX)" }), "en")).toBe(
+      "Data: NASA POWER",
+    );
+  });
+});
