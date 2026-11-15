@@ -39,11 +39,29 @@ function ScoreBar({ value }: { value: number }) {
 
 function BadgeView({ badge }: { badge: Badge }) {
   if (badge.kind === "none") return null;
+  if (badge.kind === "recommended") {
+    // "Recomendada" does not fit a ~65 px column on a 360-390 px phone: the
+    // column shows the ✓ and the word is in the line above the table
+    // (recommendedLine). Screen readers still hear it here.
+    return (
+      <span className="ag-badge ag-badge-icon" data-badge={badge.kind}>
+        <span aria-hidden="true">✓</span>
+        <span style={visuallyHidden}> Recomendada</span>
+      </span>
+    );
+  }
   return (
     <span className="ag-badge" data-badge={badge.kind}>
       {badge.text}
     </span>
   );
+}
+
+/** "✓ Recomendada: Op.1 (Gandul → Nada)", or null when no column is recommended. */
+function recommendedLine(columns: RotationOption[]): string | null {
+  const index = columns.findIndex((option) => columnBadge(option).kind === "recommended");
+  if (index === -1) return null;
+  return `✓ Recomendada: ${COLUMN_TITLES[index]} (${sequenceLabel(columns[index].sequence)})`;
 }
 
 type ComparisonTableProps = {
@@ -249,10 +267,12 @@ function ResultsView(props: ResultsViewProps) {
   }
 
   const summary = summaryMessage(state.options);
+  const recommended = recommendedLine(columns);
   return (
     <Page>
       {back}
       {summary ? <p className="ag-info">{summary}</p> : null}
+      {recommended ? <p className="ag-recommended-line">{recommended}</p> : null}
       <div className="ag-card" style={{ padding: "8px 4px" }}>
         <ComparisonTable options={state.options} onSelect={setSelected} />
       </div>
