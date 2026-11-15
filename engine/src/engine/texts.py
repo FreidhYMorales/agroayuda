@@ -1,4 +1,4 @@
-"""One-line Spanish texts for each option (Guatemala, usted). Copy approved in story 15."""
+"""One-line texts for each option: Spanish (Guatemala, usted; story 15) and English (i18n 05)."""
 
 from contracts import (
     Criteria,
