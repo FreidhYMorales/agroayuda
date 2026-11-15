@@ -10,6 +10,7 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+import duckdb
 from test_pipeline import VERSION, fake_daily, fake_soil, write_catalogs
 
 from data_pipeline.__main__ import MUNICIPALITIES, Paths, run
@@ -194,3 +195,34 @@ def test_map_mask_holes_never_cross_on_the_real_borders() -> None:
 
     assert holes  # the region is one hole or more (the new municipalities join both areas)
     assert crossings == []  # no edge crosses another, within a hole or between two
+
+
+def test_region_parquet_keeps_border_overlaps_inside(tmp_path: Path) -> None:
+    """Palencia (ADM2) and El Progreso (ADM1) overlap by about 3 km2 on the real borders; with
+    raw rings the API's even-odd rule counts that strip twice and answers outside_region."""
+    paths = Paths(
+        cache=tmp_path / "cache",
+        catalog=tmp_path / "catalog",
+        output=tmp_path / "output",
+        web=tmp_path / "web",
+    )
+    write_catalogs(paths.catalog)
+    data = recorded()
+    run(
+        paths,
+        VERSION,
+        data["adm1"],
+        adm2=data["adm2"],
+        municipalities=MUNICIPALITIES,
+        fetch_daily=fake_daily,
+        fetch_soil=fake_soil,
+    )
+    with duckdb.connect() as con:
+        rows = con.execute(
+            "SELECT ring FROM read_parquet(?)", [(paths.output / "region.parquet").as_posix()]
+        ).fetchall()
+    rings = [row[0] for row in rows]
+
+    assert _point_in_rings((-90.2365, 14.6231), rings)  # Palencia / El Progreso overlap
+    assert _point_in_rings((-90.50, 15.08), rings)  # Rabinal
+    assert not _point_in_rings((-90.51, 14.63), rings)  # Ciudad de Guatemala

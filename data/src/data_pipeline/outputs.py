@@ -232,6 +232,17 @@ def region_geojson(
     return {"type": "FeatureCollection", "data_version": data_version, "features": features}
 
 
+def _union_parts(rings: Sequence[Ring]) -> list[Polygon]:
+    """The region as a valid polygon union, counterclockwise outer rings (shapely)."""
+    union = unary_union([make_valid(Polygon(ring)) for ring in rings if len(ring) >= 4])
+    parts = getattr(union, "geoms", [union])
+    return [orient(p, sign=1.0) for p in parts if isinstance(p, Polygon) and not p.is_empty]
+
+
+def _coords(ring: Any) -> Ring:
+    return [[x, y] for x, y in ring.coords]
+
+
 def dissolve(rings: Sequence[Ring]) -> list[Ring]:
     """Outer outlines of the union of the rings, counterclockwise, never overlapping.
 
@@ -239,12 +250,19 @@ def dissolve(rings: Sequence[Ring]) -> list[Ring]:
     borders need not share vertices; a real polygon union (shapely) merges them anyway. Gaps
     inside the union are left out: an outline inside another would make the mask invalid.
     """
-    union = unary_union([make_valid(Polygon(ring)) for ring in rings if len(ring) >= 4])
-    parts = getattr(union, "geoms", [union])
+    return [_coords(part.exterior) for part in _union_parts(rings)]
+
+
+def union_rings(rings: Sequence[Ring]) -> list[Ring]:
+    """Every ring (outer and holes) of the union, for the API's even-odd test.
+
+    Raw ADM1 + ADM2 rings overlap along borders that do not share vertices, and even-odd would
+    count those strips twice (outside); the union's rings never overlap.
+    """
     return [
-        [[x, y] for x, y in orient(part, sign=1.0).exterior.coords]
-        for part in parts
-        if isinstance(part, Polygon) and not part.is_empty
+        ring
+        for part in _union_parts(rings)
+        for ring in [_coords(part.exterior), *(_coords(hole) for hole in part.interiors)]
     ]
 
 
