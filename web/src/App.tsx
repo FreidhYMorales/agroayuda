@@ -88,7 +88,7 @@ function Screens() {
 
 export function App() {
   return (
-    <main>
+    <main style={{ fontFamily: "system-ui, sans-serif", maxWidth: 480, margin: "0 auto" }}>
       <ErrorBoundary>
         <Screens />
       </ErrorBoundary>

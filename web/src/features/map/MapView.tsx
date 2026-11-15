@@ -5,7 +5,9 @@ import {
   type GeoJSONSource,
   Map as MapLibreMap,
   type MapMouseEvent,
+  setWorkerUrl,
 } from "maplibre-gl";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { type CSSProperties, useEffect, useRef } from "react";
 import type { SiteProfile } from "../../contracts/contracts";
 import type { RegionCollection } from "./mapData";
@@ -108,6 +110,12 @@ export function MapView({ rain, region, site, onSelectPoint, onError }: MapViewP
   useEffect(() => {
     const container = containerRef.current;
     if (container === null) return;
+    // MapLibre derives its worker URL from the location of its own file. Once
+    // Vite bundles MapLibre into another file (pre-bundled in dev, a hashed
+    // chunk in the build) there is no worker next to it and the map fails with
+    // "Worker failed to load". Passing the URL explicitly works in dev and in
+    // production, and the worker is bundled with whatever it imports.
+    setWorkerUrl(workerUrl);
 
     const map = new MapLibreMap({
       container,
@@ -130,11 +138,16 @@ export function MapView({ rain, region, site, onSelectPoint, onError }: MapViewP
     // Any map error counts as a basemap failure: report it once and switch to
     // the plain style, which needs no network and still draws our overlays.
     let failed = false;
+
     map.on("error", () => {
       if (failed) return;
       failed = true;
       latest.current.onError();
-      map.setStyle(fallbackStyle());
+      // diff: false forces a full style reload. By default MapLibre diffs object
+      // styles against the current one, which would remove our overlays (they
+      // are not in the fallback style) without firing "style.load", so they
+      // would never be added again.
+      map.setStyle(fallbackStyle(), { diff: false });
     });
 
     return () => {
