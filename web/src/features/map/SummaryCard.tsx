@@ -13,15 +13,10 @@ export interface SummaryCardProps {
   onPickPlace: () => void;
 }
 
-// Áreas táctiles >= 44 px.
-
-const cardStyle: CSSProperties = {
-  padding: 16,
-  borderRadius: 12,
-  background: "#ffffff",
-  color: "#1a1a1a",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-};
+// No frame of its own: the card lives in the map bottom sheet, which already
+// has the background, rounded corners and shadow.
+const cardStyle: CSSProperties = { color: "#1a1a1a" };
+const titleStyle: CSSProperties = { marginTop: 0, marginBottom: 8 };
 const actionsStyle: CSSProperties = { display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 };
 
 export function SummaryCard({
@@ -36,7 +31,7 @@ export function SummaryCard({
 
   return (
     <section style={cardStyle}>
-      <h2>{placeName ?? MAP_COPY.defaultTitle}</h2>
+      <h2 style={titleStyle}>{placeName ?? MAP_COPY.defaultTitle}</h2>
       <p>{MAP_COPY.zoneLine(site.cell_resolution_km)}</p>
       {showTopRisk && <p>{`⚠ ${riskTitle(topRisk)}`}</p>}
       <div style={actionsStyle}>

@@ -122,3 +122,21 @@ describe("SummaryCard button looks", () => {
     );
   });
 });
+
+describe("SummaryCard frame", () => {
+  // It lives inside the map bottom sheet, which already has its own frame.
+  test("has no frame of its own, so it does not look like a box in a box", () => {
+    renderCard();
+
+    const card = screen.getByRole("heading", { name: "Su zona" }).closest("section");
+    expect(card).not.toBeNull();
+    expect(card?.style.boxShadow).toBe("");
+    expect(card?.style.borderRadius).toBe("");
+  });
+
+  test("the title has no top margin, so it sits right under the sheet handle", () => {
+    renderCard();
+
+    expect(screen.getByRole("heading", { name: "Su zona" }).style.marginTop).toBe("0px");
+  });
+});
