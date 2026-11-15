@@ -18,6 +18,8 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 | Name | URL | Used for | Licence | Owner |
 |---|---|---|---|---|
 | SoilGrids (ISRIC) | https://soilgrids.org/ | Soil clay, sand, pH and organic carbon at cell centers | CC BY 4.0 | Data |
+| Loveland, P.; Webb, J. (2003). Is there a critical level of organic matter in the agricultural soils of temperate regions: a review. Soil & Tillage Research 70:1-18 | https://doi.org/10.1016/S0167-1987(02)00139-3 | Low-SOC threshold (2 % SOC = 20 g/kg) in `data/README.md` | Cited only (journal article) | Data |
+| Musinguzi, P. et al. (2016). Critical soil organic carbon range for optimal crop response to mineral fertiliser nitrogen on a Ferralsol. Experimental Agriculture | https://www.cambridge.org/core/journals/experimental-agriculture/article/critical-soil-organic-carbon-range-for-optimal-crop-response-to-mineral-fertiliser-nitrogen-on-a-ferralsol/68E8927BE333330514FE239BEF810250 | Tropical support for the low-SOC threshold (1.9-2.2 %) | Cited only (journal article) | Data |
 | geoBoundaries (ADM1 Guatemala) | https://www.geoboundaries.org/ | Dry Corridor region outline | ODbL 1.0 (source OpenStreetMap, per the geoBoundaries GTM ADM1 metadata) | Data |
 | OpenFreeMap tiles | https://openfreemap.org/ | Basemap tiles | _verify_ | Web map |
 | OpenStreetMap data (via OpenFreeMap) | https://www.openstreetmap.org/copyright | Basemap content; attribution shown on the map | ODbL (see link) | Web map |

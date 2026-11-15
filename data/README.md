@@ -74,8 +74,15 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 - Two of the 10 cell centers return no data (13.5_-90.0, over the Pacific; 15.5_-89.375): their
   soil fields are null and the cell gets a `missing_data` risk. SHOULD 1 (nearest non-null value
   inside the region) would fill them.
-- **Low-SOC threshold: PENDING.** Must be fixed with a citation before the engine uses it.
-  For reference, SOC at 5-15 cm in the 8 cells with data is 24.7-39.9 g/kg.
+- **Low-SOC threshold: 20 g/kg (2 % SOC)** at 5-15 cm, fixed 2026-11-14. Source: Loveland &
+  Webb (2003), *Soil & Tillage Research* 70:1-18, the review behind the widely cited 2 % SOC
+  level below which soil quality may decline (they note the evidence for a fixed threshold is
+  weak and mostly temperate); Musinguzi et al. (2016), *Experimental Agriculture*, found a
+  1.9-2.2 % critical range on a tropical Ferralsol. No ICTA/MAGA low/medium/high table was found;
+  regional labs tie those classes to their own lab method, which SoilGrids does not use.
+- Consequence: SOC at 5-15 cm in the 8 cells with data is 24.7-39.9 g/kg, so no region cell is
+  below the threshold and the low-SOC soil bonus (engine story 09) would not change any real
+  result. Story 09 is parked.
 
 ## Region and grid
 
