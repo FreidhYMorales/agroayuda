@@ -37,7 +37,7 @@ The complete list with licences is in `docs/resources.md`; copy the two tables f
 
 - SoilGrids (ISRIC), CC BY 4.0. https://soilgrids.org/
 - geoBoundaries, ODbL 1.0. https://www.geoboundaries.org/
-- OpenFreeMap and OpenStreetMap contributors, ODbL. https://openfreemap.org/ · https://www.openstreetmap.org/copyright
+- OpenFreeMap tiles: free public instance, commercial use allowed; attribution required ("OpenFreeMap © OpenMapTiles, Data from OpenStreetMap", added by MapLibre); software MIT; map data from OpenStreetMap (ODbL). https://openfreemap.org/ · https://www.openstreetmap.org/copyright
 - FAO ECOCROP and FAO Irrigation and Drainage Paper 56. https://ecocrop.apps.fao.org/ecocrop/srv/en/ · https://www.fao.org/4/x0490e/x0490e0e.htm
 - ICTA, El cultivo del maíz en Guatemala (2002); ICTA Memoria de Labores 2019; ICTA Boletín octubre 2022 (abonos verdes); CGIAR guide to bean cultivation in Guatemala (2024); MAGA Agro en Cifras 2016 (sesame); USAC studies (Jutiapa, Jalapa). Links in `docs/crop-sources.md`.
 
