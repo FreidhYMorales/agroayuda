@@ -17,11 +17,22 @@ from engine.errors import InvalidRequestError
 from engine.scoring import (
     confidence,
     failure_reason,
+    failure_reason_en,
     round_half_up,
     score_option,
     weighted_score,
 )
-from engine.texts import LOCAL_REVIEW_ES, benefits, canicula_evidence, data_gaps, reason_line
+from engine.texts import (
+    LOCAL_REVIEW_EN,
+    LOCAL_REVIEW_ES,
+    benefits,
+    benefits_en,
+    canicula_evidence,
+    data_gaps,
+    data_gaps_en,
+    reason_line,
+    reason_line_en,
+)
 
 
 def _option(
@@ -40,20 +51,20 @@ def _option(
         is_current=is_current,
         recommended=False,
         not_recommended_reason=failure_reason(site, primera, request.constraints.irrigation),
-        not_recommended_reason_en=None,
+        not_recommended_reason_en=failure_reason_en(site, primera, request.constraints.irrigation),
         bare_months=bare_months(primera, postrera),
         criteria=criteria,
         delta_vs_current=DeltaVsCurrent(water="same", soil="same", income="same", risk="same"),
         confidence=confidence(site, [primera, postrera]),
         reasons=[reason_line(request.priorities, criteria)],
-        reasons_en=[],
+        reasons_en=[reason_line_en(request.priorities, criteria)],
         evidence=canicula_evidence(site),
         benefits=[],
         benefits_en=[],
         data_gaps=data_gaps(site, [primera, postrera]),
-        data_gaps_en=[],
+        data_gaps_en=data_gaps_en(site, [primera, postrera]),
         local_review=[LOCAL_REVIEW_ES],
-        local_review_en=[],
+        local_review_en=[LOCAL_REVIEW_EN],
     )
     return rank, option
 
@@ -110,4 +121,10 @@ def _with_deltas(option: RotationOption, current: RotationOption) -> RotationOpt
         income=_delta(mine.income, theirs.income),
         risk=_delta(mine.risk, theirs.risk),
     )
-    return option.model_copy(update={"delta_vs_current": deltas, "benefits": benefits(deltas)})
+    return option.model_copy(
+        update={
+            "delta_vs_current": deltas,
+            "benefits": benefits(deltas),
+            "benefits_en": benefits_en(deltas),
+        }
+    )

@@ -31,6 +31,7 @@ PRIORITY_LABEL_EN = {
 
 
 LOCAL_REVIEW_ES = "Consulte con un técnico local antes de cambiar su siembra."
+LOCAL_REVIEW_EN = "Talk to a local technician before changing what you plant."
 
 
 def top_priority(priorities: Priorities) -> str:
