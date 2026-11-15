@@ -1,5 +1,6 @@
 // web/src/ui/layout.test.ts
 import { describe, expect, test } from "vitest";
+import { THEME_CSS } from "../features/comparison/theme";
 import { BREAKPOINTS, CONTENT_MAX_WIDTH, LAYOUT_CSS, MEDIA, SHEET_SIDE_WIDTH } from "./layout";
 
 // jsdom does not lay out pages, so these tests read the CSS rules themselves.
@@ -118,5 +119,32 @@ describe("safety rules", () => {
   test("every box sizes with its border and media never overflows", () => {
     expect(LAYOUT_CSS).toContain("box-sizing:border-box");
     expect(rule(LAYOUT_CSS, "img,svg,canvas")).toContain("max-width:100%");
+  });
+});
+
+describe("form and comparison theme (THEME_CSS)", () => {
+  test("hover rules only apply on devices that hover (no sticky hover after a tap)", () => {
+    const hover = mediaBody(THEME_CSS, "(hover:hover)") ?? "";
+
+    expect(outsideMedia(THEME_CSS)).not.toContain(":hover");
+    expect(hover).toContain(".ag-btn:hover");
+    expect(hover).toContain(".ag-primary:hover");
+  });
+
+  test(".ag keeps colors and font but leaves width and side padding to .ag-screen", () => {
+    const ag = rule(outsideMedia(THEME_CSS), ".ag") ?? "";
+
+    expect(ag).toContain("background:");
+    expect(ag).not.toContain("max-width");
+    expect(ag).not.toMatch(/padding:\s*\d/);
+  });
+
+  test("crop grids get 3 columns on tablets and 4 on desktops", () => {
+    expect(rule(mediaBody(LAYOUT_CSS, MEDIA.tablet) ?? "", ".ag-screen .ag-crop-grid")).toContain(
+      "repeat(3,minmax(0,1fr))",
+    );
+    expect(rule(mediaBody(LAYOUT_CSS, MEDIA.desktop) ?? "", ".ag-screen .ag-crop-grid")).toContain(
+      "repeat(4,minmax(0,1fr))",
+    );
   });
 });

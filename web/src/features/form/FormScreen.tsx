@@ -78,7 +78,8 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
   return (
     <section className="ag-card">
       <h2>{title}</h2>
-      <div className="ag-grid">
+      {/* 2 columns on phones; ag-crop-grid gives 3 on tablets and 4 on desktops. */}
+      <div className="ag-grid ag-crop-grid">
         {allowed.map((entry) => (
           <CropButton
             key={entry.id}
@@ -207,76 +208,89 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
         </p>
       ) : null}
 
-      {catalog.status === "loading" ? <CatalogSkeleton label={copy.loading} /> : null}
-      {catalog.status === "error" ? (
-        <div className="ag-card">
-          <p>{copy.catalogError}</p>
-          <button type="button" className="ag-btn ag-primary" onClick={onRetryCatalog}>
-            {copy.retry}
-          </button>
-        </div>
-      ) : null}
-      {catalog.status === "ready" ? (
-        <>
-          <CropGrid
-            title={copy.primeraTitle}
-            season="primera"
-            crops={catalog.crops}
-            selected={values.primera}
-            onSelect={(id) => onChange({ primera: id })}
-          />
-          <CropGrid
-            title={copy.postreraTitle}
-            season="postrera"
-            crops={catalog.crops}
-            selected={values.postrera}
-            onSelect={(id) => onChange({ postrera: id })}
-          />
-        </>
-      ) : null}
-
-      <section className="ag-card">
-        <h2 ref={prioritiesRef}>{copy.prioritiesTitle}</h2>
-        {PRIORITY_ROWS.map(({ key, icon }) => (
-          <PriorityCircles
-            key={key}
-            name={`priority-${key}`}
-            icon={icon}
-            label={copy.priorities[key]}
-            value={values.priorities[key]}
-            onPick={(level) => onChange({ priorities: { ...values.priorities, [key]: level } })}
-          />
-        ))}
-      </section>
-
-      <fieldset className="ag-card" style={{ margin: "14px 0" }}>
-        <legend style={{ fontWeight: 600, padding: "0 4px" }}>{copy.irrigationTitle}</legend>
-        <div className="ag-grid">
-          {[
-            { label: copy.yes, value: true },
-            { label: copy.no, value: false },
-          ].map(({ label, value }) => (
-            <label
-              key={label}
-              className="ag-choice"
-              data-checked={irrigation === value}
-              style={{ minHeight: TARGET, borderRadius: 12, gap: 8 }}
-            >
-              <input
-                type="radio"
-                name="irrigation"
-                checked={irrigation === value}
-                onChange={() => onChange({ irrigation: value })}
+      {/* Two columns on tablets and desktops (.ag-cols): crops on the left, priorities and
+          irrigation on the right, the submit button below both. DOM order = reading order. */}
+      <div className="ag-cols">
+        <div>
+          {catalog.status === "loading" ? <CatalogSkeleton label={copy.loading} /> : null}
+          {catalog.status === "error" ? (
+            <div className="ag-card">
+              <p>{copy.catalogError}</p>
+              <button type="button" className="ag-btn ag-primary" onClick={onRetryCatalog}>
+                {copy.retry}
+              </button>
+            </div>
+          ) : null}
+          {catalog.status === "ready" ? (
+            <>
+              <CropGrid
+                title={copy.primeraTitle}
+                season="primera"
+                crops={catalog.crops}
+                selected={values.primera}
+                onSelect={(id) => onChange({ primera: id })}
               />
-              {label}
-            </label>
-          ))}
+              <CropGrid
+                title={copy.postreraTitle}
+                season="postrera"
+                crops={catalog.crops}
+                selected={values.postrera}
+                onSelect={(id) => onChange({ postrera: id })}
+              />
+            </>
+          ) : null}
         </div>
-      </fieldset>
 
-      <button type="button" className="ag-btn ag-primary" disabled={!canSubmit} onClick={onSubmit}>
-        {copy.submit}
-      </button>
+        <div>
+          <section className="ag-card">
+            <h2 ref={prioritiesRef}>{copy.prioritiesTitle}</h2>
+            {PRIORITY_ROWS.map(({ key, icon }) => (
+              <PriorityCircles
+                key={key}
+                name={`priority-${key}`}
+                icon={icon}
+                label={copy.priorities[key]}
+                value={values.priorities[key]}
+                onPick={(level) => onChange({ priorities: { ...values.priorities, [key]: level } })}
+              />
+            ))}
+          </section>
+
+          <fieldset className="ag-card" style={{ margin: "14px 0" }}>
+            <legend style={{ fontWeight: 600, padding: "0 4px" }}>{copy.irrigationTitle}</legend>
+            <div className="ag-grid">
+              {[
+                { label: copy.yes, value: true },
+                { label: copy.no, value: false },
+              ].map(({ label, value }) => (
+                <label
+                  key={label}
+                  className="ag-choice"
+                  data-checked={irrigation === value}
+                  style={{ minHeight: TARGET, borderRadius: 12, gap: 8 }}
+                >
+                  <input
+                    type="radio"
+                    name="irrigation"
+                    checked={irrigation === value}
+                    onChange={() => onChange({ irrigation: value })}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
+        <button
+          type="button"
+          className="ag-btn ag-primary ag-span"
+          disabled={!canSubmit}
+          onClick={onSubmit}
+        >
+          {copy.submit}
+        </button>
+      </div>
     </Page>
   );
 }
