@@ -15,7 +15,6 @@ export type FormValues = {
 
 export const DEFAULT_PRIORITIES: Priorities = { water: 3, soil: 3, income: 3, risk: 3 };
 export const CATALOG_URL = "/data/crops.json";
-export const RETRY_LABEL = "Intentar de nuevo";
 
 // The labels come from formCopy, by key.
 const PRIORITY_ROWS = [
@@ -100,10 +99,10 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
   );
 }
 
-function CatalogSkeleton() {
+function CatalogSkeleton({ label }: { label: string }) {
   return (
     <div aria-busy="true">
-      <span style={visuallyHidden}>Cargando los cultivos…</span>
+      <span style={visuallyHidden}>{label}</span>
       {[0, 1].map((row) => (
         <div
           key={row}
@@ -208,12 +207,12 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
         </p>
       ) : null}
 
-      {catalog.status === "loading" ? <CatalogSkeleton /> : null}
+      {catalog.status === "loading" ? <CatalogSkeleton label={copy.loading} /> : null}
       {catalog.status === "error" ? (
         <div className="ag-card">
-          <p>No pudimos cargar los cultivos.</p>
+          <p>{copy.catalogError}</p>
           <button type="button" className="ag-btn ag-primary" onClick={onRetryCatalog}>
-            {RETRY_LABEL}
+            {copy.retry}
           </button>
         </div>
       ) : null}
