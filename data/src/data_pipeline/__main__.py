@@ -164,7 +164,7 @@ def write_map_layers(
         region_geojson(boundaries, set(REGION_ISO), data_version, adm2, municipalities),
         paths.web / "region.geojson",
     )
-    rings = region_rings(boundaries, set(REGION_ISO))
+    rings = region_rings(boundaries, set(REGION_ISO), adm2, municipalities)
     write_json(region_mask_geojson(rings, data_version), paths.web / "region_mask.geojson")
     write_json(DEMO_POINTS, paths.web / "demo_points.json")
 
