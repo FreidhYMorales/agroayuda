@@ -1,8 +1,8 @@
 """Pipeline entry point: uv run --package data-pipeline python -m data_pipeline [--map-layers]
 
-Full run: region (geoBoundaries ADM1 + the listed ADM2 municipalities) -> POWER cells that intersect it -> per cell: POWER daily
-features, SoilGrids soil, precomputed risks -> data/output/*.parquet and web/public/data/**, all
-with the same data_version (the run date).
+Full run: region (geoBoundaries ADM1 + the listed ADM2 municipalities) -> POWER cells that
+intersect it -> per cell: POWER daily features, SoilGrids soil, precomputed risks ->
+data/output/*.parquet and web/public/data/**, all with the same data_version (the run date).
 
 --map-layers writes only the web map files that need neither the crop catalog nor the engine:
 web/public/data/layers/rain.geojson, region.geojson and demo_points.json.
@@ -222,9 +222,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     paths = Paths()
     data_version = date.today().isoformat()
     if args.map_layers:
-        cells = map_layers(
-            paths, data_version, load_boundaries(paths), adm2=load_adm2(paths)
-        )
+        cells = map_layers(paths, data_version, load_boundaries(paths), adm2=load_adm2(paths))
         print(f"Wrote {len(cells)} rain cells, the region and demo points to {paths.web}")
         return
     sites = run(paths, data_version, load_boundaries(paths), adm2=load_adm2(paths))
