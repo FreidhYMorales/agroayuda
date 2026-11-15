@@ -16,6 +16,8 @@ const ES = {
   tapOption: "Toque una opción ›",
   aid: "ⓘ Esto es una ayuda; no reemplaza su criterio",
   changePriorities: "Cambiar prioridades",
+  loading: "Cargando las opciones…",
+  slow: "Despertando el servidor…",
 };
 
 const EN: typeof ES = {
@@ -32,6 +34,8 @@ const EN: typeof ES = {
   tapOption: "Tap an option ›",
   aid: "ⓘ This is an aid; it does not replace your judgment",
   changePriorities: "Change priorities",
+  loading: "Loading the options…",
+  slow: "Waking up the server, one moment…",
 };
 
 export function comparisonCopy(lang: Lang): typeof ES {
