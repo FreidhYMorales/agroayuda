@@ -25,15 +25,37 @@ def canicula_level(site: SiteProfile) -> Level:
     return next((risk.level for risk in site.risks if risk.id == "canicula"), "unknown")
 
 
-def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
-    """F1/F2: why the primera crop is likely lost in a high canícula, or None."""
+FAILURE_TEXT_ES = {
+    "F1": "Necesita mucha agua justo en la canícula",
+    "F2": "Aguanta poco la sequía de la canícula",
+}
+FAILURE_TEXT_EN = {
+    "F1": "Needs a lot of water right in the canícula",
+    "F2": "Cannot take much drought in the canícula",
+}
+
+
+def _failure_rule(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
+    """F1/F2: which rule says the primera crop is likely lost in a high canícula, or None."""
     if irrigation or canicula_level(site) != "high":
         return None
     if primera.water_need == "high":
-        return "Necesita mucha agua justo en la canícula"
+        return "F1"
     if primera.drought_tolerance == "low":
-        return "Aguanta poco la sequía de la canícula"
+        return "F2"
     return None
+
+
+def failure_reason(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
+    """Why the primera crop is likely lost in a high canícula, or None."""
+    rule = _failure_rule(site, primera, irrigation)
+    return FAILURE_TEXT_ES[rule] if rule else None
+
+
+def failure_reason_en(site: SiteProfile, primera: CropCatalogEntry, irrigation: bool) -> str | None:
+    """English version of failure_reason."""
+    rule = _failure_rule(site, primera, irrigation)
+    return FAILURE_TEXT_EN[rule] if rule else None
 
 
 def confidence(site: SiteProfile, crops: list[CropCatalogEntry]) -> Confidence:
