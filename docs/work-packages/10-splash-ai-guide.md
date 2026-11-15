@@ -62,7 +62,7 @@ Check: the splash leaves after ~0.8 s. Run the whole "Manual check" of the packa
 
 ### Step 4: docs
 
-> Step 4: give me the rows for `docs/resources.md` and `docs/si-usage.md` exactly as in "Files to deliver". The lead gives me the image tool name.
+> Step 4: give me the rows for `docs/resources.md` and `docs/si-usage.md` exactly as in "Files to deliver".
 
 Add them by hand. Add your own row in `docs/si-usage.md` if you used AI. Commit `docs: list the logo tools and its AI use`.
 

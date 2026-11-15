@@ -22,7 +22,7 @@ Today:
 - `web/src/main.tsx` renders `<App />` into `#root`.
 - The language comes from the URL: `?lang=en` is English, anything else is Spanish (`web/src/lib/urlState.ts`).
 - There is no logo in the repo yet. It comes with this package: `logo.svg` (vector, transparent background, `viewBox="0 0 1968 1612"`, no fixed size, ~87 KB). It shows the icon plus the words "AgroAyuda" and "Siembra y Clima", so the splash needs no visible title.
-- The logo was made with an AI image generator and vectorized with vtracer + ImageMagick. Project rules (`AGENTS.md`, `docs/si-usage.md`) require a visible "AI-generated" mark on any SI-generated image.
+- The logo was made with ChatGPT (image generation) and vectorized with vtracer + ImageMagick. Project rules (`AGENTS.md`, `docs/si-usage.md`) require a visible "AI-generated" mark on any SI-generated image.
 
 ## Scope
 
@@ -135,10 +135,10 @@ The language script is checked manually (below); it is three lines and runs befo
 | `docs/resources.md` | Rows below |
 | `docs/si-usage.md` | Row below, plus your own row if you used AI |
 
-Rows to add to `docs/resources.md`, table "Tools and services" (fill in the AI tool the logo was made with; ask the lead):
+Rows to add to `docs/resources.md`, table "Tools and services":
 
 ```
-| _Image generator used for the logo_, SI | _fill in_ | Team logo (AI-generated, marked on the splash) |
+| ChatGPT image generation (OpenAI), SI | https://chatgpt.com | Team logo (AI-generated, marked on the splash) |
 | VTracer (visioncortex) | https://github.com/visioncortex/vtracer | Converting the logo image to SVG |
 | ImageMagick | https://imagemagick.org | Cleaning the logo image before vectorizing |
 ```
@@ -146,7 +146,7 @@ Rows to add to `docs/resources.md`, table "Tools and services" (fill in the AI t
 Row to add to `docs/si-usage.md`, table "Audio, images and video" (above "Images or video frames"):
 
 ```
-| Team logo (splash screen) | Generated with an AI image tool from the team's idea; vectorized with VTracer | Visible text "Logo generado con IA" / "AI-generated logo" on the splash screen |
+| Team logo (splash screen) | Generated with ChatGPT from the team's idea; vectorized with VTracer | Visible text "Logo generado con IA" / "AI-generated logo" on the splash screen |
 ```
 
 ## Conventions
@@ -168,6 +168,6 @@ Row to add to `docs/si-usage.md`, table "Audio, images and video" (above "Images
 
 ## Coordination
 
-- Lead: approves this package before work starts, fills in the AI image tool name, reviews the whole PR.
+- Lead: approves this package before work starts, reviews the whole PR.
 - Package 03 owner (App shell): tell them before you start; they review `index.html` and `main.tsx`.
 - Package 08 owner (phone QA, demo): re-runs the demo on a real phone after the merge; the splash must not delay the recording more than the load itself.
