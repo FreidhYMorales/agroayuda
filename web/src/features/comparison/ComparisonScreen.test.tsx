@@ -88,6 +88,26 @@ test("badges: current warns, Op.1 recommended, Op.2 not recommended with its rea
   expect(headers[3]).toHaveTextContent("Aguanta poco la sequía de la canícula");
 });
 
+// "Recomendada" does not fit a ~65 px column on a 360-390 px phone, so the
+// column shows only the ✓ and the word moves to a line above the table.
+test("the recommended column shows only a ✓, with Recomendada kept for screen readers", () => {
+  render(<ComparisonTable options={FIXTURE_OPTIONS} onSelect={vi.fn()} />);
+
+  const badge = screen.getAllByRole("columnheader")[2].querySelector("[data-badge='recommended']");
+  expect(badge).not.toBeNull();
+  expect(badge?.querySelector("[aria-hidden='true']")?.textContent).toBe("✓");
+  expect(badge?.textContent).toBe("✓ Recomendada");
+});
+
+test("a line above the table names the recommended option", async () => {
+  fetchMock.mockImplementation(async () => okResponse());
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  const line = await screen.findByText("✓ Recomendada: Op.1 (Maíz con frijol → Maicillo)");
+  const table = screen.getByRole("table");
+  expect(line.compareDocumentPosition(table) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
 test("confidence shows dots plus a word and highlights the low one", () => {
   render(<ComparisonTable options={FIXTURE_OPTIONS} onSelect={vi.fn()} />);
 
@@ -124,7 +144,7 @@ test("loads the options, then shows the table and the footer", async () => {
   expect(screen.getByRole("button", { name: "← Sus opciones" })).toBeVisible();
   expect(screen.getByText("Toque una opción ›")).toBeVisible();
   expect(screen.getByText("ⓘ Esto es una ayuda; no reemplaza su criterio")).toBeVisible();
-  expect(screen.getByRole("button", { name: "[ Cambiar prioridades ]" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Cambiar prioridades" })).toBeVisible();
   expect(screen.queryByText(/Su rotación actual ya es la mejor/)).toBeNull();
 });
 
@@ -216,7 +236,7 @@ test("'Cambiar prioridades' and '← Sus opciones' call their handlers", async (
   const props = handlers();
   render(<ComparisonScreen request={REQUEST} {...props} />);
 
-  fireEvent.click(await screen.findByRole("button", { name: "[ Cambiar prioridades ]" }));
+  fireEvent.click(await screen.findByRole("button", { name: "Cambiar prioridades" }));
   fireEvent.click(screen.getByRole("button", { name: "← Sus opciones" }));
 
   expect(props.onChangePriorities).toHaveBeenCalledTimes(1);

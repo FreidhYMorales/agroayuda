@@ -1,6 +1,7 @@
 // web/src/ui/buttonStyles.test.ts
 import { describe, expect, test } from "vitest";
 import { BUTTON_VARIANTS, buttonStyle } from "./buttonStyles";
+import { COLORS } from "./colors";
 
 // WCAG relative luminance and contrast ratio for #rrggbb colors.
 function luminance(hex: string): number {
@@ -42,5 +43,24 @@ describe("buttonStyle", () => {
 
     expect(style.width).toBe("100%");
     expect(style.backgroundColor).toBe(buttonStyle("secondary").backgroundColor);
+  });
+});
+
+describe("buttonStyle matches the form and comparison buttons", () => {
+  test("primary uses the theme green", () => {
+    expect(buttonStyle("primary").backgroundColor).toBe(COLORS.primary);
+  });
+
+  test("secondary is white with the theme border and text", () => {
+    const style = buttonStyle("secondary");
+    expect(style.backgroundColor).toBe(COLORS.card);
+    expect(style.color).toBe(COLORS.text);
+    expect(String(style.border)).toContain(COLORS.border);
+  });
+
+  test("targets are 48 px, like the form buttons", () => {
+    for (const variant of BUTTON_VARIANTS) {
+      expect(buttonStyle(variant).minHeight).toBe(48);
+    }
   });
 });

@@ -2,6 +2,7 @@
 import type { CSSProperties } from "react";
 import type { SiteRisk } from "../../contracts/contracts";
 import { riskPeriod, riskSourceLine } from "./riskLines";
+import { COLORS } from "../../ui/colors";
 import { riskTitle } from "./riskTitle";
 
 // A circle drawn with CSS plus a glyph every phone font has. "◐" was missing
@@ -10,7 +11,7 @@ const LEVEL_BADGE: Record<SiteRisk["level"], { glyph: string; background: string
   {
     high: { glyph: "⚠", background: "#c62828", color: "#ffffff" },
     medium: { glyph: "!", background: "#f9a825", color: "#1a1a1a" },
-    low: { glyph: "✓", background: "#2e7d32", color: "#ffffff" },
+    low: { glyph: "✓", background: COLORS.primary, color: "#ffffff" },
     unknown: { glyph: "?", background: "#616161", color: "#ffffff" },
   };
 
