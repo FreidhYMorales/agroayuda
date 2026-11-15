@@ -77,7 +77,10 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 - **Low-SOC threshold: 20 g/kg (2 % SOC)** at 5-15 cm, fixed 2026-11-14. Source: Loveland &
   Webb (2003), *Soil & Tillage Research* 70:1-18, the review behind the widely cited 2 % SOC
   level below which soil quality may decline (they note the evidence for a fixed threshold is
-  weak and mostly temperate); Musinguzi et al. (2016), *Experimental Agriculture*, found a
+  weak and mostly temperate); Musinguzi et al. (2013), *Journal of Sustainable Development*
+  6(12):31-43, a review of tropical agroecosystems, gives the same "about 2 %" as the widely
+  suggested threshold for sustaining soil quality, while noting no single threshold is accepted
+  universally or regionally; Musinguzi et al. (2016), *Experimental Agriculture*, found a
   1.9-2.2 % critical range on a tropical Ferralsol. No ICTA/MAGA low/medium/high table was found;
   regional labs tie those classes to their own lab method, which SoilGrids does not use.
 - Consequence: SOC at 5-15 cm in the 8 cells with data is 24.7-39.9 g/kg, so no region cell is
