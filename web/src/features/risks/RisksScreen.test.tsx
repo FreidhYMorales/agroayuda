@@ -193,8 +193,6 @@ describe("RisksScreen with the null soil example", () => {
   test("the missing data row names its source without the parenthesis", () => {
     renderReady(nullSoilSite.risks);
 
-    expect(
-      screen.getByText("Dato: SoilGrids · muestra cerca del centro de la zona"),
-    ).toBeTruthy();
+    expect(screen.getByText("Dato: SoilGrids · muestra cerca del centro de la zona")).toBeTruthy();
   });
 });
