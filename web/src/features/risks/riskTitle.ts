@@ -9,14 +9,25 @@ const SEVERITY: Record<SiteRisk["level"], number> = {
   unknown: 3,
 };
 
+// The level must be readable as text, not only from the badge color.
+const BARE_FIELD_LEVEL: Partial<Record<SiteRisk["level"], string>> = {
+  high: "alto",
+  medium: "moderado",
+  low: "bajo",
+};
+
 export function riskTitle(risk: SiteRisk): string {
   switch (risk.id) {
     case "canicula":
       if (risk.level === "high") return "Canícula fuerte";
       if (risk.level === "medium") return "Canícula moderada";
-      return "Canícula"; // sin copy en el paquete: título base
-    case "bare_field":
-      return "Suelo sin cultivo";
+      // "Canícula baja" comes from the map wireframe in docs/spec.md.
+      if (risk.level === "low") return "Canícula baja";
+      return "Canícula";
+    case "bare_field": {
+      const level = BARE_FIELD_LEVEL[risk.level];
+      return level === undefined ? "Suelo sin cultivo" : `Suelo sin cultivo · ${level}`;
+    }
     case "heat":
       return "Calor"; // sin copy en el paquete: pendiente de confirmar con el lead
     case "missing_data":

@@ -14,17 +14,24 @@ describe("riskTitle", () => {
     expect(riskTitle(risk("canicula", "medium"))).toBe("Canícula moderada");
   });
 
-  test("bare field reads suelo sin cultivo", () => {
-    expect(riskTitle(risk("bare_field", "medium"))).toBe("Suelo sin cultivo");
+  // The level must be readable as text, not only from the badge color.
+  test("bare field names its level", () => {
+    expect(riskTitle(risk("bare_field", "high"))).toBe("Suelo sin cultivo · alto");
+    expect(riskTitle(risk("bare_field", "medium"))).toBe("Suelo sin cultivo · moderado");
+    expect(riskTitle(risk("bare_field", "low"))).toBe("Suelo sin cultivo · bajo");
+    expect(riskTitle(risk("bare_field", "unknown"))).toBe("Suelo sin cultivo");
   });
 
   test("missing data reads suelo sin dato", () => {
     expect(riskTitle(risk("missing_data", "unknown"))).toBe("❔ Suelo: sin dato");
   });
 
-  // Copy no definido en el paquete: se usa el título base, sin adjetivo.
-  test("low and unknown canícula fall back to the base title", () => {
-    expect(riskTitle(risk("canicula", "low"))).toBe("Canícula");
+  // "Canícula baja" comes from the map wireframe in docs/spec.md.
+  test("low canícula reads baja", () => {
+    expect(riskTitle(risk("canicula", "low"))).toBe("Canícula baja");
+  });
+
+  test("unknown canícula falls back to the base title", () => {
     expect(riskTitle(risk("canicula", "unknown"))).toBe("Canícula");
   });
 
