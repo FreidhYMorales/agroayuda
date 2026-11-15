@@ -1,12 +1,12 @@
 // web/src/App.tsx
-import { Component, type ReactNode } from "react";
+import { Component, type ReactNode, useEffect } from "react";
 import { ResultsFlow } from "./features/comparison/ResultsFlow";
 import { MAP_COPY } from "./features/map/copy";
 import { MapScreen, type MapSelection } from "./features/map/MapScreen";
 import { useDemoPlaces } from "./features/map/useDemoPlaces";
 import { type SiteState, useSite } from "./features/map/useSite";
 import { RisksScreen, type RisksView } from "./features/risks/RisksScreen";
-import { useAppState } from "./lib/urlState";
+import { useAppState, useLang } from "./lib/urlState";
 
 // Top-level boundary: any crash while rendering shows a retry button instead
 // of a blank page. The point and the step live in the URL, so a retry
@@ -53,6 +53,12 @@ function Screens() {
   // One request shared by the map and the risks screen.
   const { state: site, retry } = useSite(state.lat, state.lon);
   const places = useDemoPlaces();
+  const lang = useLang();
+
+  // Screen readers and the browser's translate offer read the page language.
+  useEffect(() => {
+    document.documentElement.lang = lang === "en" ? "en" : "es-GT";
+  }, [lang]);
 
   // Every step after the map needs a point; without one, the map is shown.
   const hasPoint = state.lat !== undefined && state.lon !== undefined;
