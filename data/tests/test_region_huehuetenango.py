@@ -24,7 +24,7 @@ from data_pipeline.outputs import region_geojson, region_rings, select_adm2, spl
 from data_pipeline.parquet_io import read_site_data
 
 REGION_ISO = {"GT-CQ"}
-CACHE = Path(__file__).resolve().parents[2] / "cache" / "geoboundaries"
+CACHE = Path(__file__).resolve().parents[1] / "cache" / "geoboundaries"
 
 
 def square(west: float, south: float, east: float, north: float) -> list[list[list[float]]]:
