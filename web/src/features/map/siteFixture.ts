@@ -1,7 +1,7 @@
 // web/src/features/map/siteFixture.ts
 // Datos de relleno del paquete (no son datos reales). Cuando se confirme el
 // nombre del archivo en contracts/examples/, se cambia por ese ejemplo.
-import type { SiteProfile, SiteRisk } from "../../contracts/contracts";
+import type { DemoPoint, SiteProfile, SiteRisk } from "../../contracts/contracts";
 
 export const caniculaRisk: SiteRisk = {
   id: "canicula",
@@ -56,3 +56,18 @@ export const chiquimulaSite: SiteProfile = {
   soil_sample_location: { lat: 14.5, lon: -89.375 },
   risks: [caniculaRisk, bareFieldRisk],
 };
+
+export const chiquimulaPlace: DemoPoint = {
+  id: "chiquimula",
+  name_es: "Chiquimula",
+  location: { lat: 14.7, lon: -89.5 },
+};
+
+// Relleno: nombre y coordenadas reales llegan con demo_points.json (paquete 01).
+export const outsidePlace: DemoPoint = {
+  id: "fuera_de_region",
+  name_es: "Punto fuera de la región",
+  location: { lat: 15.7, lon: -88.6 },
+};
+
+export const demoPlaces: DemoPoint[] = [chiquimulaPlace, outsidePlace];
