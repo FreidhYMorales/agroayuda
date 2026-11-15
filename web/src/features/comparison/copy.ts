@@ -4,7 +4,7 @@ import type { Lang } from "../../lib/urlState";
 
 const ES = {
   back: "← Sus opciones",
-  columnTitles: ["Actual", "Op.1", "Op.2"] as const,
+  columnTitles: ["Actual", "Op.1", "Op.2"] as readonly [string, string, string],
   criteria: { water: "Agua", soil: "Suelo", income: "Ingreso", risk: "Riesgo" },
   criterion: "Criterio",
   confidence: "Confianza",
