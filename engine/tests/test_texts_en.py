@@ -2,7 +2,8 @@
 
 import pytest
 
-from contracts import Criteria, CropCatalogEntry, DeltaVsCurrent, Priorities, SiteProfile
+from contracts import Criteria, CropCatalogEntry, DeltaVsCurrent, Level, Priorities, SiteProfile
+from engine.scoring import failure_reason_en
 from engine.texts import benefits_en, data_gaps_en, reason_line_en
 
 CRITERIA = Criteria(water=4, soil=2, income=3, risk=5)
@@ -65,3 +66,34 @@ def test_data_gaps_in_english_name_missing_soil_and_general_crops(
         "Squash: general value, check locally.",
         POWER_GAP_EN,
     ]
+
+
+def with_canicula(site: SiteProfile, level: Level) -> SiteProfile:
+    risks = [r.model_copy(update={"level": level}) if r.id == "canicula" else r for r in site.risks]
+    return site.model_copy(update={"risks": risks})
+
+
+def test_thirsty_crop_reason_in_english(site: SiteProfile, maiz: CropCatalogEntry) -> None:
+    thirsty = maiz.model_copy(update={"water_need": "high", "drought_tolerance": "medium"})
+
+    assert (
+        failure_reason_en(with_canicula(site, "high"), thirsty, irrigation=False)
+        == "Needs a lot of water right in the canícula"
+    )
+
+
+def test_drought_sensitive_crop_reason_in_english(
+    site: SiteProfile, maiz: CropCatalogEntry
+) -> None:
+    # maíz in crops.csv: water medium, drought tolerance low.
+    assert (
+        failure_reason_en(with_canicula(site, "high"), maiz, irrigation=False)
+        == "Cannot take much drought in the canícula"
+    )
+
+
+def test_no_english_reason_without_a_high_canicula(
+    site: SiteProfile, maiz: CropCatalogEntry
+) -> None:
+    assert failure_reason_en(with_canicula(site, "medium"), maiz, irrigation=False) is None
+    assert failure_reason_en(with_canicula(site, "high"), maiz, irrigation=True) is None
