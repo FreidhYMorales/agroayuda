@@ -174,7 +174,7 @@ test("'Cambiar prioridades' shows the form at priorities, answers kept, then rec
   render(<ResultsFlow />);
   await chooseAndCompare();
 
-  fireEvent.click(await screen.findByRole("button", { name: "[ Cambiar prioridades ]" }));
+  fireEvent.click(await screen.findByRole("button", { name: "Cambiar prioridades" }));
 
   const heading = await screen.findByRole("heading", {
     name: "¿Qué es lo más importante para usted?",

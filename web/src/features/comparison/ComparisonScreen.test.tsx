@@ -124,7 +124,7 @@ test("loads the options, then shows the table and the footer", async () => {
   expect(screen.getByRole("button", { name: "← Sus opciones" })).toBeVisible();
   expect(screen.getByText("Toque una opción ›")).toBeVisible();
   expect(screen.getByText("ⓘ Esto es una ayuda; no reemplaza su criterio")).toBeVisible();
-  expect(screen.getByRole("button", { name: "[ Cambiar prioridades ]" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Cambiar prioridades" })).toBeVisible();
   expect(screen.queryByText(/Su rotación actual ya es la mejor/)).toBeNull();
 });
 
@@ -216,7 +216,7 @@ test("'Cambiar prioridades' and '← Sus opciones' call their handlers", async (
   const props = handlers();
   render(<ComparisonScreen request={REQUEST} {...props} />);
 
-  fireEvent.click(await screen.findByRole("button", { name: "[ Cambiar prioridades ]" }));
+  fireEvent.click(await screen.findByRole("button", { name: "Cambiar prioridades" }));
   fireEvent.click(screen.getByRole("button", { name: "← Sus opciones" }));
 
   expect(props.onChangePriorities).toHaveBeenCalledTimes(1);

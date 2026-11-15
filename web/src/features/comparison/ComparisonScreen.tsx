@@ -259,7 +259,7 @@ function ResultsView(props: ResultsViewProps) {
       <p className="ag-muted">Toque una opción ›</p>
       <p className="ag-muted">ⓘ Esto es una ayuda; no reemplaza su criterio</p>
       <button type="button" className="ag-btn ag-primary" onClick={onChangePriorities}>
-        [ Cambiar prioridades ]
+        Cambiar prioridades
       </button>
     </Page>
   );
@@ -269,7 +269,7 @@ export type ComparisonScreenProps = {
   request: RecommendationRequest;
   /** "← Sus opciones": back to the form. */
   onBack: () => void;
-  /** "[ Cambiar prioridades ]": show the form at the priorities block, answers kept. */
+  /** "Cambiar prioridades": show the form at the priorities block, answers kept. */
   onChangePriorities: () => void;
   /** 422 invalid_request: the parent shows the form again with "Revise sus respuestas". */
   onInvalidRequest: () => void;
