@@ -1,6 +1,7 @@
 // web/src/features/risks/RisksScreen.tsx
 import type { CSSProperties } from "react";
 import type { SiteRisk } from "../../contracts/contracts";
+import { buttonStyle } from "../../ui/buttonStyles";
 import { RISKS_COPY } from "./copy";
 import { RiskRow } from "./RiskRow";
 import { sortRisks } from "./riskTitle";
@@ -18,7 +19,7 @@ export interface RisksScreenProps {
 }
 
 // Áreas táctiles >= 44 px.
-const buttonStyle: CSSProperties = { minHeight: 44, minWidth: 44, padding: "0 16px" };
+
 const screenStyle: CSSProperties = { padding: 16, maxWidth: 480, margin: "0 auto" };
 const headerStyle: CSSProperties = {
   display: "flex",
@@ -45,7 +46,7 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
 
   if (view.status === "error") {
     return (
-      <button type="button" style={buttonStyle} onClick={onRetry}>
+      <button type="button" style={buttonStyle("secondary")} onClick={onRetry}>
         {RISKS_COPY.retry}
       </button>
     );
@@ -64,7 +65,11 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
           ))}
         </ul>
       )}
-      <button type="button" style={{ ...buttonStyle, marginTop: 16 }} onClick={onContinue}>
+      <button
+        type="button"
+        style={{ ...buttonStyle("primary", { fullWidth: true }), marginTop: 16 }}
+        onClick={onContinue}
+      >
         {RISKS_COPY.continue}
       </button>
     </>
@@ -80,7 +85,12 @@ export function RisksScreen({ view, onClose, onRetry, onContinue }: RisksScreenP
     >
       <header style={headerStyle}>
         <h2 id="risks-title">{RISKS_COPY.header}</h2>
-        <button type="button" style={buttonStyle} aria-label={RISKS_COPY.close} onClick={onClose}>
+        <button
+          type="button"
+          style={buttonStyle("secondary")}
+          aria-label={RISKS_COPY.close}
+          onClick={onClose}
+        >
           ✕
         </button>
       </header>

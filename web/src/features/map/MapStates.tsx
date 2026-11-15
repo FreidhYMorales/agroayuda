@@ -1,6 +1,7 @@
 // web/src/features/map/MapStates.tsx
 import type { CSSProperties } from "react";
 import type { DemoPoint } from "../../contracts/contracts";
+import { buttonStyle } from "../../ui/buttonStyles";
 import { MAP_COPY } from "./copy";
 import { DemoPlaceList } from "./DemoPlaceList";
 import type { SiteState } from "./useSite";
@@ -27,7 +28,7 @@ const loadingCardStyle: CSSProperties = {
   background: "#e0e0e0",
 };
 // Áreas táctiles >= 44 px.
-const buttonStyle: CSSProperties = { minHeight: 44, minWidth: 44, padding: "0 16px" };
+const retryStyle = buttonStyle("secondary");
 
 export function MapStates({
   site,
@@ -60,7 +61,7 @@ export function MapStates({
       )}
       {site.status === "error" && site.error !== "outside_region" && (
         <div style={panelStyle}>
-          <button type="button" style={buttonStyle} onClick={onRetry}>
+          <button type="button" style={retryStyle} onClick={onRetry}>
             {MAP_COPY.retry}
           </button>
         </div>

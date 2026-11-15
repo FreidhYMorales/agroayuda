@@ -2,6 +2,7 @@
 import type { CSSProperties } from "react";
 import type { SiteProfile } from "../../contracts/contracts";
 import { riskTitle, sortRisks } from "../risks/riskTitle";
+import { buttonStyle } from "../../ui/buttonStyles";
 import { MAP_COPY } from "./copy";
 
 export interface SummaryCardProps {
@@ -13,7 +14,7 @@ export interface SummaryCardProps {
 }
 
 // Áreas táctiles >= 44 px.
-const buttonStyle: CSSProperties = { minHeight: 44, minWidth: 44, padding: "0 16px" };
+
 const cardStyle: CSSProperties = {
   padding: 16,
   borderRadius: 12,
@@ -39,14 +40,14 @@ export function SummaryCard({
       <p>{MAP_COPY.zoneLine(site.cell_resolution_km)}</p>
       {showTopRisk && <p>{`⚠ ${riskTitle(topRisk)}`}</p>}
       <div style={actionsStyle}>
-        <button type="button" style={buttonStyle} onClick={onViewRisks}>
+        <button type="button" style={buttonStyle("secondary")} onClick={onViewRisks}>
           {MAP_COPY.viewRisks}
         </button>
-        <button type="button" style={buttonStyle} onClick={onViewRecommendations}>
+        <button type="button" style={buttonStyle("primary")} onClick={onViewRecommendations}>
           {MAP_COPY.viewRecommendations}
         </button>
       </div>
-      <button type="button" style={{ ...buttonStyle, marginTop: 8 }} onClick={onPickPlace}>
+      <button type="button" style={{ ...buttonStyle("link"), marginTop: 8 }} onClick={onPickPlace}>
         {MAP_COPY.pickPlace}
       </button>
     </section>

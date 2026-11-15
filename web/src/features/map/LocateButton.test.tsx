@@ -1,6 +1,9 @@
 // web/src/features/map/LocateButton.test.tsx
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
+import { buttonStyle } from "../../ui/buttonStyles";
+
+import { expectButtonLook } from "../../ui/expectButtonLook";
 import { LocateButton } from "./LocateButton";
 
 afterEach(cleanup);
@@ -41,5 +44,13 @@ describe("LocateButton", () => {
 
     expect(button.disabled).toBe(true);
     expect(onLocate).not.toHaveBeenCalled();
+  });
+});
+
+describe("LocateButton look", () => {
+  test("is a full-width secondary button", () => {
+    const { button } = renderButton();
+
+    expectButtonLook(button, buttonStyle("secondary", { fullWidth: true }));
   });
 });

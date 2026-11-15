@@ -3,6 +3,9 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import type { SiteProfile } from "../../contracts/contracts";
 import { bareFieldRisk, caniculaRisk, chiquimulaSite } from "./siteFixture";
+import { buttonStyle } from "../../ui/buttonStyles";
+
+import { expectButtonLook } from "../../ui/expectButtonLook";
 import { SummaryCard } from "./SummaryCard";
 
 afterEach(cleanup);
@@ -101,5 +104,21 @@ describe("SummaryCard buttons", () => {
     fireEvent.click(screen.getByRole("button", { name: "O elija un lugar: ›" }));
 
     expect(onPickPlace).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("SummaryCard button looks", () => {
+  test("Ver recomendaciones is the main action; the others are lighter", () => {
+    renderCard();
+
+    expectButtonLook(
+      screen.getByRole("button", { name: "Ver recomendaciones →" }),
+      buttonStyle("primary"),
+    );
+    expectButtonLook(screen.getByRole("button", { name: "Ver riesgos" }), buttonStyle("secondary"));
+    expectButtonLook(
+      screen.getByRole("button", { name: "O elija un lugar: ›" }),
+      buttonStyle("link"),
+    );
   });
 });
