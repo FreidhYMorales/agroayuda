@@ -3,7 +3,12 @@
 import math
 
 from contracts import Confidence, CropCatalogEntry, Level, Priorities, SiteProfile, Tier
-from engine.calendar import bare_months
+from engine.calendar import (
+    POSTRERA_PLANTING_MONTH,
+    PRIMERA_PLANTING_MONTH,
+    bare_months,
+    covered_months,
+)
 
 TIER_NUMBER: dict[Tier, int] = {"low": 1, "medium": 2, "high": 3}
 # Fallow saves water but leaves the soil bare and earns nothing.
@@ -81,6 +86,11 @@ def score_option(
 ) -> dict[str, float]:
     """Clamped float criteria: mean of both seasons for water, soil, income; min for risk."""
     first, second = crop_criteria(primera), crop_criteria(postrera)
+    # A long-cycle primera crop still in the field at the postrera planting is not fallow.
+    if postrera.id == "none" and POSTRERA_PLANTING_MONTH in covered_months(
+        primera, PRIMERA_PLANTING_MONTH
+    ):
+        second = crop_criteria(primera)
     # The canícula falls in the primera cycle; fallow has nothing to lose.
     if primera.id != "none":
         first["risk"] -= CANICULA_PENALTY.get(canicula_level(site), 0.0)

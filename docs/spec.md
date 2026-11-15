@@ -89,6 +89,7 @@ Values change only with a test.
 | Income (per crop) | market_tier 1 -> 1, 2 -> 3, 3 -> 5 |
 | Risk (per crop) | drought_tolerance 1 -> 1, 2 -> 3, 3 -> 5; primera crops lose 1 if canícula is high, 0.5 if medium (the canícula falls in the primera cycle); with irrigation, high-water crops get +1 |
 | `none` row | water 5, soil 1, income 1, risk 5 (fallow saves water but leaves soil bare and earns nothing); exempt from the canícula penalty |
+| Long-cycle primera | when postrera is `none` and the primera crop still covers the postrera planting month (`calendar.py` + `cycle_days`, e.g. gandul, canavalia), postrera scores with the primera crop's row instead of the `none` row; the canícula penalty stays on primera only; bare months are unchanged |
 | Season combination | water, soil, income = mean of primera and postrera; risk = min of the two |
 | Bare months | soil - 0.5 when `bare_months` has 6 or more months |
 | Clamp and rank | clamp each criterion to 1-5 as a float; weighted score = sum(priority x criterion) / sum(priority); rank on floats; tie-break by CSV order; `criteria` in the response are rounded with `math.floor(x + 0.5)` (not Python `round`, which rounds half to even; unit test at 2.5) |
