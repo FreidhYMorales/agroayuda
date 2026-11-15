@@ -74,10 +74,9 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 |---|---|---|
 | Claude Code (Anthropic), SI | https://claude.com/claude-code | Coding and documentation assistant (see `docs/si-usage.md`) |
 | Claude (Anthropic), claude.ai chat, SI | https://claude.ai | Chat assistant for code, tests and documentation (see `docs/si-usage.md`) |
-| _AI voice tool_, SI | _fill in_ | English voice-over of the demo video |
+| ElevenLabs, SI | https://elevenlabs.io | English AI-generated voice-over of the demo video |
 | ChatGPT (OpenAI), SI | https://chatgpt.com | Logo generation (see `docs/si-usage.md`) |
 | Gemini (Google), SI | https://gemini.google.com | Logo generation (see `docs/si-usage.md`) |
-| _Other AI tools used by owners_, SI | _fill in_ | See `docs/si-usage.md` |
 | GitHub and GitHub Actions | https://github.com | Repository and CI |
 | Vercel | https://vercel.com | Web hosting |
 | Render | https://render.com | API hosting |
