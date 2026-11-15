@@ -56,9 +56,15 @@ GEOBOUNDARIES_URL: Final = (
     "geoBoundaries-GTM-ADM1_simplified.geojson"
 )
 ADM2_URL: Final = GEOBOUNDARIES_URL.replace("/ADM1/", "/ADM2/").replace("ADM1_", "ADM2_")
-# Dry Corridor municipalities (municipality, department) added to the five departments above.
-# Each entry must come from the cited source (see data/README.md); empty until the list PRs.
-MUNICIPALITIES: Final[tuple[Municipality, ...]] = ()
+# Dry Corridor municipalities (municipality, department) added to the five departments above,
+# spelled as in geoBoundaries ADM2. Source: SESAN (2016), Plan de Respuesta para la Atención del
+# Hambre Estacional 2016, Anexo 1, pp. 28-30 (see data/README.md).
+MUNICIPALITIES: Final[tuple[Municipality, ...]] = (
+    # Huehuetenango (Anexo 1, p. 29)
+    ("Aguacatán", "Huehuetenango"),
+    ("Huehuetenango", "Huehuetenango"),
+    ("Malacatancito", "Huehuetenango"),
+)
 TYPICAL_ROTATION: Final = ("maiz", "frijol")
 
 DailyFetcher = Callable[[float, float, Path], pd.DataFrame]
@@ -119,7 +125,7 @@ def run(
     boundaries: dict[str, Any],
     *,
     adm2: dict[str, Any] | None = None,
-    municipalities: Sequence[Municipality] = MUNICIPALITIES,
+    municipalities: Sequence[Municipality] = (),
     fetch_daily: DailyFetcher = _fetch_daily,
     fetch_soil: SoilFetcher = _fetch_soil,
 ) -> list[SiteData]:
@@ -156,7 +162,7 @@ def write_map_layers(
     boundaries: dict[str, Any],
     cells: Sequence[RainCell],
     adm2: dict[str, Any] | None = None,
-    municipalities: Sequence[Municipality] = MUNICIPALITIES,
+    municipalities: Sequence[Municipality] = (),
 ) -> None:
     """rain.geojson, region.geojson, region_mask.geojson and demo_points.json under paths.web."""
     write_json(rain_geojson(cells, data_version), paths.web / "layers" / "rain.geojson")
@@ -175,7 +181,7 @@ def map_layers(
     boundaries: dict[str, Any],
     *,
     adm2: dict[str, Any] | None = None,
-    municipalities: Sequence[Municipality] = MUNICIPALITIES,
+    municipalities: Sequence[Municipality] = (),
     fetch_daily: DailyFetcher = _fetch_daily,
 ) -> list[RainCell]:
     """Annual rain normal for every region cell, then the three map files."""
@@ -222,10 +228,22 @@ def main(argv: Sequence[str] | None = None) -> None:
     paths = Paths()
     data_version = date.today().isoformat()
     if args.map_layers:
-        cells = map_layers(paths, data_version, load_boundaries(paths), adm2=load_adm2(paths))
+        cells = map_layers(
+            paths,
+            data_version,
+            load_boundaries(paths),
+            adm2=load_adm2(paths),
+            municipalities=MUNICIPALITIES,
+        )
         print(f"Wrote {len(cells)} rain cells, the region and demo points to {paths.web}")
         return
-    sites = run(paths, data_version, load_boundaries(paths), adm2=load_adm2(paths))
+    sites = run(
+        paths,
+        data_version,
+        load_boundaries(paths),
+        adm2=load_adm2(paths),
+        municipalities=MUNICIPALITIES,
+    )
     print(f"Wrote {len(sites)} cells to {paths.output} and {paths.web}")
 
 

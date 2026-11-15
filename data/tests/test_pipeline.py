@@ -129,5 +129,6 @@ def test_region_catalogs_and_demo_points_are_written(tmp_path: Path) -> None:
     assert all(RotationTemplate.model_validate(t) for t in templates)
     assert [DemoPoint.model_validate(p).id for p in points] == [
         "chiquimula",
+        "aguacatan",
         "fuera_ciudad_guatemala",
     ]

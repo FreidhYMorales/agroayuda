@@ -232,10 +232,10 @@ def test_catalog_parquet_round_trips_in_row_order(tmp_path: Path) -> None:
 # --- static json ---------------------------------------------------------------------------------
 
 
-def test_demo_points_are_chiquimula_and_one_outside_point() -> None:
+def test_demo_points_start_with_chiquimula_and_keep_the_outside_point() -> None:
     points = [DemoPoint.model_validate(p) for p in DEMO_POINTS]
 
-    assert [p.id for p in points] == ["chiquimula", "fuera_ciudad_guatemala"]
+    assert [p.id for p in points] == ["chiquimula", "aguacatan", "fuera_ciudad_guatemala"]
     assert points[0].location.lat == 14.70
     assert points[0].location.lon == -89.50
 

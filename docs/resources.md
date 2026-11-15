@@ -22,7 +22,7 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 | Musinguzi, P.; Tenywa, J. S.; Ebanyat, P.; Tenywa, M. M.; Mubiru, D. N.; Basamba, T. A.; Leip, A. (2013). Soil Organic Carbon Thresholds and Nitrogen Management in Tropical Agroecosystems: Concepts and Prospects. Journal of Sustainable Development 6(12):31-43 | https://doi.org/10.5539/jsd.v6n12p31 | Tropical review behind the low-SOC threshold (about 2 % SOC = 20 g/kg) in `data/README.md` | Cited only (journal article) | Data |
 | Musinguzi, P. et al. (2016). Critical soil organic carbon range for optimal crop response to mineral fertiliser nitrogen on a Ferralsol. Experimental Agriculture | https://www.cambridge.org/core/journals/experimental-agriculture/article/critical-soil-organic-carbon-range-for-optimal-crop-response-to-mineral-fertiliser-nitrogen-on-a-ferralsol/68E8927BE333330514FE239BEF810250 | Tropical support for the low-SOC threshold (1.9-2.2 %) | Cited only (journal article) | Data |
 | geoBoundaries (ADM1 Guatemala) | https://www.geoboundaries.org/ | Dry Corridor region outline | ODbL 1.0 (source OpenStreetMap, per the geoBoundaries GTM ADM1 metadata) | Data |
-| geoBoundaries (ADM2 Guatemala, simplified, same commit 9469f09 as ADM1) | https://www.geoboundaries.org/ | Outline of the listed Dry Corridor municipalities | ODbL 1.0 (source OpenStreetMap; confirm against the GTM ADM2 metadata before the list PR) | Data |
+| geoBoundaries (ADM2 Guatemala, simplified, same commit 9469f09 as ADM1) | https://www.geoboundaries.org/ | Outline of the listed Dry Corridor municipalities | CC BY 3.0 IGO (source CONRED and OCHA FISS, per the geoBoundaries GTM ADM2 metadata) | Data |
 | OpenFreeMap tiles | https://openfreemap.org/ | Basemap tiles | Free public instance, commercial use allowed; attribution required ("OpenFreeMap © OpenMapTiles, Data from OpenStreetMap", added by MapLibre); software MIT; map data from OpenStreetMap (ODbL) | Web map |
 | OpenStreetMap data (via OpenFreeMap) | https://www.openstreetmap.org/copyright | Basemap content; attribution shown on the map | ODbL (see link) | Web map |
 
@@ -30,6 +30,7 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 
 | Name | URL | Used for | Owner |
 |---|---|---|---|
+| SESAN (2016), Plan de Respuesta para la Atención del Hambre Estacional 2016, Anexo 1, pp. 28-30 | https://portal.siinsan.gob.gt/wp-content/uploads/Plan-de-Respuesta-para-la-Atencion-del-Hambre-Estacional-2016.pdf | List of Dry Corridor municipalities added to the region (`MUNICIPALITIES`) | Data |
 | ICTA, El cultivo del maíz en Guatemala (2002) | https://www.icta.gob.gt/publicaciones/Maiz/cultivoMaizManejoAgronomico.pdf | Maize cycle days, Dry Corridor zone | Engine |
 | CGIAR, Guía de buenas prácticas en el manejo del cultivo de frijol en Guatemala (2024) | https://cgspace.cgiar.org/server/api/core/bitstreams/9964fd5e-e848-4cf3-963b-1b2c72516e3c/content | Bean varieties, postrera sowing window | Engine |
 | ICTA, Memoria de Labores 2019 | https://www.icta.gob.gt/publicaciones/Memoriasicta/Memoria%20labores%202019.pdf | Sorghum variety ICTA Rendidor | Engine |

@@ -25,6 +25,12 @@ RAIN_SOURCE: Final = "NASA POWER (PRECTOTCORR diario, 1991-2020)"
 # Chiquimula (golden point) + one point outside the region (named cut 3).
 DEMO_POINTS: Final[list[dict[str, Any]]] = [
     {"id": "chiquimula", "name_es": "Chiquimula", "location": {"lat": 14.70, "lon": -89.50}},
+    # A point well inside the Aguacatán polygon (geoBoundaries ADM2), not the town itself.
+    {
+        "id": "aguacatan",
+        "name_es": "Aguacatán, Huehuetenango",
+        "location": {"lat": 15.33, "lon": -91.23},
+    },
     {
         "id": "fuera_ciudad_guatemala",
         "name_es": "Ciudad de Guatemala (fuera de la región)",

@@ -91,6 +91,15 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 
 - Region: Chiquimula (GT-CQ), Jutiapa (GT-JU), Zacapa (GT-ZA), El Progreso (GT-PR), Jalapa (GT-JA),
   from geoBoundaries gbOpen GTM ADM1, simplified geometry (release commit `9469f09`).
+- Plus the Dry Corridor municipalities in `MUNICIPALITIES` (`data/src/data_pipeline/__main__.py`),
+  from geoBoundaries gbOpen GTM ADM2 at the same commit, matched on name and department. Source of
+  the list: SESAN (2016), *Plan de Respuesta para la Atención del Hambre Estacional 2016*, Anexo 1
+  "Departamentos, municipios y población del Corredor Seco", pp. 28-30. Huehuetenango: Aguacatán,
+  Huehuetenango, Malacatancito (p. 29). Whole municipalities are added, even where the annex says
+  only part of the population lives inside the corridor.
+- Mountain terrain: a POWER cell is about 56 x 67 km, so in Huehuetenango one cell mixes dry
+  valleys and highlands; the regional rain and dry-spell data are less faithful there than in the
+  eastern lowlands.
 - `region.parquet` holds every ring of the 5 departments (one row per ring, even-odd rule in the
   API). `region.geojson` holds one feature per department.
 - Grid: POWER nodes at lat = -90 + 0.5 i, lon = -180 + 0.625 j, round half up (same as
@@ -115,6 +124,8 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 | NASA POWER Daily API, `PRECTOTCORR` and `T2M_MAX`, community AG, 1991-2020 (https://power.larc.nasa.gov/) | Climate normals, dry spells, rain layer | Free and open, no restrictions. Acknowledgement: "These data were obtained from the NASA Langley Research Center (LaRC) POWER Project funded through the NASA Earth Science/Applied Science Program." |
 | SoilGrids 2.0, ISRIC - World Soil Information (https://soilgrids.org/) | Soil at cell centers | CC BY 4.0 |
 | geoBoundaries gbOpen GTM ADM1 (https://www.geoboundaries.org/), source OpenStreetMap | Region outline | ODbL 1.0 (© OpenStreetMap contributors) |
+| geoBoundaries gbOpen GTM ADM2 (https://www.geoboundaries.org/), source CONRED and OCHA FISS | Outline of the listed municipalities | CC BY 3.0 IGO |
+| SESAN (2016), Plan de Respuesta para la Atención del Hambre Estacional 2016, Anexo 1 | Which municipalities are listed | Cited only (public government document) |
 
 ## References
 
