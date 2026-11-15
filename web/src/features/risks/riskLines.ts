@@ -45,14 +45,28 @@ function shortSource(source: string): string {
   return source.replace(/\s*\(.*\)\s*$/, "");
 }
 
-export function riskSourceLine(risk: SiteRisk): string {
-  const base = `Dato: ${shortSource(risk.source)}`;
+const SOURCE_WORDS = {
+  es: {
+    data: "Dato",
+    years: (count: number) => `en ${count} de ${YEARS_WINDOW} años`,
+    sample: "muestra cerca del centro de la zona",
+  },
+  en: {
+    data: "Data",
+    years: (count: number) => `in ${count} of ${YEARS_WINDOW} years`,
+    sample: "sample near the center of the zone",
+  },
+};
+
+export function riskSourceLine(risk: SiteRisk, lang: Lang = "es"): string {
+  const words = SOURCE_WORDS[lang];
+  const base = `${words.data}: ${shortSource(risk.source)}`;
 
   if (risk.id === "canicula" && risk.value !== null) {
-    return `${base} · en ${Math.round(risk.value * YEARS_WINDOW)} de ${YEARS_WINDOW} años`;
+    return `${base} · ${words.years(Math.round(risk.value * YEARS_WINDOW))}`;
   }
   if (risk.id === "missing_data") {
-    return `${base} · muestra cerca del centro de la zona`;
+    return `${base} · ${words.sample}`;
   }
   return base;
 }
