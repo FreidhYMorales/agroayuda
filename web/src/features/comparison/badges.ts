@@ -1,4 +1,5 @@
 import type { DeltaVsCurrent, RotationOption } from "../../contracts/contracts";
+import type { Lang } from "../../lib/urlState";
 
 export type Delta = DeltaVsCurrent["water"];
 
@@ -42,8 +43,17 @@ export function deltaText(d: Delta): string {
 }
 
 /** Confidence as dots plus a word, so it never relies on color alone. */
-export function confidenceText(confidence: RotationOption["confidence"]): string {
-  if (confidence === "high") return "●●● alta";
-  if (confidence === "medium") return "●●○ media";
-  return "●○○ baja";
+const CONFIDENCE_WORDS = {
+  es: { high: "alta", medium: "media", low: "baja" },
+  en: { high: "high", medium: "medium", low: "low" },
+};
+
+export function confidenceText(
+  confidence: RotationOption["confidence"],
+  lang: Lang = "es",
+): string {
+  const words = CONFIDENCE_WORDS[lang];
+  if (confidence === "high") return `●●● ${words.high}`;
+  if (confidence === "medium") return `●●○ ${words.medium}`;
+  return `●○○ ${words.low}`;
 }
