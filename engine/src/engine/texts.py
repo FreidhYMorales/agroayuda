@@ -21,6 +21,12 @@ PRIORITY_LABEL_ES = {
     "income": "el ingreso",
     "risk": "bajar el riesgo",
 }
+PRIORITY_LABEL_EN = {
+    "water": "saving water",
+    "soil": "caring for the soil",
+    "income": "income",
+    "risk": "lowering the risk",
+}
 
 
 LOCAL_REVIEW_ES = "Consulte con un técnico local antes de cambiar su siembra."
@@ -37,6 +43,13 @@ def reason_line(priorities: Priorities, criteria: Criteria) -> str:
     name = top_priority(priorities)
     score = criteria.model_dump()[name]
     return f"Su prioridad es {PRIORITY_LABEL_ES[name]}: esta opción saca {score} de 5."
+
+
+def reason_line_en(priorities: Priorities, criteria: Criteria) -> str:
+    """English version of reason_line."""
+    name = top_priority(priorities)
+    score = criteria.model_dump()[name]
+    return f"Your top priority is {PRIORITY_LABEL_EN[name]}: this option scores {score} of 5."
 
 
 def canicula_evidence(site: SiteProfile) -> list[Evidence]:
