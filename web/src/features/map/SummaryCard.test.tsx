@@ -48,6 +48,14 @@ describe("SummaryCard zone line", () => {
       screen.getByText("Zona de unos 30 km de lado (dato regional, no de su parcela)"),
     ).toBeTruthy();
   });
+
+  test("rounds the cell size to the nearest 10 km, because the text says 'unos'", () => {
+    renderCard({ ...chiquimulaSite, cell_resolution_km: 61.7 });
+
+    expect(
+      screen.getByText("Zona de unos 60 km de lado (dato regional, no de su parcela)"),
+    ).toBeTruthy();
+  });
 });
 
 describe("SummaryCard top risk", () => {

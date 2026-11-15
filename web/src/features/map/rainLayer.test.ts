@@ -135,4 +135,9 @@ describe("rainSourceDetail", () => {
   test("takes the cell size from the layer, not from a constant", () => {
     expect(rainSourceDetail(properties(1200, 30))).toBe("NASA POWER · celdas de unos 30 km");
   });
+
+  test("rounds the cell size to the nearest 10 km, because the text says 'unos'", () => {
+    expect(rainSourceDetail(properties(1396.1, 61.7))).toBe("NASA POWER · celdas de unos 60 km");
+    expect(rainSourceDetail(properties(1396.1, 68))).toBe("NASA POWER · celdas de unos 70 km");
+  });
 });
