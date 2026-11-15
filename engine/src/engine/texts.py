@@ -75,10 +75,14 @@ POWER_GAP_ES = "La lluvia de NASA POWER es una estimación regional."
 SOIL_GAP_ES = "No hay datos de suelo para este punto."
 
 
+def _missing_soil(site: SiteProfile) -> bool:
+    soil = site.soil
+    return None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+
+
 def data_gaps(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
     """What the advice cannot rest on: missing soil, non-local crops, then the regional rain."""
-    soil = site.soil
-    missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+    missing_soil = _missing_soil(site)
     general = [
         f"{crop.name_es}: valor general, validar localmente."
         for crop in crops
@@ -106,8 +110,7 @@ CROP_NAME_EN: dict[CropId, str] = {
 
 def data_gaps_en(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
     """English version of data_gaps."""
-    soil = site.soil
-    missing_soil = None in (soil.clay_pct, soil.sand_pct, soil.ph, soil.soc_g_kg)
+    missing_soil = _missing_soil(site)
     general = [
         f"{CROP_NAME_EN[crop.id]}: general value, check locally."
         for crop in crops
