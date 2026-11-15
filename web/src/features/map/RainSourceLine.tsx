@@ -15,7 +15,8 @@ const sourceStyle = buttonStyle("link");
 
 export function RainSourceLine({ properties }: RainSourceLineProps) {
   const [open, setOpen] = useState(false);
-  const copy = mapCopy(useLang());
+  const lang = useLang();
+  const copy = mapCopy(lang);
 
   return (
     <div>
@@ -28,7 +29,7 @@ export function RainSourceLine({ properties }: RainSourceLineProps) {
         {copy.sourceLine}
       </button>
       {/* Text only: no NASA logo, as the work package requires. */}
-      {open && <p>{rainSourceDetail(properties)}</p>}
+      {open && <p>{rainSourceDetail(properties, lang)}</p>}
     </div>
   );
 }
