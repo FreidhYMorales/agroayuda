@@ -1,4 +1,5 @@
 from contracts import CropCatalogEntry, SiteProfile
+from engine.calendar import bare_months
 from engine.scoring import score_option
 
 
@@ -37,3 +38,16 @@ def test_five_bare_months_cost_nothing(
 ) -> None:
     # maíz May-Aug, frijol Sep-Nov: bare Dec-Apr (5). Soil (2 + 3) / 2, no penalty.
     assert soil(site, crops, "maiz", "frijol") == 2.5
+
+
+def test_short_cycle_crop_leaves_postrera_fallow(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # Story 18 guard. maíz 120 d covers May-Aug, gone by the September planting: postrera stays
+    # fallow (none row soil 1). Bare Sep-Apr (8). Soil (2 + 1) / 2 - 0.5.
+    assert soil(site, crops, "maiz", "none") == 1.0
+
+
+def test_long_cycle_crop_keeps_its_bare_months(crops: dict[str, CropCatalogEntry]) -> None:
+    # Story 18 guard. gandul 180 d covers May-Oct: bare Nov-Apr, listed December first.
+    assert bare_months(crops["gandul"], crops["none"]) == [12, 1, 2, 3, 4, 11]
