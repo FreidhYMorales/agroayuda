@@ -1,8 +1,23 @@
 // web/src/features/risks/copy.ts
-export const RISKS_COPY = {
+// Risks screen texts in Spanish (Guatemala, "usted") and their English version.
+import type { Lang } from "../../lib/urlState";
+
+const ES = {
   header: "Riesgos de esta zona",
   close: "Cerrar",
   noStrongRisk: "No encontramos riesgos fuertes en esta zona",
   continue: "Ver recomendaciones →",
   retry: "Intentar de nuevo",
-} as const;
+};
+
+const EN: typeof ES = {
+  header: "Risks in this area",
+  close: "Close",
+  noStrongRisk: "We found no strong risks in this area",
+  continue: "See recommendations →",
+  retry: "Try again",
+};
+
+export function risksCopy(lang: Lang): typeof ES {
+  return lang === "en" ? EN : ES;
+}

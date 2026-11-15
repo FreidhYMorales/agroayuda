@@ -4,6 +4,7 @@ import type { SiteRisk } from "../../contracts/contracts";
 import { riskPeriod, riskSourceLine } from "./riskLines";
 import { COLORS } from "../../ui/colors";
 import { riskTitle } from "./riskTitle";
+import { type Lang, useLang } from "../../lib/urlState";
 
 // A circle drawn with CSS plus a glyph every phone font has. "◐" was missing
 // from common fonts and showed as "◖". Text colors meet WCAG AA on each fill.
@@ -31,8 +32,8 @@ const badgeBaseStyle: CSSProperties = {
 };
 
 // The missing data title already has its own ❔: no badge is repeated.
-function showsBadge(risk: SiteRisk): boolean {
-  return !riskTitle(risk).startsWith("❔");
+function showsBadge(risk: SiteRisk, lang: Lang): boolean {
+  return !riskTitle(risk, lang).startsWith("❔");
 }
 
 function LevelBadge({ level }: { level: SiteRisk["level"] }) {
@@ -58,16 +59,17 @@ const titleStyle: CSSProperties = { fontWeight: 600 };
 const detailStyle: CSSProperties = { fontSize: "0.875rem", marginTop: 2 };
 
 export function RiskRow({ risk }: { risk: SiteRisk }) {
-  const period = riskPeriod(risk);
+  const lang = useLang();
+  const period = riskPeriod(risk, lang);
 
   return (
     <li style={rowStyle}>
       <div style={titleStyle}>
-        {showsBadge(risk) && <LevelBadge level={risk.level} />}
-        {riskTitle(risk)}
+        {showsBadge(risk, lang) && <LevelBadge level={risk.level} />}
+        {riskTitle(risk, lang)}
       </div>
       {period !== "" && <div style={detailStyle}>{period}</div>}
-      <div style={detailStyle}>{riskSourceLine(risk)}</div>
+      <div style={detailStyle}>{riskSourceLine(risk, lang)}</div>
     </li>
   );
 }

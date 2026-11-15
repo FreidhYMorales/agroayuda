@@ -27,7 +27,8 @@ export function SummaryCard({
   onViewRecommendations,
   onPickPlace,
 }: SummaryCardProps) {
-  const copy = mapCopy(useLang());
+  const lang = useLang();
+  const copy = mapCopy(lang);
   const topRisk = sortRisks(site.risks)[0];
   const showTopRisk = topRisk !== undefined && topRisk.level === "high";
 
@@ -35,7 +36,7 @@ export function SummaryCard({
     <section style={cardStyle}>
       <h2 style={titleStyle}>{placeName ?? copy.defaultTitle}</h2>
       <p>{copy.zoneLine(site.cell_resolution_km)}</p>
-      {showTopRisk && <p>{`⚠ ${riskTitle(topRisk)}`}</p>}
+      {showTopRisk && <p>{`⚠ ${riskTitle(topRisk, lang)}`}</p>}
       <div style={actionsStyle}>
         <button type="button" style={buttonStyle("secondary")} onClick={onViewRisks}>
           {copy.viewRisks}

@@ -80,3 +80,45 @@ describe("riskSourceLine", () => {
     expect(riskSourceLine(risk)).toBe("Dato: SoilGrids · muestra cerca del centro de la zona");
   });
 });
+
+describe("riskPeriod in English", () => {
+  test("canícula reads mid plus the English range", () => {
+    expect(riskPeriod(makeRisk(), "en")).toBe("mid Jul-Aug");
+  });
+
+  test("an estimated period that wraps the year reads Dec-Apr (estimated)", () => {
+    const risk = makeRisk({
+      id: "bare_field",
+      period_months: [12, 1, 2, 3, 4],
+      estimated: true,
+    });
+
+    expect(riskPeriod(risk, "en")).toBe("Dec-Apr (estimated)");
+  });
+
+  test("a single month reads its English name", () => {
+    expect(riskPeriod(makeRisk({ id: "heat", period_months: [4] }), "en")).toBe("Apr");
+  });
+});
+
+describe("riskSourceLine in English", () => {
+  test("canícula says in how many of the 30 years", () => {
+    expect(riskSourceLine(makeRisk({ value: 0.4 }), "en")).toBe(
+      "Data: NASA POWER · in 12 of 30 years",
+    );
+  });
+
+  test("missing data says where the soil sample is", () => {
+    const risk = makeRisk({ id: "missing_data", level: "unknown", source: "SoilGrids 2.0" });
+
+    expect(riskSourceLine(risk, "en")).toBe(
+      "Data: SoilGrids 2.0 · sample near the center of the zone",
+    );
+  });
+
+  test("other risks show only the source", () => {
+    expect(riskSourceLine(makeRisk({ id: "heat", source: "NASA POWER (T2M_MAX)" }), "en")).toBe(
+      "Data: NASA POWER",
+    );
+  });
+});
