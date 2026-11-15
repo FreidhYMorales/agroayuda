@@ -43,12 +43,6 @@ const SELECTED_SOURCE = "selected-cell";
 const INITIAL_CENTER: [number, number] = [-89.6, 14.9];
 const INITIAL_ZOOM = 7;
 
-// Verify the exact wording OpenFreeMap asks for in its documentation.
-const ATTRIBUTION =
-  '<a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a> ' +
-  '<a href="https://www.openmaptiles.org/" target="_blank" rel="noopener noreferrer">© OpenMapTiles</a> ' +
-  'Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>';
-
 const containerStyle: CSSProperties = { width: "100%", height: "100%", minHeight: 240 };
 
 interface OverlayData {
@@ -126,12 +120,15 @@ export function MapView({ rain, region, site, onSelectPoint, onError }: MapViewP
       // Read through the ref: the map is created once, not per region change.
       bounds: regionBounds(latest.current.region) ?? undefined,
       fitBoundsOptions: { padding: 24 },
-      // The default control is replaced by one with fixed text, so the
-      // attribution stays visible with the fallback style too.
+      // Replaced by a compact control below.
       attributionControl: false,
     });
     mapRef.current = map;
-    map.addControl(new AttributionControl({ compact: true, customAttribution: ATTRIBUTION }));
+    // The text comes from the OpenFreeMap TileJSON ("OpenFreeMap © OpenMapTiles
+    // Data from OpenStreetMap"), so it shows exactly when OSM tiles are drawn.
+    // Adding it again as custom text showed it twice. The fallback style draws
+    // no third-party tiles, so it needs none.
+    map.addControl(new AttributionControl({ compact: true }));
 
     map.on("style.load", () => addOverlays(map, latest.current));
 

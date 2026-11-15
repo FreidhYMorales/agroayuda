@@ -33,7 +33,9 @@ const mocks = vi.hoisted(() => {
 
   const api = {
     mapCreated: vi.fn((_options: MapOptions) => undefined),
-    attributionCreated: vi.fn((_options: { customAttribution?: string }) => undefined),
+    attributionCreated: vi.fn(
+      (_options: { customAttribution?: string; compact?: boolean }) => undefined,
+    ),
     on: vi.fn((event: string, handler: Handler) => {
       handlers.set(event, [...(handlers.get(event) ?? []), handler]);
     }),
@@ -70,7 +72,7 @@ vi.mock("maplibre-gl", () => {
   }
 
   class FakeAttributionControl {
-    constructor(options: { customAttribution?: string }) {
+    constructor(options: { customAttribution?: string; compact?: boolean }) {
       mocks.api.attributionCreated(options);
     }
   }
@@ -212,14 +214,16 @@ describe("MapView setup", () => {
     expect(options.fitBoundsOptions?.padding).toBeGreaterThan(0);
   });
 
-  test("shows the OpenFreeMap and OpenStreetMap attribution", () => {
+  // The OpenFreeMap TileJSON already carries "OpenFreeMap © OpenMapTiles Data
+  // from OpenStreetMap"; adding it again as custom text showed it twice.
+  test("shows one compact attribution control, with the text from the tiles only", () => {
     renderMap();
 
     expect(mocks.api.mapCreated.mock.calls[0][0].attributionControl).toBe(false);
     expect(mocks.api.attributionCreated).toHaveBeenCalledTimes(1);
-    const text = mocks.api.attributionCreated.mock.calls[0][0].customAttribution ?? "";
-    expect(text).toContain("OpenFreeMap");
-    expect(text).toContain("OpenStreetMap");
+    const options = mocks.api.attributionCreated.mock.calls[0][0];
+    expect(options.customAttribution).toBeUndefined();
+    expect(options.compact).toBe(true);
     expect(mocks.api.addControl).toHaveBeenCalledTimes(1);
   });
 
