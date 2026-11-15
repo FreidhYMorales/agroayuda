@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 from contracts import (
     CropCatalogEntry,
     RecommendationRequest,
@@ -50,3 +52,17 @@ def test_four_improvements_are_listed_with_commas_and_y(
     assert benefits[("frijol", "maicillo")] == [
         "Mejora frente a su rotación en: agua, suelo, ingreso y riesgo."
     ]
+
+
+def test_no_improvement_means_no_benefits_line(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    make_template: Callable[[str, str], RotationTemplate],
+) -> None:
+    """canavalia and gandul share tiers and cycle in crops.csv, so canavalia -> maicillo
+    improves nothing over current gandul -> maicillo; the current never has a line."""
+    templates = [make_template("canavalia", "maicillo"), make_template("frijol", "maicillo")]
+
+    benefits = recommend_for(site, crops, templates, "gandul", "maicillo")
+
+    assert (benefits[("gandul", "maicillo")], benefits[("canavalia", "maicillo")]) == ([], [])
