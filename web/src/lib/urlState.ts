@@ -13,6 +13,7 @@ export interface AppState {
   postrera?: CropId;
   priorities: Priorities;
   irrigation?: boolean;
+  lang?: "en"; // Spanish is the default, so only English is kept in the URL.
 }
 
 const STEPS: readonly Step[] = ["map", "risks", "form", "results"];
@@ -65,6 +66,8 @@ export function readState(search: string): AppState {
   if (irr === "1") state.irrigation = true;
   else if (irr === "0") state.irrigation = false;
 
+  if (params.get("lang") === "en") state.lang = "en";
+
   return state;
 }
 
@@ -81,6 +84,7 @@ export function toSearch(state: AppState): string {
   params.set("i", String(state.priorities.income));
   params.set("r", String(state.priorities.risk));
   if (state.irrigation !== undefined) params.set("irr", state.irrigation ? "1" : "0");
+  if (state.lang !== undefined) params.set("lang", state.lang);
   return `?${params.toString()}`;
 }
 
