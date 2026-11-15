@@ -1,6 +1,6 @@
 # Work package 09: Web — responsive layout: phone, tablet and desktop views
 
-Owner: ________ · Estimate: 5-6 hours · Due: ________ (the lead sets it; not during the recording freeze, Sun 12:30-15:30) · Depends on: packages 03 (map, risks, App shell) and 04 (form, comparison) merged in `main`
+Estimate: 5-6 hours · Depends on: packages 03 (map, risks, App shell) and 04 (form, comparison), both merged in `main` · Do not merge layout changes during a demo recording.
 
 How to work this package with Claude, step by step: `09-responsive-ai-guide.md` (read it first).
 

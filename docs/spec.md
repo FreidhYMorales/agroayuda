@@ -8,8 +8,8 @@ The rules the team builds against: contracts list, engine rules (incl. Scoring v
 
 A phone-first web app for farmers in Guatemala's Dry Corridor. The farmer picks a point on a map with a NASA rainfall layer (source visible), sees the site's risks (canícula, bare-field period, heat, missing data) in plain language, enters the current primera/postrera crops, priorities and irrigation, and compares the current rotation against two alternatives from a curated list of local rotations, ranked by the farmer's priorities. Each option shows why, NASA evidence, benefits, missing data and what to check with a local technician.
 
-- Web, mobile-first: Chrome/Safari last 2 versions; phone width (~360 px) first, desktop second. Public URL (Vercel web + Render API).
-- Out of scope: native apps, offline mode, desktop-specific layouts, accounts. No user data is stored server-side.
+- Web, mobile-first: Chrome/Safari last 2 versions; phone width (~360 px) first; tablet (>= 768 px) and desktop (>= 1200 px) views that reuse the same screens and flow (work package 09). Public URL (Vercel web + Render API).
+- Out of scope: native apps, offline mode, desktop-only screens or flows, accounts. No user data is stored server-side.
 
 **Primary user:** the farmer (a technician may accompany). Copy rules: usted throughout; short plain sentences; icon plus text, never color alone; no jargon on the first level; sources, confidence and technical detail one tap away ("¿De dónde sale este dato?").
 
