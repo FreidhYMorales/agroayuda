@@ -49,13 +49,11 @@ type MapDataState =
 // locate button stays on top, the map takes the free space with its legend on
 // it, and the card lives in a bottom sheet that scrolls on its own, so the
 // result of a tap is visible without scrolling the page.
-const screenStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  height: "100dvh",
-};
+// The layout itself lives in the ag-map-* classes (src/ui/layout.ts): on
+// tablets, desktops and landscape phones the header and the sheet move into a
+// side panel on the right and the map gets the full height. Only what is the
+// same in every view stays inline here.
 const headerStyle: CSSProperties = {
-  flex: "none",
   padding: 12,
   backgroundColor: COLORS.background,
 };
@@ -92,7 +90,6 @@ function LanguageToggle() {
   );
 }
 
-const mapAreaStyle: CSSProperties = { position: "relative", flex: "1 1 auto", minHeight: 200 };
 const mapOverlayStyle: CSSProperties = {
   position: "absolute",
   // Top corner: the bottom one belongs to the map attribution.
@@ -109,18 +106,12 @@ const mapOverlayStyle: CSSProperties = {
   background: "rgba(255, 255, 255, 0.9)",
   boxShadow: "0 1px 4px rgba(0, 0, 0, 0.2)",
 };
+// Height, corners and shadow change with the view, so they live in .ag-map-sheet.
 const sheetStyle: CSSProperties = {
-  flex: "0 1 auto",
-  maxHeight: "50dvh",
   overflowY: "auto",
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-  padding: "8px 12px 16px",
-  borderRadius: "16px 16px 0 0",
   backgroundColor: COLORS.background,
-  boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.15)",
 };
+// The handle means "drag up"; .ag-map-handle hides it in the side layout.
 const handleStyle: CSSProperties = {
   alignSelf: "center",
   flex: "none",
@@ -195,8 +186,8 @@ export function MapScreen({
   const firstCell = mapData.status === "ready" ? mapData.data.rain.features[0] : undefined;
 
   return (
-    <section style={screenStyle} aria-label={copy.defaultTitle}>
-      <div style={headerStyle}>
+    <section className="ag-map-screen" aria-label={copy.defaultTitle}>
+      <div className="ag-map-header" style={headerStyle}>
         <div style={headerRowStyle}>
           <div style={{ flex: "1 1 auto" }}>
             <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
@@ -206,7 +197,7 @@ export function MapScreen({
       </div>
 
       {mapData.status === "ready" && (
-        <div style={mapAreaStyle} data-testid="map-area">
+        <div className="ag-map-area" data-testid="map-area">
           <MapView
             rain={mapData.data.rain}
             region={mapData.data.region}
@@ -222,8 +213,8 @@ export function MapScreen({
         </div>
       )}
 
-      <div style={sheetStyle} data-testid="map-sheet">
-        <div style={handleStyle} aria-hidden="true" />
+      <div className="ag-map-sheet" style={sheetStyle} data-testid="map-sheet">
+        <div className="ag-map-handle" style={handleStyle} aria-hidden="true" />
 
         <MapStates
           site={site}

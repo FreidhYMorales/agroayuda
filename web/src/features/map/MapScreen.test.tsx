@@ -241,6 +241,47 @@ describe("MapScreen layout", () => {
   });
 });
 
+describe("MapScreen responsive layout (work package 09)", () => {
+  const precedes = (a: Element, b: Element) =>
+    (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+
+  test("the screen, header, map area, sheet and handle carry the layout classes", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+
+    const root = screen.getByRole("region");
+    const sheet = screen.getByTestId("map-sheet");
+    expect(root.classList).toContain("ag-map-screen");
+    expect(root.querySelector(".ag-map-header")).not.toBeNull();
+    expect(screen.getByTestId("map-area").classList).toContain("ag-map-area");
+    expect(sheet.classList).toContain("ag-map-sheet");
+    expect(sheet.querySelector(".ag-map-handle")).not.toBeNull();
+  });
+
+  test("no inline height, max height, corners or shadow are left to block the side layout", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+
+    for (const element of [
+      screen.getByRole("region"),
+      screen.getByTestId("map-area"),
+      screen.getByTestId("map-sheet"),
+    ]) {
+      expect(element.style.height).toBe("");
+      expect(element.style.maxHeight).toBe("");
+      expect(element.style.borderRadius).toBe("");
+      expect(element.style.boxShadow).toBe("");
+    }
+  });
+
+  test("the DOM order stays header, map, sheet (screen readers and tab order)", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+
+    const header = screen.getByRole("region").querySelector(".ag-map-header");
+    expect(header).not.toBeNull();
+    expect(precedes(header as Element, screen.getByTestId("map-area"))).toBe(true);
+    expect(precedes(screen.getByTestId("map-area"), screen.getByTestId("map-sheet"))).toBe(true);
+  });
+});
+
 describe("MapScreen summary card", () => {
   test("shows the picked place name, the zone line and the top risk", async () => {
     await renderScreen({ site: READY, placeId: "chiquimula" });
