@@ -11,7 +11,14 @@ from typing import Any
 import pytest
 from test_pipeline import VERSION, fake_daily, fake_soil, write_catalogs
 
-from data_pipeline.__main__ import ADM2_URL, GEOBOUNDARIES_URL, MUNICIPALITIES, Paths, run
+from data_pipeline.__main__ import (
+    ADM2_URL,
+    GEOBOUNDARIES_URL,
+    MUNICIPALITIES,
+    Paths,
+    run,
+    write_map_layers,
+)
 from data_pipeline.grid import _point_in_rings, cells_intersecting
 from data_pipeline.outputs import region_geojson, region_rings, select_adm2, split_multipolygons
 from data_pipeline.parquet_io import read_site_data
@@ -254,6 +261,25 @@ def test_run_writes_a_site_for_a_cell_of_the_listed_municipality(tmp_path: Path)
     region = json.loads((paths.web / "region.geojson").read_text("utf-8"))
     names = [f["properties"]["shapeName"] for f in region["features"]]
     assert names == ["Chiquimula", "Aguacatán"]
+
+
+def test_map_mask_leaves_the_listed_municipality_undimmed(tmp_path: Path) -> None:
+    """region_mask.geojson dims the outside: a listed municipality must be a hole in it."""
+    paths = Paths(
+        cache=tmp_path / "cache",
+        catalog=tmp_path / "catalog",
+        output=tmp_path / "output",
+        web=tmp_path / "web",
+    )
+    adm2, listed = collection(AGUACATAN), [("Aguacatán", "Huehuetenango")]
+
+    write_map_layers(paths, VERSION, ADM1, [], adm2, listed)
+
+    mask = json.loads((paths.web / "region_mask.geojson").read_text("utf-8"))
+    rings = mask["features"][0]["geometry"]["coordinates"]
+    assert not _even_odd((-91.3, 15.4), rings)  # inside Aguacatán: not dimmed
+    assert not _even_odd((-89.2, 14.65), rings)  # inside Chiquimula: not dimmed
+    assert _even_odd((-91.8, 15.8), rings)  # Chiantla, unlisted: dimmed
 
 
 # --- real files (skipped when the geoBoundaries cache is absent) ---------------------------------
