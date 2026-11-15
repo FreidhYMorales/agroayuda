@@ -140,3 +140,18 @@ describe("SummaryCard frame", () => {
     expect(screen.getByRole("heading", { name: "Su zona" }).style.marginTop).toBe("0px");
   });
 });
+
+describe("SummaryCard top risk in English", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("with lang=en the strong risk line is in English", () => {
+    window.history.replaceState(null, "", "/?step=map&lang=en");
+
+    renderCard();
+
+    expect(screen.getByText("⚠ Strong dry spell (canícula)")).toBeTruthy();
+    expect(screen.queryByText("⚠ Canícula fuerte")).toBeNull();
+  });
+});
