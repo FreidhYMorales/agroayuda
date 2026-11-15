@@ -2,6 +2,9 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import type { SiteRisk } from "../../contracts/contracts";
+import { buttonStyle } from "../../ui/buttonStyles";
+
+import { expectButtonLook } from "../../ui/expectButtonLook";
 import { RisksScreen } from "./RisksScreen";
 import { nullSoilSite } from "../map/siteFixture";
 
@@ -194,5 +197,16 @@ describe("RisksScreen with the null soil example", () => {
     renderReady(nullSoilSite.risks);
 
     expect(screen.getByText("Dato: SoilGrids · muestra cerca del centro de la zona")).toBeTruthy();
+  });
+});
+
+describe("RisksScreen button looks", () => {
+  test("Ver recomendaciones is the full-width main action", () => {
+    renderReady([makeRisk()]);
+
+    expectButtonLook(
+      screen.getByRole("button", { name: "Ver recomendaciones →" }),
+      buttonStyle("primary", { fullWidth: true }),
+    );
   });
 });

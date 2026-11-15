@@ -2,6 +2,9 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test } from "vitest";
 import type { RainCellProperties } from "../../contracts/contracts";
+import { buttonStyle } from "../../ui/buttonStyles";
+
+import { expectButtonLook } from "../../ui/expectButtonLook";
 import { RainSourceLine } from "./RainSourceLine";
 
 afterEach(cleanup);
@@ -55,5 +58,13 @@ describe("RainSourceLine", () => {
     fireEvent.click(button);
 
     expect(container.querySelector("img, svg")).toBeNull();
+  });
+});
+
+describe("RainSourceLine look", () => {
+  test("the source line is a link-style button", () => {
+    const { button } = renderLine();
+
+    expectButtonLook(button, buttonStyle("link"));
   });
 });

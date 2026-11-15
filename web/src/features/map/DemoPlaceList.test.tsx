@@ -2,6 +2,9 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import type { DemoPoint } from "../../contracts/contracts";
+import { buttonStyle } from "../../ui/buttonStyles";
+
+import { expectButtonLook } from "../../ui/expectButtonLook";
 import { DemoPlaceList } from "./DemoPlaceList";
 import { chiquimulaPlace, demoPlaces, outsidePlace } from "./siteFixture";
 
@@ -54,5 +57,16 @@ describe("DemoPlaceList", () => {
     const { onPick } = renderList();
 
     expect(onPick).not.toHaveBeenCalled();
+  });
+});
+
+describe("DemoPlaceList look", () => {
+  test("each place is a full-width secondary button", () => {
+    renderList();
+
+    expectButtonLook(
+      screen.getByRole("button", { name: "Chiquimula" }),
+      buttonStyle("secondary", { fullWidth: true }),
+    );
   });
 });
