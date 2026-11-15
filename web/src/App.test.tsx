@@ -363,3 +363,22 @@ describe("App error boundary", () => {
     expect(screen.getByTestId("risks-screen")).toBeTruthy();
   });
 });
+
+describe("App language", () => {
+  afterEach(() => {
+    document.documentElement.lang = "es-GT";
+  });
+
+  test("lang=en makes the page English; no lang keeps it Spanish (Guatemala)", () => {
+    goTo("?lang=en");
+    renderApp();
+
+    expect(document.documentElement.lang).toBe("en");
+
+    cleanup();
+    goTo("");
+    renderApp();
+
+    expect(document.documentElement.lang).toBe("es-GT");
+  });
+});
