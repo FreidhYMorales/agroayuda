@@ -65,3 +65,9 @@ test("confidence shows dots and a word", () => {
   expect(confidenceText("medium")).toBe("●●○ media");
   expect(confidenceText("low")).toBe("●○○ baja");
 });
+
+test("confidence words in English", () => {
+  expect(confidenceText("high", "en")).toBe("●●● high");
+  expect(confidenceText("medium", "en")).toBe("●●○ medium");
+  expect(confidenceText("low", "en")).toBe("●○○ low");
+});
