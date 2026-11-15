@@ -357,3 +357,20 @@ test("with lang=en loading says so and, after 5 seconds, that the server is waki
 
   expect(screen.getByText("Waking up the server, one moment…")).toBeVisible();
 });
+
+test("with lang=en a failed load says so and offers Try again, but not without data", async () => {
+  window.history.replaceState(null, "", "/?step=results&lang=en");
+  onTestFinished(() => window.history.replaceState(null, "", "/"));
+  fetchMock.mockResolvedValueOnce(errorResponse("internal", 500));
+  const first = render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  expect(await screen.findByText("We could not get your options.")).toBeVisible();
+  expect(screen.getByRole("button", { name: "Try again" })).toBeVisible();
+  first.unmount();
+
+  fetchMock.mockResolvedValueOnce(errorResponse("not_found", 404));
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  expect(await screen.findByText("We could not get your options.")).toBeVisible();
+  expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
+});
