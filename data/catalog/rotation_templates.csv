@@ -1,0 +1,7 @@
+id,primera,postrera,description_es,source
+maiz__frijol,maiz,frijol,Maíz en primera y frijol en postrera.,"CGIAR-FRIJOL (frijol de postrera en el oriente, siembra del 15 de agosto al 15 de septiembre); ICTA-MAIZ (maíz de bajura en la zona de humedad limitada)"
+maiz_frijol__maicillo,maiz_frijol,maicillo,Maíz con frijol en primera y maicillo en postrera.,"CGIAR-FRIJOL (maíz y frijol en asocio); ICTA-SORGO (maicillo ICTA Rendidor para la segunda siembra); USAC-JUTIAPA (maíz, frijol y maicillo, cultivos tradicionales del suroriente de Jutiapa)"
+maiz__maicillo,maiz,maicillo,Maíz en primera y maicillo en postrera.,ICTA-MAIZ (maíz B-5 recomendado para lluvia escasa o mal distribuida); ICTA-SORGO (maicillo ICTA Rendidor para la segunda siembra); USAC-JUTIAPA (cultivos tradicionales del suroriente de Jutiapa)
+frijol__maicillo,frijol,maicillo,Frijol en primera y maicillo en postrera.,"CGIAR-FRIJOL (guía del cultivo de frijol en Guatemala); ICTA-SORGO (maicillo ICTA Rendidor para la segunda siembra); USAC-JUTIAPA (frijol y maicillo, cultivos tradicionales del suroriente de Jutiapa)"
+maiz__mucuna,maiz,mucuna,Maíz en primera y mucuna (abono verde) en postrera.,ICTA-ABONOS (mucuna se adapta al Corredor Seco y el ICTA la promueve en sistemas de maíz); ICTA-MAIZ (maíz de bajura)
+gandul__none,gandul,none,Gandul en primera y el terreno en descanso en postrera.,ICTA-ABONOS (gandul se adapta al Corredor Seco; su grano se come y también sirve de forraje)

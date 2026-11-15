@@ -20,7 +20,7 @@ AI coding assistants helped write code in every module. A human chose what to bu
 | `data/` pipeline, `engine/src/engine/risks.py` | Data owner | Claude Code (Anthropic) | Pipeline and risk code and tests written test-first with the assistant from the work package; the owner chose N, the cut-offs and the SoilGrids depth, and the region-wide dry-day check was run on real POWER data before any rule was fixed |
 | `engine/` | Engine owner | _fill in_ | _fill in_ |
 | `web/` map and risks | Web-map owner | _fill in_ | _fill in_ |
-| `web/` form and comparison | Web-results owner | _fill in_ | _fill in_ |
+| `web/` form and comparison, `data/catalog/rotation_templates.csv`, README | Web-results owner | Claude (Anthropic), in the claude.ai chat | Form, comparison table, detail, API call and tests drafted test-first from the work package and then reviewed and run by the owner (`make check`); the template rows were assembled from `docs/crop-sources.md` and checked against `crops.csv` by a test; the owner confirms the combinations with the lead's curated list |
 
 ### Data
 
