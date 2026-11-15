@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { CATALOG_FIXTURE } from "./catalogFixture";
 import { DEFAULT_PRIORITIES, FormScreen, type FormValues } from "./FormScreen";
 
@@ -220,4 +220,37 @@ test("scrolls to the priorities block when asked", async () => {
   expect(scrollIntoView.mock.contexts[0]).toBe(
     screen.getByRole("heading", { name: "¿Qué es lo más importante para usted?" }),
   );
+});
+
+describe("FormScreen in English", () => {
+  beforeEach(() => {
+    window.history.replaceState(null, "", "/?step=form&lang=en");
+  });
+
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("the form texts are in English", async () => {
+    setup();
+
+    expect(screen.getByRole("button", { name: "← Your plot" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", {
+        name: "What do you plant in the first season (primera)?",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "And in the second season (postrera)?" }),
+    ).toBeVisible();
+    expect(screen.getByRole("heading", { name: "What matters most to you?" })).toBeVisible();
+    expect(screen.getByRole("group", { name: "💧 Save water" })).toBeVisible();
+    expect(screen.getByRole("group", { name: "🟫 Care for the soil" })).toBeVisible();
+    expect(screen.getByRole("group", { name: "💰 Earn more" })).toBeVisible();
+    expect(screen.getByRole("group", { name: "🛡 Less risk" })).toBeVisible();
+    const irrigation = screen.getByRole("group", { name: "Do you have irrigation?" });
+    expect(within(irrigation).getByRole("radio", { name: "Yes" })).toBeInTheDocument();
+    expect(within(irrigation).getByRole("radio", { name: "No" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Compare options →" })).toBeVisible();
+  });
 });
