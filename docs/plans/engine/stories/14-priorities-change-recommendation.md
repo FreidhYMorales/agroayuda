@@ -35,3 +35,7 @@ Risk: none
 
 - L1 request: si, dale con /flow:story 14
 - L2 user chose option 1: re-pin the demo to maíz → maicillo with 5/3/3/3 vs 1/1/5/1 (with maíz → frijol, income first leaves the current rotation as the best, so no option is recommended).
+- L3 test list approved (mode B): two golden tests on the real catalog and templates.
+- L4 commits: e4faa0c golden tests (green on first run, no production code: the current rules already give the answers; proven by mutants "income weight 0" (fails the income test) and "slot1_rank < current_rank" (fails both)); cfd03d4 docs: spec golden rule, demo data and demo flow, engine package golden row and H20 check, web-results recording steps re-pinned to maíz -> maicillo with 5/3/3/3 vs 1/1/5/1.
+- L5 the same-size mutant left a stale .pyc again: `fd` skips gitignored `__pycache__`, so clear with `fd -I`. After clearing, make check green: 214 pytest, 233 vitest, ruff, mypy, biome, tsc. No verifier (Risk: none).
+Risk: none
