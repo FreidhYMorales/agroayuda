@@ -9,8 +9,6 @@ import { sequenceLabel } from "./cropLabels";
 import { OptionDetail } from "./OptionDetail";
 import { Page, visuallyHidden } from "./theme";
 
-export const RETRY_LABEL = "Intentar de nuevo";
-
 // The labels come from comparisonCopy, by key.
 const CRITERIA = [
   { key: "water", icon: "💧" },
@@ -265,10 +263,10 @@ function ResultsView(props: ResultsViewProps) {
       <Page>
         {back}
         <div className="ag-card">
-          <p>No pudimos traer sus opciones.</p>
+          <p>{copy.loadError}</p>
           {state.error === "not_found" ? null : (
             <button type="button" className="ag-btn ag-primary" onClick={onRetry}>
-              {RETRY_LABEL}
+              {copy.retry}
             </button>
           )}
         </div>

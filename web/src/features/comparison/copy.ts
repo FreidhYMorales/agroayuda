@@ -18,6 +18,8 @@ const ES = {
   changePriorities: "Cambiar prioridades",
   loading: "Cargando las opciones…",
   slow: "Despertando el servidor…",
+  loadError: "No pudimos traer sus opciones.",
+  retry: "Intentar de nuevo",
 };
 
 const EN: typeof ES = {
@@ -36,6 +38,8 @@ const EN: typeof ES = {
   changePriorities: "Change priorities",
   loading: "Loading the options…",
   slow: "Waking up the server, one moment…",
+  loadError: "We could not get your options.",
+  retry: "Try again",
 };
 
 export function comparisonCopy(lang: Lang): typeof ES {
