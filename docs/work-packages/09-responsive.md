@@ -187,7 +187,7 @@ No new entries in `docs/resources.md` are expected (no new library, font or imag
 
 ## Coordination
 
-- Lead: approves this package before work starts (it touches files owned by packages 03 and 04) and updates `docs/spec.md` ("Out of scope: desktop-specific layouts") to allow the tablet and desktop views; reviews the PR.
+- Lead: approves this package before work starts (it touches files owned by packages 03 and 04) and updates `docs/spec.md` ("Out of scope: desktop-specific layouts") to allow the tablet and desktop views; reviews the whole PR.
 - Package 03 owner (map, risks, App): tell them before you start; they review `MapScreen.tsx`, `MapView.tsx`, `RisksScreen.tsx`, `App.tsx`.
 - Package 04 owner (form, comparison): reviews `theme.tsx` and `ComparisonScreen.tsx`.
 - Package 08 owner (phone QA): re-runs their row 9 (rotate + text zoom) after the merge.
