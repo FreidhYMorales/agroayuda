@@ -188,6 +188,45 @@ describe("MapScreen places list", () => {
   });
 });
 
+// Layout from docs/spec.md "1. Map": locate button on top, legend and source
+// on the map, and the card in a bottom sheet visible without scrolling.
+describe("MapScreen layout", () => {
+  const precedes = (a: Element, b: Element) =>
+    (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+
+  test("the locate button sits above the map", async () => {
+    await renderScreen();
+
+    expect(
+      precedes(screen.getByRole("button", { name: LOCATE_LABEL }), screen.getByTestId("map-view")),
+    ).toBe(true);
+  });
+
+  test("the legend and the source line sit on the map area", async () => {
+    await renderScreen();
+
+    const mapArea = screen.getByTestId("map-area");
+    expect(mapArea.contains(screen.getByTestId("map-view"))).toBe(true);
+    expect(mapArea.contains(screen.getByText("poca lluvia"))).toBe(true);
+    expect(mapArea.contains(screen.getByRole("button", { name: SOURCE_LINE }))).toBe(true);
+  });
+
+  test("the summary card and the states sit in a sheet below the map", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+
+    const sheet = screen.getByTestId("map-sheet");
+    expect(precedes(screen.getByTestId("map-area"), sheet)).toBe(true);
+    expect(sheet.contains(screen.getByText("Chiquimula"))).toBe(true);
+    expect(sheet.contains(screen.getByRole("button", { name: "Ver riesgos" }))).toBe(true);
+  });
+
+  test("the sheet scrolls on its own so the page does not", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+
+    expect(screen.getByTestId("map-sheet").style.overflowY).toBe("auto");
+  });
+});
+
 describe("MapScreen summary card", () => {
   test("shows the picked place name, the zone line and the top risk", async () => {
     await renderScreen({ site: READY, placeId: "chiquimula" });

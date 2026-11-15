@@ -42,13 +42,52 @@ type MapDataState =
   | { status: "ready"; data: MapData }
   | { status: "failed" };
 
-const screenStyle: CSSProperties = { display: "flex", flexDirection: "column", height: "100%" };
-const mapAreaStyle: CSSProperties = { height: "55vh", minHeight: 240 };
-const panelStyle: CSSProperties = {
+// Layout from docs/spec.md "1. Map": the screen fills the phone height, the
+// locate button stays on top, the map takes the free space with its legend on
+// it, and the card lives in a bottom sheet that scrolls on its own, so the
+// result of a tap is visible without scrolling the page.
+const screenStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  height: "100dvh",
+};
+const headerStyle: CSSProperties = { flex: "none", padding: 12 };
+const mapAreaStyle: CSSProperties = { position: "relative", flex: "1 1 auto", minHeight: 200 };
+const mapOverlayStyle: CSSProperties = {
+  position: "absolute",
+  // Top corner: the bottom one belongs to the map attribution.
+  left: 8,
+  top: 8,
+  width: "min(60%, 240px)",
+  boxSizing: "border-box",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "stretch",
+  gap: 4,
+  padding: 8,
+  borderRadius: 8,
+  background: "rgba(255, 255, 255, 0.9)",
+  boxShadow: "0 1px 4px rgba(0, 0, 0, 0.2)",
+};
+const sheetStyle: CSSProperties = {
+  flex: "0 1 auto",
+  maxHeight: "50dvh",
+  overflowY: "auto",
   display: "flex",
   flexDirection: "column",
   gap: 12,
-  padding: 12,
+  padding: "8px 12px 16px",
+  borderRadius: "16px 16px 0 0",
+  background: "#fff",
+  boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.15)",
+};
+const handleStyle: CSSProperties = {
+  alignSelf: "center",
+  flex: "none",
+  width: 40,
+  height: 4,
+  borderRadius: 2,
+  background: "#ccc",
 };
 
 export function MapScreen({
@@ -116,8 +155,12 @@ export function MapScreen({
 
   return (
     <section style={screenStyle} aria-label={MAP_COPY.defaultTitle}>
+      <div style={headerStyle}>
+        <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
+      </div>
+
       {mapData.status === "ready" && (
-        <div style={mapAreaStyle}>
+        <div style={mapAreaStyle} data-testid="map-area">
           <MapView
             rain={mapData.data.rain}
             region={mapData.data.region}
@@ -125,14 +168,15 @@ export function MapScreen({
             onSelectPoint={selectFromMap}
             onError={() => setMapError(true)}
           />
+          <div style={mapOverlayStyle}>
+            <RainLegend />
+            {firstCell !== undefined && <RainSourceLine properties={firstCell.properties} />}
+          </div>
         </div>
       )}
 
-      <div style={panelStyle}>
-        <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
-
-        {mapData.status === "ready" && <RainLegend />}
-        {firstCell !== undefined && <RainSourceLine properties={firstCell.properties} />}
+      <div style={sheetStyle} data-testid="map-sheet">
+        <div style={handleStyle} aria-hidden="true" />
 
         <MapStates
           site={site}

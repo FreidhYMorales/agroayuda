@@ -21,6 +21,8 @@ type MapOptions = {
   style: unknown;
   center: [number, number];
   zoom: number;
+  bounds?: [[number, number], [number, number]];
+  fitBoundsOptions?: { padding?: number };
   attributionControl: unknown;
 };
 
@@ -197,6 +199,17 @@ describe("MapView setup", () => {
     expect(mocks.api.setWorkerUrl.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.api.mapCreated.mock.invocationCallOrder[0],
     );
+  });
+
+  test("opens framed on the region, with padding, instead of a fixed view", () => {
+    renderMap();
+
+    const options = mocks.api.mapCreated.mock.calls[0][0];
+    expect(options.bounds).toEqual([
+      [-89.9, 15.1],
+      [-89.8, 15.2],
+    ]);
+    expect(options.fitBoundsOptions?.padding).toBeGreaterThan(0);
   });
 
   test("shows the OpenFreeMap and OpenStreetMap attribution", () => {

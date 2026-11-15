@@ -11,7 +11,7 @@ import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { type CSSProperties, useEffect, useRef } from "react";
 import type { SiteProfile } from "../../contracts/contracts";
 import type { RegionCollection } from "./mapData";
-import { fallbackStyle, OPENFREEMAP_STYLE_URL, selectedCellData } from "./mapGeo";
+import { fallbackStyle, OPENFREEMAP_STYLE_URL, regionBounds, selectedCellData } from "./mapGeo";
 import {
   NEUTRAL_RAIN_COLOR,
   type RainCollection,
@@ -122,6 +122,10 @@ export function MapView({ rain, region, site, onSelectPoint, onError }: MapViewP
       style: OPENFREEMAP_STYLE_URL,
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
+      // Frame the region we cover; center and zoom are only the fallback.
+      // Read through the ref: the map is created once, not per region change.
+      bounds: regionBounds(latest.current.region) ?? undefined,
+      fitBoundsOptions: { padding: 24 },
       // The default control is replaced by one with fixed text, so the
       // attribution stays visible with the fallback style too.
       attributionControl: false,
