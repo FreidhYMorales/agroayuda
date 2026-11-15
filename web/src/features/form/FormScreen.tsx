@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { CropCatalogEntry, CropId, Priorities } from "../../contracts/contracts";
+import { useLang } from "../../lib/urlState";
 import { Page, visuallyHidden } from "../comparison/theme";
+import { formCopy } from "./copy";
 
 /** Same field names as `AppState` (web/src/lib/urlState.ts), so `onChange` can be its `patch`. */
 export type FormValues = {
@@ -14,11 +16,12 @@ export const DEFAULT_PRIORITIES: Priorities = { water: 3, soil: 3, income: 3, ri
 export const CATALOG_URL = "/data/crops.json";
 export const RETRY_LABEL = "Intentar de nuevo";
 
+// The labels come from formCopy, by key.
 const PRIORITY_ROWS = [
-  { key: "water", icon: "💧", label: "Ahorrar agua" },
-  { key: "soil", icon: "🟫", label: "Cuidar suelo" },
-  { key: "income", icon: "💰", label: "Ganar más" },
-  { key: "risk", icon: "🛡", label: "Menos riesgo" },
+  { key: "water", icon: "💧" },
+  { key: "soil", icon: "🟫" },
+  { key: "income", icon: "💰" },
+  { key: "risk", icon: "🛡" },
 ] as const;
 const LEVELS = [1, 2, 3, 4, 5] as const;
 const TARGET = 48; // px, above the 44 px minimum
@@ -162,6 +165,7 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
   const { values, onChange, onSubmit, onBack, notice, focusPriorities, onRetryCatalog } = props;
   const [catalog, setCatalog] = useState<CatalogState>({ status: "loading" });
   const prioritiesRef = useRef<HTMLHeadingElement>(null);
+  const copy = formCopy(useLang());
 
   useEffect(() => {
     let active = true;
@@ -191,7 +195,7 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
   return (
     <Page>
       <button type="button" className="ag-btn ag-link" onClick={onBack}>
-        ← Su parcela
+        {copy.back}
       </button>
       {notice ? (
         <p role="alert" className="ag-notice">
@@ -211,14 +215,14 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
       {catalog.status === "ready" ? (
         <>
           <CropGrid
-            title="¿Qué siembra en primera?"
+            title={copy.primeraTitle}
             season="primera"
             crops={catalog.crops}
             selected={values.primera}
             onSelect={(id) => onChange({ primera: id })}
           />
           <CropGrid
-            title="¿Y en postrera?"
+            title={copy.postreraTitle}
             season="postrera"
             crops={catalog.crops}
             selected={values.postrera}
@@ -228,13 +232,13 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
       ) : null}
 
       <section className="ag-card">
-        <h2 ref={prioritiesRef}>¿Qué es lo más importante para usted?</h2>
-        {PRIORITY_ROWS.map(({ key, icon, label }) => (
+        <h2 ref={prioritiesRef}>{copy.prioritiesTitle}</h2>
+        {PRIORITY_ROWS.map(({ key, icon }) => (
           <PriorityCircles
             key={key}
             name={`priority-${key}`}
             icon={icon}
-            label={label}
+            label={copy.priorities[key]}
             value={values.priorities[key]}
             onPick={(level) => onChange({ priorities: { ...values.priorities, [key]: level } })}
           />
@@ -242,11 +246,11 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
       </section>
 
       <fieldset className="ag-card" style={{ margin: "14px 0" }}>
-        <legend style={{ fontWeight: 600, padding: "0 4px" }}>¿Tiene riego?</legend>
+        <legend style={{ fontWeight: 600, padding: "0 4px" }}>{copy.irrigationTitle}</legend>
         <div className="ag-grid">
           {[
-            { label: "Sí", value: true },
-            { label: "No", value: false },
+            { label: copy.yes, value: true },
+            { label: copy.no, value: false },
           ].map(({ label, value }) => (
             <label
               key={label}
@@ -267,7 +271,7 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
       </fieldset>
 
       <button type="button" className="ag-btn ag-primary" disabled={!canSubmit} onClick={onSubmit}>
-        Comparar opciones →
+        {copy.submit}
       </button>
     </Page>
   );
