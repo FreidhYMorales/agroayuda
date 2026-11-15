@@ -6,7 +6,7 @@ NASA Space Apps requires teams to state where and how SI tools (chatbots, large 
 
 ## Before the event
 
-Before the event, we used an AI assistant to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build. The planning documents in `docs/` (architecture, ADRs, spec, work packages) and `AGENTS.md` were written with AI assistance and carry a dated preface saying so.
+Before the event, we used an AI assistant (Claude) to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build. The planning documents in `docs/` (architecture, ADRs, spec, work packages) and `AGENTS.md` were written with AI assistance and carry a dated preface saying so.
 
 ## During the event
 
@@ -17,9 +17,9 @@ AI coding assistants helped write code in every module. A human chose what to bu
 | Module | Owner | SI tool(s) used | How |
 |---|---|---|---|
 | `contracts/`, `api/`, CI, repo setup | Lead | Claude Code (Anthropic) | Scaffolding, contract models from the team's spec, API endpoints, tests written first |
-| `data/` pipeline, `engine/src/engine/risks.py` | Data owner | Claude Code (Anthropic) | Pipeline and risk code and tests written test-first with the assistant from the work package; the owner chose N, the cut-offs and the SoilGrids depth, and the region-wide dry-day check was run on real POWER data before any rule was fixed |
-| `engine/` | Engine owner | _fill in_ | _fill in_ |
-| `web/` map and risks | Web-map owner | _fill in_ | _fill in_ |
+| `data/` pipeline, `engine/src/engine/risks.py` | Data owner | Claude Code (Anthropic) | Pipeline and risk code and tests written test-first with the assistant from the work package; the owner chose N, the cut-offs and the SoilGrids depth, and the region-wide dry-day check was run on real POWER data before any rule was fixed; package 07 (submission docs): the assistant read the OpenFreeMap licence page and edited the rows, with the owners' answers written as given |
+| `engine/` | Engine owner | Claude (Anthropic) | Code, tests and documentation drafted with the assistant for almost every task, then reviewed and run by the owner (`make check`) before each merge |
+| `web/` map and risks | Web-map owner | Claude (Anthropic) | Code, tests and documentation drafted with the assistant for almost every task, then reviewed and run by the owner (`make check`) before each merge |
 | `web/` form and comparison, `data/catalog/rotation_templates.csv`, README | Web-results owner | Claude (Anthropic), in the claude.ai chat | Form, comparison table, detail, API call and tests drafted test-first from the work package and then reviewed and run by the owner (`make check`); the template rows were assembled from `docs/crop-sources.md` and checked against `crops.csv` by a test; the owner confirms the combinations with the lead's curated list |
 
 ### Data
@@ -42,10 +42,11 @@ The app itself does not call any AI service: every recommendation comes from fix
 
 | Asset | SI use | How it is marked |
 |---|---|---|
-| Demo video voice-over | English AI-generated voice from the team's script | Stated in the video description and in the video file metadata |
-| Images or video frames | Only if SI-generated | Visible "AI-generated" watermark on each one |
+| Demo video voice-over | English AI-generated voice (ElevenLabs) from the team's script | Stated in the video description and in the video file metadata |
+| AgroAyuda logo | Generated with ChatGPT and Gemini from the team's prompts | Visible "AI-generated" watermark |
+| Other images and video frames | None: made by the team | Not needed |
 | NASA branding | None | No NASA logos, flags or mission identifiers; text "Datos: NASA POWER" only |
 
 ## Text for the submission form ("Use of Super Intelligence")
 
-> We used AI assistants (Claude Code and other chat assistants) to organize and review our plan before the event, and during the event to help write code, tests and documentation; a human reviewed and merged every change, and all code passes strict tests and type checks. The idea, product decisions, agronomic rules and crop values are the team's own; crop values come from cited sources (ICTA, CGIAR, FAO). NASA POWER, SoilGrids and geoBoundaries data are not SI-generated. The app does not call any AI at run time. The video uses an English AI-generated voice-over, stated in its description and metadata; any SI-generated image carries a visible watermark. No NASA branding is used. Full details: docs/si-usage.md in our repository.
+> We used an AI assistant (Claude) to organize and review our plan before the event, and AI assistants (Claude and Claude Code) during the event to help write code, tests and documentation; a human reviewed and merged every change, and all code passes strict tests and type checks. The idea, product decisions, agronomic rules and crop values are the team's own; crop values come from cited sources (ICTA, CGIAR, FAO). NASA POWER, SoilGrids and geoBoundaries data are not SI-generated. The app does not call any AI at run time. The video uses an English AI-generated voice-over (ElevenLabs), stated in its description and metadata; the logo was generated with ChatGPT and Gemini and carries a visible "AI-generated" watermark; all other images are the team's own. No NASA branding is used. Full details: docs/si-usage.md in our repository.

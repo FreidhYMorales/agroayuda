@@ -22,9 +22,9 @@ Everything is precomputed from NASA POWER (1991-2020), SoilGrids and geoBoundari
 
 ## SI (Super Intelligence) use disclosure
 
-Before the event, we used an AI assistant to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build.
+Before the event, we used an AI assistant (Claude) to organize our ideas into a written plan and to review it, probed the NASA POWER and SoilGrids APIs, and looked at NASA POWER monthly rain normals at one Chiquimula point; no code or datasets from before the event are part of the build.
 
-During the event, AI was used as a coding assistant (code, tests and documentation), and the English voice-over of the demo video was generated with AI (also stated in the video metadata). A human reviewed and merged every change. Details per module: docs/si-usage.md in the repository.
+During the event, AI (Claude and Claude Code) was used as a coding assistant (code, tests and documentation), and the English voice-over of the demo video was generated with AI (ElevenLabs; also stated in the video metadata), and the logo was generated with ChatGPT and Gemini (marked "AI-generated"). A human reviewed and merged every change. Details per module: docs/si-usage.md in the repository.
 
 ## NASA data used
 
@@ -37,7 +37,7 @@ The complete list with licences is in `docs/resources.md`; copy the two tables f
 
 - SoilGrids (ISRIC), CC BY 4.0. https://soilgrids.org/
 - geoBoundaries, ODbL 1.0. https://www.geoboundaries.org/
-- OpenFreeMap and OpenStreetMap contributors, ODbL. https://openfreemap.org/ · https://www.openstreetmap.org/copyright
+- OpenFreeMap tiles: free public instance, commercial use allowed; attribution required ("OpenFreeMap © OpenMapTiles, Data from OpenStreetMap", added by MapLibre); software MIT; map data from OpenStreetMap (ODbL). https://openfreemap.org/ · https://www.openstreetmap.org/copyright
 - FAO ECOCROP and FAO Irrigation and Drainage Paper 56. https://ecocrop.apps.fao.org/ecocrop/srv/en/ · https://www.fao.org/4/x0490e/x0490e0e.htm
 - ICTA, El cultivo del maíz en Guatemala (2002); ICTA Memoria de Labores 2019; ICTA Boletín octubre 2022 (abonos verdes); CGIAR guide to bean cultivation in Guatemala (2024); MAGA Agro en Cifras 2016 (sesame); USAC studies (Jutiapa, Jalapa). Links in `docs/crop-sources.md`.
 
@@ -46,7 +46,8 @@ The complete list with licences is in `docs/resources.md`; copy the two tables f
 - Demo (video): TODO (public or unlisted YouTube link, not marked "made for kids")
 - Final project: https://agroayuda.vercel.app
 - Repository: https://github.com/FreidhYMorales/agroayuda
-- Members: TODO (names of the team)
+- Team: AgroAyuda
+- Members: Freidh Yannel Morales González, Francisco David Diego Noriega, Fernando Rene Villatoro Samayoa, Wilder Estiven Cruz Garcia, Sheyla Mishel Argueta Cobón
 
 ## Before the final save (checklist)
 
