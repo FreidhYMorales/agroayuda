@@ -234,3 +234,42 @@ describe("RisksScreen button looks", () => {
     );
   });
 });
+
+describe("RisksScreen in English", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("the screen and each risk row are in English", () => {
+    window.history.replaceState(null, "", "/?step=risks&lang=en");
+
+    renderReady([bareField(), makeRisk({ value: 0.4 })]);
+
+    expect(screen.getByRole("heading", { name: "Risks in this area" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Close" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "See recommendations →" })).toBeTruthy();
+    expect(screen.getByText("Strong dry spell (canícula)")).toBeTruthy();
+    expect(screen.getByText("mid Jul-Aug")).toBeTruthy();
+    expect(screen.getByText("Data: NASA POWER · in 12 of 30 years")).toBeTruthy();
+    expect(screen.getByText("Bare field · moderate")).toBeTruthy();
+    expect(screen.getByText("Dec-Apr (estimated)")).toBeTruthy();
+  });
+
+  test("with no strong risk and on error the messages are in English", () => {
+    window.history.replaceState(null, "", "/?step=risks&lang=en");
+
+    renderReady([bareField()]);
+    expect(screen.getByText("We found no strong risks in this area")).toBeTruthy();
+
+    cleanup();
+    render(
+      <RisksScreen
+        view={{ status: "error" }}
+        onClose={vi.fn()}
+        onRetry={vi.fn()}
+        onContinue={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Try again" })).toBeTruthy();
+  });
+});
