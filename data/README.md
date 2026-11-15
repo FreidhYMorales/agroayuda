@@ -44,6 +44,18 @@ Rule (a) was run over all 10 region cells:
 | 15.0_-89.375 | 5.24 | 19 | 0 | 0.00 |
 | 15.5_-89.375 | 5.50 | 10 | 0 | 0.00 |
 
+Cells added on Sun 2026-11-15 with the municipality list (packages 05 and 06), same rule and
+cut-offs, no change after seeing them:
+
+| Cell | Mean Jul-Aug rain (mm/day) | Longest Jul-Aug dry run in 30 years (days) | Years with ≥ 20 days | Share |
+|---|---|---|---|---|
+| 14.5_-91.25 | 8.74 | 9 | 0 | 0.00 |
+| 15.0_-91.875 | 9.04 | 9 | 0 | 0.00 |
+| 15.0_-91.25 | 8.60 | 5 | 0 | 0.00 |
+| 15.5_-91.875 | 7.85 | 8 | 0 | 0.00 |
+| 15.5_-91.25 | 7.52 | 7 | 0 | 0.00 |
+| 15.5_-90.625 | 6.52 | 7 | 0 | 0.00 |
+
 Rule (a) shows dry spells of 20+ days in 4 cells, so **rule (a) is used**; (b) and (c) were not
 needed. Stored in `SiteData.dry_spell_rule`:
 
@@ -105,10 +117,11 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 - Mountain terrain: a POWER cell is about 56 x 67 km, so in Huehuetenango one cell mixes dry
   valleys and highlands; the regional rain and dry-spell data are less faithful there than in the
   eastern lowlands.
-- `region.parquet` holds every ring of the 5 departments (one row per ring, even-odd rule in the
-  API). `region.geojson` holds one feature per department.
+- `region.parquet` holds every ring of the 5 departments and the listed municipalities (one row
+  per ring, even-odd rule in the API). `region.geojson` holds one Polygon feature per department
+  and per municipality part.
 - Grid: POWER nodes at lat = -90 + 0.5 i, lon = -180 + 0.625 j, round half up (same as
-  `api/src/api/geo.py`); every cell that intersects the region: **10 cells**.
+  `api/src/api/geo.py`); every cell that intersects the region: **16 cells** (10 before the municipality list).
 
 ## Outputs
 
@@ -118,9 +131,9 @@ data shows, so long runs of days under 1 mm are rare in POWER. The cut-offs were
 | `data/output/region.parquet` | Region rings, column `ring DOUBLE[][]` |
 | `data/output/crops.parquet`, `rotation_templates.parquet` | `data/catalog/*.csv`, CSV row order kept |
 | `web/public/data/layers/rain.geojson` | One Polygon per cell, feature `id` = `cell_id`, `RainCellProperties` (annual normal in mm/año), top-level `data_version` |
-| `web/public/data/region.geojson` | The 5 departments, top-level `data_version` |
-| `web/public/data/region_mask.geojson` | World ring with the region as one hole (the 5 departments merged by dropping their shared borders), to dim the area outside the region; top-level `data_version` |
-| `web/public/data/crops.json`, `rotation_templates.json`, `demo_points.json` | Catalogs and the 2 demo points |
+| `web/public/data/region.geojson` | The 5 departments and the listed municipalities, top-level `data_version` |
+| `web/public/data/region_mask.geojson` | World ring with the region as holes (3 today: departments and municipalities merged by dropping their shared borders), to dim the area outside the region; top-level `data_version` |
+| `web/public/data/crops.json`, `rotation_templates.json`, `demo_points.json` | Catalogs and the 8 demo points (Chiquimula first, one outside point last) |
 
 ## Sources and licences
 
