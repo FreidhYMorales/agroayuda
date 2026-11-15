@@ -22,6 +22,7 @@ AI coding assistants helped write code in every module. A human chose what to bu
 | `engine/` | Engine owner | Claude (Anthropic) | Code, tests and documentation drafted with the assistant for almost every task, then reviewed and run by the owner (`make check`) before each merge |
 | `web/` map and risks | Web-map owner | Claude (Anthropic) | Code, tests and documentation drafted with the assistant for almost every task, then reviewed and run by the owner (`make check`) before each merge |
 | `web/` form and comparison, `data/catalog/rotation_templates.csv`, README | Web-results owner | Claude (Anthropic), in the claude.ai chat | Form, comparison table, detail, API call and tests drafted test-first from the work package and then reviewed and run by the owner (`make check`); the template rows were assembled from `docs/crop-sources.md` and checked against `crops.csv` by a test; the owner confirms the combinations with the lead's curated list |
+| `web/` responsive layout (package 09) | Data owner | Claude Code (Anthropic) | Tests and CSS drafted one step at a time (test first), every step run (`make check`) and reviewed by the owner; the check matrix was walked in a browser at every listed width in both languages |
 
 ### Data
 

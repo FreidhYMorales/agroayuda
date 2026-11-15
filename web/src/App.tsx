@@ -7,6 +7,7 @@ import { useDemoPlaces } from "./features/map/useDemoPlaces";
 import { type SiteState, useSite } from "./features/map/useSite";
 import { RisksScreen, type RisksView } from "./features/risks/RisksScreen";
 import { useAppState, useLang } from "./lib/urlState";
+import { LAYOUT_CSS } from "./ui/layout";
 
 // Top-level boundary: any crash while rendering shows a retry button instead
 // of a blank page. The point and the step live in the URL, so a retry
@@ -94,8 +95,11 @@ function Screens() {
 }
 
 export function App() {
+  // No width cap here: the text screens center themselves (.ag-screen) and the
+  // map uses the whole window on tablets and desktops (src/ui/layout.ts).
   return (
-    <main style={{ fontFamily: "system-ui, sans-serif", maxWidth: 480, margin: "0 auto" }}>
+    <main style={{ fontFamily: "system-ui, sans-serif" }}>
+      <style>{LAYOUT_CSS}</style>
       <ErrorBoundary>
         <Screens />
       </ErrorBoundary>

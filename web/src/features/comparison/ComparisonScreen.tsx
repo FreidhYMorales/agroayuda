@@ -291,13 +291,21 @@ function ResultsView(props: ResultsViewProps) {
     <Page>
       {back}
       {summary ? <p className="ag-info">{summary}</p> : null}
-      {notes.map((note) => (
-        <p key={note.text} className="ag-note" data-badge={note.kind}>
-          {note.text}
-        </p>
-      ))}
+      {notes.length > 0 ? (
+        // Stacked on phones; a row of up to 3 cards on tablets and desktops (.ag-notes).
+        <div className="ag-notes">
+          {notes.map((note) => (
+            <p key={note.text} className="ag-note" data-badge={note.kind}>
+              {note.text}
+            </p>
+          ))}
+        </div>
+      ) : null}
       <div className="ag-card" style={{ padding: "8px 4px" }}>
-        <ComparisonTable options={state.options} onSelect={setSelected} />
+        {/* Safety net: a long English word scrolls inside the table, never the page. */}
+        <div className="ag-table-wrap">
+          <ComparisonTable options={state.options} onSelect={setSelected} />
+        </div>
       </div>
       <p className="ag-muted">{copy.tapOption}</p>
       <p className="ag-muted">{copy.aid}</p>

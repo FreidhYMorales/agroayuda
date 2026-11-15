@@ -282,3 +282,61 @@ describe("FormScreen in English", () => {
     expect(screen.getByRole("button", { name: "Try again" })).toBeVisible();
   });
 });
+
+describe("responsive layout (work package 09)", () => {
+  test("the page centers itself as a text screen", async () => {
+    setup();
+    const heading = await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+
+    const page = heading.closest(".ag");
+    expect(page?.classList).toContain("ag-screen");
+  });
+
+  test(".ag-cols holds two column blocks and the submit button spanning both", async () => {
+    setup();
+    await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+
+    const cols = document.querySelector(".ag-cols");
+    expect(cols).not.toBeNull();
+    const children = [...(cols as Element).children];
+    expect(children).toHaveLength(3);
+    const [crops, preferences, submit] = children;
+    expect(submit).toBe(screen.getByRole("button", { name: "Comparar opciones →" }));
+    expect(submit.classList).toContain("ag-span");
+    expect(
+      within(crops as HTMLElement).getByRole("heading", { name: "¿Qué siembra en primera?" }),
+    ).toBeVisible();
+    expect(
+      within(crops as HTMLElement).getByRole("heading", { name: "¿Y en postrera?" }),
+    ).toBeVisible();
+    expect(
+      within(preferences as HTMLElement).getByRole("heading", {
+        name: "¿Qué es lo más importante para usted?",
+      }),
+    ).toBeVisible();
+    expect(within(preferences as HTMLElement).getAllByRole("radio", { name: /Sí|No/ }).length).toBe(
+      2,
+    );
+  });
+
+  test("crops come before priorities in the DOM (reading and tab order)", async () => {
+    setup();
+    const postrera = await screen.findByRole("heading", { name: "¿Y en postrera?" });
+    const priorities = screen.getByRole("heading", {
+      name: "¿Qué es lo más importante para usted?",
+    });
+
+    expect(
+      postrera.compareDocumentPosition(priorities) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).not.toBe(0);
+  });
+
+  test("only the crop grids get the wider crop columns, not the irrigation choice", async () => {
+    setup();
+    await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+
+    expect(block("¿Qué siembra en primera?").querySelector(".ag-crop-grid")).not.toBeNull();
+    expect(block("¿Y en postrera?").querySelector(".ag-crop-grid")).not.toBeNull();
+    expect(screen.getAllByRole("radio", { name: /Sí|No/ })[0].closest(".ag-crop-grid")).toBeNull();
+  });
+});

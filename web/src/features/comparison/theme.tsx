@@ -7,11 +7,16 @@ import type { ReactNode } from "react";
  *   always shown by symbol + text as well (✓ ✗ ⚠ ● ▲ ▼), never by color alone;
  * - one idea per card and generous spacing (small working memory), 48 px targets (Fitts);
  * - the recommended column is tinted and framed so the eye lands on it first (isolation effect);
- * - quick, quiet feedback (120 ms) that stops when the person asks for reduced motion.
+ * - quick, quiet feedback (120 ms) that stops when the person asks for reduced motion;
+ * - hover only on devices that hover: on a touch screen it would stick after a tap;
+ * - below 360 px (small Android, iPhone SE zoomed) the table is a bit denser so it fits 320 px;
+ * - below 320 px (only reached with browser zoom) the 48 px priority circles may wrap.
+ * Width, centering and side padding come from .ag-screen (src/ui/layout.ts), which also gives
+ * the tablet and desktop views.
  */
 export const THEME_CSS = `
-.ag{max-width:560px;margin:0 auto;padding:16px 16px 40px;background:#faf7f0;color:#1e2a22;
-font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.ag{padding-top:16px;padding-bottom:max(40px,env(safe-area-inset-bottom));background:#faf7f0;
+color:#1e2a22;font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .ag *{box-sizing:border-box}
 .ag h2{font-size:21px;line-height:1.25;margin:0 0 12px;font-weight:700}
 .ag h3{font-size:17px;margin:0 0 6px;font-weight:700;color:#1f5e3b}
@@ -23,12 +28,10 @@ box-shadow:0 1px 2px rgba(60,50,20,.06)}
 .ag-btn{min-height:48px;min-width:48px;padding:10px 16px;font:inherit;border-radius:12px;
 border:2px solid #c9c0a8;background:#fff;color:#1e2a22;cursor:pointer;
 transition:background .12s,border-color .12s}
-.ag-btn:hover:not(:disabled){background:#f3eedf}
 .ag-btn:focus-visible,.ag-choice:focus-within{outline:3px solid #1f5e3b;outline-offset:2px}
 .ag-btn[aria-pressed="true"]{background:#e3f1e6;border-color:#1f5e3b;font-weight:700}
 .ag-btn:disabled{background:#e8e4d6;color:#6b665a;border-color:#e8e4d6;cursor:not-allowed}
 .ag-primary{width:100%;background:#1f5e3b;border-color:#1f5e3b;color:#fff;font-weight:700}
-.ag-primary:hover:not(:disabled){background:#184b2f}
 .ag-link{background:transparent;border-color:transparent;color:#1f5e3b;font-weight:600;padding-left:4px}
 .ag-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .ag-crop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -67,13 +70,17 @@ border-radius:50%;font-size:16px}
 .ag-track{flex:1;height:10px;background:#e4ddcb;border-radius:6px;overflow:hidden}
 .ag-fill{display:block;height:100%;background:#1f5e3b;border-radius:6px}
 .ag-low{background:#fff0c9;outline:2px solid #b7791f;outline-offset:-2px;font-weight:700;color:#3d2800}
+@media (max-width:319px){.ag-circles{flex-wrap:wrap;justify-content:flex-start}}
+@media (max-width:359px){.ag-table{font-size:14px}.ag-table th[scope="row"]{width:22%}}
+@media (hover:hover){.ag-btn:hover:not(:disabled){background:#f3eedf}
+.ag-primary:hover:not(:disabled){background:#184b2f}}
 @media (prefers-reduced-motion:reduce){.ag *{animation:none!important;transition:none!important}}
 `;
 
 /** Wraps a screen with the page frame and its styles. */
 export function Page({ children }: { children: ReactNode }) {
   return (
-    <div className="ag">
+    <div className="ag ag-screen">
       <style>{THEME_CSS}</style>
       {children}
     </div>

@@ -1,11 +1,13 @@
 // web/src/App.test.tsx
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, type MockInstance, test, vi } from "vitest";
+import indexHtml from "../index.html?raw";
 import { App } from "./App";
 import { getSite, type SiteResult } from "./api/site";
 import type { MapScreenProps } from "./features/map/MapScreen";
 import { chiquimulaSite } from "./features/map/siteFixture";
 import type { RisksScreenProps } from "./features/risks/RisksScreen";
+import { LAYOUT_CSS } from "./ui/layout";
 
 // Lets a test make a screen throw while it renders, to exercise the boundary.
 const crash = vi.hoisted(() => ({ map: false, risks: false }));
@@ -403,5 +405,33 @@ describe("App language", () => {
       expect(params().get("lang")).toBe("en");
       expect(document.documentElement.lang).toBe("en");
     });
+  });
+});
+
+describe("App layout (work package 09)", () => {
+  test("<main> has no inline max width: each screen sizes itself", () => {
+    const { container } = renderApp();
+
+    const main = container.querySelector("main");
+    expect(main).not.toBeNull();
+    expect(main?.style.maxWidth).toBe("");
+  });
+
+  test("the layout CSS is rendered exactly once", () => {
+    const { container } = renderApp();
+
+    const layoutStyles = [...container.querySelectorAll("style")].filter(
+      (style) => style.textContent === LAYOUT_CSS,
+    );
+    expect(layoutStyles).toHaveLength(1);
+  });
+
+  test("the viewport reaches under the iPhone home bar and never blocks zoom", () => {
+    const viewport = /<meta name="viewport" content="([^"]*)"/.exec(indexHtml)?.[1] ?? "";
+
+    expect(viewport).toContain("viewport-fit=cover");
+    expect(viewport).toContain("width=device-width");
+    expect(viewport).not.toContain("user-scalable");
+    expect(viewport).not.toContain("maximum-scale");
   });
 });

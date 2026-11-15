@@ -21,7 +21,9 @@ export interface RisksScreenProps {
 
 // Touch targets of at least 44 px.
 
-const screenStyle: CSSProperties = { padding: 16, maxWidth: 480, margin: "0 auto" };
+// Width, centering and side padding come from .ag-screen (src/ui/layout.ts);
+// the top padding keeps the phone view as it was.
+const screenStyle: CSSProperties = { paddingTop: 16 };
 const headerStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
@@ -61,7 +63,8 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
     <>
       {!hasHighRisk && <p>{copy.noStrongRisk}</p>}
       {risks.length > 0 && (
-        <ul style={{ padding: 0, margin: 0 }}>
+        // Two columns of risk rows on tablets and desktops (.ag-risk-grid).
+        <ul className="ag-risk-grid" style={{ padding: 0, margin: 0 }}>
           {risks.map((risk) => (
             <RiskRow key={risk.id} risk={risk} />
           ))}
@@ -69,6 +72,8 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
       )}
       <button
         type="button"
+        // Full width on phones; .ag-action caps it at 420 px, centered, on wide screens.
+        className="ag-action"
         style={{ ...buttonStyle("primary", { fullWidth: true }), marginTop: 16 }}
         onClick={onContinue}
       >
@@ -82,6 +87,7 @@ export function RisksScreen({ view, onClose, onRetry, onContinue }: RisksScreenP
   const copy = risksCopy(useLang());
   return (
     <section
+      className="ag-screen"
       style={screenStyle}
       aria-labelledby="risks-title"
       aria-busy={view.status === "loading"}

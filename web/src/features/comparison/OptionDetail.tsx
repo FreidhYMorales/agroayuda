@@ -110,12 +110,23 @@ export function OptionDetail({ option, title, onBack }: OptionDetailProps) {
         <p style={{ marginBottom: 0 }}>{bareMonthsText(option.bare_months.length, lang)}</p>
       </div>
 
-      <Section title={copy.why} items={en ? option.reasons_en : option.reasons} />
-      <Section title={copy.evidence} items={evidence} />
-      <p className="ag-muted">{copy.cropNote}</p>
-      <Section title={copy.benefit} items={en ? option.benefits_en : option.benefits} />
-      <Section title={copy.localReview} items={en ? option.local_review_en : option.local_review} />
-      <Section title={copy.dataGaps} items={en ? option.data_gaps_en : option.data_gaps} />
+      {/* Two columns on tablets and desktops (.ag-cols), same content and order:
+          why and evidence first, then benefits, local review and missing data. */}
+      <div className="ag-cols">
+        <div>
+          <Section title={copy.why} items={en ? option.reasons_en : option.reasons} />
+          <Section title={copy.evidence} items={evidence} />
+          <p className="ag-muted">{copy.cropNote}</p>
+        </div>
+        <div>
+          <Section title={copy.benefit} items={en ? option.benefits_en : option.benefits} />
+          <Section
+            title={copy.localReview}
+            items={en ? option.local_review_en : option.local_review}
+          />
+          <Section title={copy.dataGaps} items={en ? option.data_gaps_en : option.data_gaps} />
+        </div>
+      </div>
     </Page>
   );
 }
