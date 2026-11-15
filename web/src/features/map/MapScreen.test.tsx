@@ -485,3 +485,23 @@ describe("MapScreen language", () => {
     expect(screen.queryByText(EMPTY_TEXT)).toBeNull();
   });
 });
+
+describe("MapScreen language toggle", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("EN switches the map to English and puts lang=en in the URL; ES switches back", async () => {
+    await renderScreen();
+
+    fireEvent.click(screen.getByRole("button", { name: "English" }));
+
+    expect(screen.getByRole("button", { name: "📍 Where is your plot?" })).toBeTruthy();
+    expect(new URLSearchParams(window.location.search).get("lang")).toBe("en");
+
+    fireEvent.click(screen.getByRole("button", { name: "Español" }));
+
+    expect(screen.getByRole("button", { name: LOCATE_LABEL })).toBeTruthy();
+    expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
+  });
+});
