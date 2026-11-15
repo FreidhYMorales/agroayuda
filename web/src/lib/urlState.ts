@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { CropId, Priorities, RecommendationRequest } from "../contracts/contracts";
 
 export type Step = "map" | "risks" | "form" | "results";
+export type Lang = "es" | "en";
 
 export interface AppState {
   step: Step;
