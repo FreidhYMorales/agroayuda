@@ -79,3 +79,21 @@ describe("sortRisks", () => {
     expect(input).toEqual(copy);
   });
 });
+
+describe("riskTitle in English", () => {
+  test("canícula keeps the local word and names its level", () => {
+    expect(riskTitle(risk("canicula", "high"), "en")).toBe("Strong dry spell (canícula)");
+    expect(riskTitle(risk("canicula", "medium"), "en")).toBe("Moderate dry spell (canícula)");
+    expect(riskTitle(risk("canicula", "low"), "en")).toBe("Mild dry spell (canícula)");
+    expect(riskTitle(risk("canicula", "unknown"), "en")).toBe("Dry spell (canícula)");
+  });
+
+  test("bare field, heat and missing data", () => {
+    expect(riskTitle(risk("bare_field", "high"), "en")).toBe("Bare field · high");
+    expect(riskTitle(risk("bare_field", "medium"), "en")).toBe("Bare field · moderate");
+    expect(riskTitle(risk("bare_field", "unknown"), "en")).toBe("Bare field");
+    expect(riskTitle(risk("heat", "high"), "en")).toBe("Strong heat");
+    expect(riskTitle(risk("heat", "low"), "en")).toBe("Mild heat");
+    expect(riskTitle(risk("missing_data", "unknown"), "en")).toBe("❔ Soil: no data");
+  });
+});
