@@ -97,14 +97,23 @@ export function toRequest(state: AppState): RecommendationRequest | null {
   };
 }
 
+// pushState fires no event, so every copy of the hook (App, ResultsFlow, ...)
+// listens to this one to follow a patch made by another copy.
+const URL_STATE_EVENT = "agroayuda:urlstate";
+
 export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
   const [state, setState] = useState<AppState>(() => readState(window.location.search));
 
   // El botón "atrás" o "adelante" del navegador cambia la URL: el estado la sigue.
+  // A patch from another copy of the hook does too (URL_STATE_EVENT).
   useEffect(() => {
-    const onPopState = () => setState(readState(window.location.search));
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
+    const onUrlChange = () => setState(readState(window.location.search));
+    window.addEventListener("popstate", onUrlChange);
+    window.addEventListener(URL_STATE_EVENT, onUrlChange);
+    return () => {
+      window.removeEventListener("popstate", onUrlChange);
+      window.removeEventListener(URL_STATE_EVENT, onUrlChange);
+    };
   }, []);
 
   const update = useCallback((patch: Partial<AppState>) => {
@@ -113,6 +122,7 @@ export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
     const next: AppState = { ...readState(window.location.search), ...patch };
     window.history.pushState(null, "", toSearch(next));
     setState(next);
+    window.dispatchEvent(new Event(URL_STATE_EVENT));
   }, []);
 
   return [state, update];

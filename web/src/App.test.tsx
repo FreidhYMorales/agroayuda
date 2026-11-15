@@ -56,10 +56,24 @@ vi.mock("./features/map/useDemoPlaces", () => {
   return { useDemoPlaces: () => places };
 });
 
-// Package 04 owns the form and results flow; here we only check that App shows it.
-vi.mock("./features/comparison/ResultsFlow", () => ({
-  ResultsFlow: () => <div data-testid="results-flow" />,
-}));
+// Package 04 owns the form and results flow; here we only check that App shows
+// it. Like the real flow, the stub changes the step through its own
+// useAppState, as "← Su parcela" does in the form.
+vi.mock("./features/comparison/ResultsFlow", async () => {
+  const { useAppState } = await import("./lib/urlState");
+  return {
+    ResultsFlow: () => {
+      const [, setState] = useAppState();
+      return (
+        <div data-testid="results-flow">
+          <button type="button" onClick={() => setState({ step: "map" })}>
+            flow-back-to-map
+          </button>
+        </div>
+      );
+    },
+  };
+});
 
 vi.mock("./features/risks/RisksScreen", () => ({
   RisksScreen: (props: RisksScreenProps) => {
@@ -267,6 +281,17 @@ describe("App form and results steps", () => {
 
     expect(params().get("step")).toBe("form");
     expect(screen.getByTestId("results-flow")).toBeTruthy();
+  });
+
+  test("going back to the map from the form shows the map again", () => {
+    goTo(`?step=form&${POINT}`);
+    renderApp();
+
+    fireEvent.click(screen.getByText("flow-back-to-map"));
+
+    expect(params().get("step")).toBe("map");
+    expect(screen.getByTestId("map-screen")).toBeTruthy();
+    expect(screen.queryByTestId("results-flow")).toBeNull();
   });
 
   test("a form URL with a point shows the form and results flow", () => {

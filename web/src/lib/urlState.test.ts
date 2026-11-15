@@ -92,6 +92,24 @@ describe("useAppState", () => {
     expect(window.history.length).toBe(entriesBefore + 1);
   });
 
+  // App and ResultsFlow each call useAppState. pushState fires no event, so a
+  // patch from one copy left the other on the old step: "← Su parcela" in the
+  // form did not go back to the map.
+  test("a patch from one copy of the hook updates every other copy", () => {
+    const app = renderHook(() => useAppState());
+    const flow = renderHook(() => useAppState());
+
+    act(() => {
+      flow.result.current[1]({ step: "form", lat: 14.7, lon: -89.5 });
+    });
+    expect(app.result.current[0]).toMatchObject({ step: "form", lat: 14.7, lon: -89.5 });
+
+    act(() => {
+      flow.result.current[1]({ step: "map" });
+    });
+    expect(app.result.current[0].step).toBe("map");
+  });
+
   test("a patch keeps the fields it does not mention", () => {
     const { result } = renderHook(() => useAppState());
 
