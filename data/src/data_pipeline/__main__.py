@@ -38,6 +38,7 @@ from data_pipeline.outputs import (
     rain_geojson,
     read_catalog_csv,
     region_geojson,
+    region_mask_geojson,
     region_rings,
     write_catalog_parquet,
     write_json,
@@ -145,11 +146,13 @@ def run(
 def write_map_layers(
     paths: Paths, data_version: str, boundaries: dict[str, Any], cells: Sequence[RainCell]
 ) -> None:
-    """rain.geojson, region.geojson and demo_points.json under paths.web."""
+    """rain.geojson, region.geojson, region_mask.geojson and demo_points.json under paths.web."""
     write_json(rain_geojson(cells, data_version), paths.web / "layers" / "rain.geojson")
     write_json(
         region_geojson(boundaries, set(REGION_ISO), data_version), paths.web / "region.geojson"
     )
+    rings = region_rings(boundaries, set(REGION_ISO))
+    write_json(region_mask_geojson(rings, data_version), paths.web / "region_mask.geojson")
     write_json(DEMO_POINTS, paths.web / "demo_points.json")
 
 

@@ -38,7 +38,21 @@
     "id": "gandul__none",
     "primera": "gandul",
     "postrera": "none",
-    "description_es": "Gandul en primera y el terreno en descanso en postrera.",
+    "description_es": "Gandul en primera; sigue en el terreno en postrera.",
     "source": "ICTA-ABONOS (gandul se adapta al Corredor Seco; su grano se come y también sirve de forraje)"
+  },
+  {
+    "id": "maiz__ajonjoli",
+    "primera": "maiz",
+    "postrera": "ajonjoli",
+    "description_es": "Maíz en primera y ajonjolí en postrera.",
+    "source": "ICTA-MAIZ (maíz de bajura en la zona de humedad limitada); MAGA-AJONJOLI (área de ajonjolí por departamento); USAC-JUTIAPA (ajonjolí, cultivo tradicional del suroriente de Jutiapa)"
+  },
+  {
+    "id": "canavalia__none",
+    "primera": "canavalia",
+    "postrera": "none",
+    "description_es": "Canavalia (abono verde) en primera; sigue en el terreno en postrera.",
+    "source": "ICTA-ABONOS (canavalia, abono verde con mejores resultados en sistemas de maíz en el Corredor Seco)"
   }
 ]
