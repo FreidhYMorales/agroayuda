@@ -1,6 +1,5 @@
 from contracts import (
     CropCatalogEntry,
-    Evidence,
     RecommendationRequest,
     RotationOption,
     RotationTemplate,
@@ -36,11 +35,13 @@ def test_every_option_cites_the_nasa_power_canicula_share(
     templates: list[RotationTemplate],
 ) -> None:
     # Example site: canícula share 0.7 of 1991-2020 -> 0.7 x 30 = 21 years.
-    expected = Evidence(text_es=CANICULA_TEXT, dataset="NASA POWER", value="21 de 30 años")
+    # Only the Spanish fields: the English ones are checked in test_texts_en.py.
+    expected = {"text_es": CANICULA_TEXT, "dataset": "NASA POWER", "value": "21 de 30 años"}
 
     options = recommend_for(site, crops, templates)
 
-    assert [o.evidence for o in options] == [[expected]] * 3
+    spanish = [[e.model_dump(include=set(expected)) for e in o.evidence] for o in options]
+    assert spanish == [[expected]] * 3
 
 
 def test_no_canicula_share_means_no_evidence(
