@@ -1,6 +1,6 @@
 """Pipeline entry point: uv run --package data-pipeline python -m data_pipeline [--map-layers]
 
-Full run: region (geoBoundaries ADM1) -> POWER cells that intersect it -> per cell: POWER daily
+Full run: region (geoBoundaries ADM1 + the listed ADM2 municipalities) -> POWER cells that intersect it -> per cell: POWER daily
 features, SoilGrids soil, precomputed risks -> data/output/*.parquet and web/public/data/**, all
 with the same data_version (the run date).
 
@@ -34,6 +34,7 @@ from data_pipeline.features import (
 from data_pipeline.grid import cell_id, cell_polygon, cells_intersecting
 from data_pipeline.outputs import (
     DEMO_POINTS,
+    Municipality,
     RainCell,
     rain_geojson,
     read_catalog_csv,
@@ -54,6 +55,10 @@ GEOBOUNDARIES_URL: Final = (
     "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/GTM/ADM1/"
     "geoBoundaries-GTM-ADM1_simplified.geojson"
 )
+ADM2_URL: Final = GEOBOUNDARIES_URL.replace("/ADM1/", "/ADM2/").replace("ADM1_", "ADM2_")
+# Dry Corridor municipalities (municipality, department) added to the five departments above.
+# Each entry must come from the cited source (see data/README.md); empty until the list PRs.
+MUNICIPALITIES: Final[tuple[Municipality, ...]] = ()
 TYPICAL_ROTATION: Final = ("maiz", "frijol")
 
 DailyFetcher = Callable[[float, float, Path], pd.DataFrame]
@@ -113,6 +118,8 @@ def run(
     data_version: str,
     boundaries: dict[str, Any],
     *,
+    adm2: dict[str, Any] | None = None,
+    municipalities: Sequence[Municipality] = MUNICIPALITIES,
     fetch_daily: DailyFetcher = _fetch_daily,
     fetch_soil: SoilFetcher = _fetch_soil,
 ) -> list[SiteData]:
@@ -122,7 +129,7 @@ def run(
     by_id = {crop.id: crop for crop in crops}
     typical = (by_id[TYPICAL_ROTATION[0]], by_id[TYPICAL_ROTATION[1]])
 
-    rings = region_rings(boundaries, set(REGION_ISO))
+    rings = region_rings(boundaries, set(REGION_ISO), adm2, municipalities)
     sites = []
     for lat, lon in cells_intersecting(rings):
         daily = fetch_daily(lat, lon, paths.cache)
@@ -137,19 +144,25 @@ def run(
     write_catalog_parquet(templates, paths.output / "rotation_templates.parquet")
 
     cells = [RainCell(s.lat, s.lon, sum(s.monthly_precip_mm)) for s in sites]
-    write_map_layers(paths, data_version, boundaries, cells)
+    write_map_layers(paths, data_version, boundaries, cells, adm2, municipalities)
     write_json([crop.model_dump() for crop in crops], paths.web / "crops.json")
     write_json([t.model_dump() for t in templates], paths.web / "rotation_templates.json")
     return sites
 
 
 def write_map_layers(
-    paths: Paths, data_version: str, boundaries: dict[str, Any], cells: Sequence[RainCell]
+    paths: Paths,
+    data_version: str,
+    boundaries: dict[str, Any],
+    cells: Sequence[RainCell],
+    adm2: dict[str, Any] | None = None,
+    municipalities: Sequence[Municipality] = MUNICIPALITIES,
 ) -> None:
     """rain.geojson, region.geojson, region_mask.geojson and demo_points.json under paths.web."""
     write_json(rain_geojson(cells, data_version), paths.web / "layers" / "rain.geojson")
     write_json(
-        region_geojson(boundaries, set(REGION_ISO), data_version), paths.web / "region.geojson"
+        region_geojson(boundaries, set(REGION_ISO), data_version, adm2, municipalities),
+        paths.web / "region.geojson",
     )
     rings = region_rings(boundaries, set(REGION_ISO))
     write_json(region_mask_geojson(rings, data_version), paths.web / "region_mask.geojson")
@@ -161,14 +174,17 @@ def map_layers(
     data_version: str,
     boundaries: dict[str, Any],
     *,
+    adm2: dict[str, Any] | None = None,
+    municipalities: Sequence[Municipality] = MUNICIPALITIES,
     fetch_daily: DailyFetcher = _fetch_daily,
 ) -> list[RainCell]:
     """Annual rain normal for every region cell, then the three map files."""
+    rings = region_rings(boundaries, set(REGION_ISO), adm2, municipalities)
     cells = [
         RainCell(lat, lon, sum(monthly_precip_mm(fetch_daily(lat, lon, paths.cache))))
-        for lat, lon in cells_intersecting(region_rings(boundaries, set(REGION_ISO)))
+        for lat, lon in cells_intersecting(rings)
     ]
-    write_map_layers(paths, data_version, boundaries, cells)
+    write_map_layers(paths, data_version, boundaries, cells, adm2, municipalities)
     return cells
 
 
@@ -176,6 +192,19 @@ def load_boundaries(paths: Paths) -> dict[str, Any]:
     return power.cached_json(
         paths.cache / "geoboundaries" / "GTM_ADM1_simplified.geojson",
         GEOBOUNDARIES_URL,
+        httpx.QueryParams(),
+        None,
+        time.sleep,
+    )
+
+
+def load_adm2(paths: Paths) -> dict[str, Any] | None:
+    """geoBoundaries ADM2, only when a municipality list needs it (cached like ADM1)."""
+    if not MUNICIPALITIES:
+        return None
+    return power.cached_json(
+        paths.cache / "geoboundaries" / "GTM_ADM2_simplified.geojson",
+        ADM2_URL,
         httpx.QueryParams(),
         None,
         time.sleep,
@@ -193,10 +222,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     paths = Paths()
     data_version = date.today().isoformat()
     if args.map_layers:
-        cells = map_layers(paths, data_version, load_boundaries(paths))
+        cells = map_layers(
+            paths, data_version, load_boundaries(paths), adm2=load_adm2(paths)
+        )
         print(f"Wrote {len(cells)} rain cells, the region and demo points to {paths.web}")
         return
-    sites = run(paths, data_version, load_boundaries(paths))
+    sites = run(paths, data_version, load_boundaries(paths), adm2=load_adm2(paths))
     print(f"Wrote {len(sites)} cells to {paths.output} and {paths.web}")
 
 
