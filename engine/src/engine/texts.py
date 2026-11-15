@@ -72,5 +72,7 @@ def benefits(deltas: DeltaVsCurrent) -> list[str]:
     """One line naming the criteria that are better than the current rotation."""
     marks = deltas.model_dump()
     better = [CRITERION_NAME_ES[name] for name in PRIORITY_ORDER if marks[name] == "better"]
+    if not better:
+        return []
     listed = " y ".join(better) if len(better) < 3 else f"{', '.join(better[:-1])} y {better[-1]}"
     return [f"Mejora frente a su rotación en: {listed}."]
