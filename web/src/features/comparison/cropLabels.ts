@@ -34,6 +34,6 @@ export function cropLabel(id: CropId, lang: Lang = "es"): string {
 }
 
 /** "Maíz con frijol → Maicillo" */
-export function sequenceLabel(sequence: Rotation): string {
-  return `${cropLabel(sequence.primera)} → ${cropLabel(sequence.postrera)}`;
+export function sequenceLabel(sequence: Rotation, lang: Lang = "es"): string {
+  return `${cropLabel(sequence.primera, lang)} → ${cropLabel(sequence.postrera, lang)}`;
 }
