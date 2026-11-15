@@ -17,7 +17,7 @@ export interface RisksScreenProps {
   onContinue: () => void;
 }
 
-// Áreas táctiles >= 44 px.
+// Touch target of at least 44 px.
 const buttonStyle: CSSProperties = { minHeight: 44, minWidth: 44, padding: "0 16px" };
 const screenStyle: CSSProperties = { padding: 16, maxWidth: 480, margin: "0 auto" };
 const headerStyle: CSSProperties = {

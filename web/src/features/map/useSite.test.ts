@@ -118,7 +118,7 @@ describe("useSite", () => {
     expect(calls[1].opts.signal.aborted).toBe(false);
 
     await act(async () => {
-      calls[0].resolve({ ok: true, site: chiquimulaSite }); // llega tarde
+      calls[0].resolve({ ok: true, site: chiquimulaSite }); // arrives late
     });
     expect(result.current.state).toEqual({ status: "loading", slow: false });
 

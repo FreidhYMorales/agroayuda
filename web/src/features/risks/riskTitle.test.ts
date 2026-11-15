@@ -2,7 +2,7 @@
 import { describe, expect, test } from "vitest";
 import { riskTitle, sortRisks } from "./riskTitle";
 
-// Solo importan `id` y `level`; el resto del SiteRisk no interviene aquí.
+// Only idandlevel matter; the rest of the SiteRisk plays no part here.
 const risk = (id: string, level: string) => ({ id, level }) as never;
 
 test("high canícula reads fuerte", () => {
@@ -22,7 +22,7 @@ describe("riskTitle", () => {
     expect(riskTitle(risk("missing_data", "unknown"))).toBe("❔ Suelo: sin dato");
   });
 
-  // Copy no definido en el paquete: se usa el título base, sin adjetivo.
+  // Copy not defined in the package: the base title is used, without an adjective.
   test("low and unknown canícula fall back to the base title", () => {
     expect(riskTitle(risk("canicula", "low"))).toBe("Canícula");
     expect(riskTitle(risk("canicula", "unknown"))).toBe("Canícula");

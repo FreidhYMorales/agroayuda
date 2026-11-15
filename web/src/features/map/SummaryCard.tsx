@@ -6,13 +6,13 @@ import { MAP_COPY } from "./copy";
 
 export interface SummaryCardProps {
   site: SiteProfile;
-  placeName?: string | undefined; // nombre del lugar de demo; si no hay, "Su zona"
+  placeName?: string | undefined; // demo place name; "Su zona" when there is none
   onViewRisks: () => void;
   onViewRecommendations: () => void;
   onPickPlace: () => void;
 }
 
-// Áreas táctiles >= 44 px.
+// Touch target of at least 44 px.
 const buttonStyle: CSSProperties = { minHeight: 44, minWidth: 44, padding: "0 16px" };
 const cardStyle: CSSProperties = {
   padding: 16,

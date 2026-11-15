@@ -11,7 +11,7 @@ const LEVEL_ICON: Record<SiteRisk["level"], string> = {
   unknown: "❔",
 };
 
-// El título de "datos faltantes" ya trae su propio ❔: no se repite el ícono.
+// The "missing data" title already carries its own ❔, so the icon is not repeated.
 function riskIcon(risk: SiteRisk): string | null {
   return riskTitle(risk).startsWith("❔") ? null : LEVEL_ICON[risk.level];
 }

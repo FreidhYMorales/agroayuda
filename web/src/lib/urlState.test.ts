@@ -12,10 +12,10 @@ test("URL round trip", () => {
     priorities: { water: 5, soil: 3, income: 3, risk: 3 },
   };
 
-  // toSearch y luego readState devuelve el mismo estado
+  // toSearch and then readState returns the same state
   expect(readState(toSearch(state))).toEqual(state);
 
-  // las prioridades que faltan en la URL quedan en 3 por defecto
+  // priorities missing from the URL default to 3
   const fromUrl = readState("?step=results&lat=14.7&lon=-89.5&p=maiz&s=frijol&w=5");
   expect(fromUrl.priorities).toEqual({ water: 5, soil: 3, income: 3, risk: 3 });
 });

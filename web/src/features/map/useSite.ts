@@ -20,10 +20,10 @@ export function useSite(
   const [state, setState] = useState<SiteState>(
     hasPoint ? { status: "loading", slow: false } : { status: "empty" },
   );
-  // Subir este contador vuelve a pedir el mismo punto.
+  // Bumping this counter requests the same point again.
   const [attempt, setAttempt] = useState(0);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `attempt` solo sirve para repetir la solicitud
+  // biome-ignore lint/correctness/useExhaustiveDependencies: attempt only exists to repeat the request
   useEffect(() => {
     if (lat === undefined || lon === undefined) {
       setState({ status: "empty" });
@@ -36,14 +36,14 @@ export function useSite(
     getSite(lat, lon, {
       signal: controller.signal,
       onSlow: () => {
-        if (controller.signal.aborted) return; // una solicitud más nueva ya la reemplazó
+        if (controller.signal.aborted) return; // a newer request has already replaced this one
         setState((current) =>
           current.status === "loading" ? { status: "loading", slow: true } : current,
         );
       },
     })
       .then((result) => {
-        if (controller.signal.aborted) return; // respuesta vieja: gana la más reciente
+        if (controller.signal.aborted) return; // stale answer: the latest request wins
         setState(
           result.ok
             ? { status: "ready", site: result.site }

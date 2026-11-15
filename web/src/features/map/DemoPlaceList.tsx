@@ -9,7 +9,7 @@ export interface DemoPlaceListProps {
 
 const listStyle: CSSProperties = { padding: 0, margin: 0 };
 const itemStyle: CSSProperties = { listStyle: "none", marginBottom: 8 };
-// Áreas táctiles >= 44 px.
+// Touch target of at least 44 px.
 const buttonStyle: CSSProperties = {
   minHeight: 44,
   width: "100%",
