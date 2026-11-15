@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { CATALOG_FIXTURE } from "./catalogFixture";
 import { DEFAULT_PRIORITIES, FormScreen, type FormValues } from "./FormScreen";
@@ -266,5 +266,19 @@ describe("FormScreen in English", () => {
     expect(within(postrera).getByRole("button", { name: "Sorghum" })).toBeVisible();
     expect(within(postrera).getByRole("button", { name: "Nothing" })).toBeVisible();
     expect(within(postrera).queryByRole("button", { name: /Maicillo/ })).toBeNull();
+  });
+
+  test("loading and a failed catalog speak English", async () => {
+    fetchMock.mockReturnValueOnce(new Promise<Response>(vi.fn()));
+    setup();
+
+    expect(screen.getByText("Loading the crops…")).toBeInTheDocument();
+
+    cleanup();
+    fetchMock.mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    setup();
+
+    expect(await screen.findByText("We could not load the crops.")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Try again" })).toBeVisible();
   });
 });
