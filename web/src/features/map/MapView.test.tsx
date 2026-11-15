@@ -42,9 +42,10 @@ const mocks = vi.hoisted(() => {
     addLayer: vi.fn((_layer: LayerSpec) => undefined),
     getSource: vi.fn((id: string) => sources.get(id)),
     // Like the real map, a new style drops every source and layer.
-    setStyle: vi.fn((_style: unknown) => {
+    setStyle: vi.fn((_style: unknown, _options?: { diff?: boolean }) => {
       sources.clear();
     }),
+    setWorkerUrl: vi.fn((_url: string) => undefined),
     remove: vi.fn(() => undefined),
   };
 
@@ -75,9 +76,19 @@ vi.mock("maplibre-gl", () => {
   return {
     Map: FakeMap,
     AttributionControl: FakeAttributionControl,
-    default: { Map: FakeMap, AttributionControl: FakeAttributionControl },
+    setWorkerUrl: mocks.api.setWorkerUrl,
+    default: {
+      Map: FakeMap,
+      AttributionControl: FakeAttributionControl,
+      setWorkerUrl: mocks.api.setWorkerUrl,
+    },
   };
 });
+
+// Vite resolves "?worker&url" imports to a path string; the test pins it.
+vi.mock("maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url", () => ({
+  default: "/test-worker.js",
+}));
 
 const cell = (valueMm: number, west: number): RainCollection["features"][number] => ({
   type: "Feature",
@@ -177,6 +188,15 @@ describe("MapView setup", () => {
     expect(options.center[1]).toBeGreaterThan(13.7);
     expect(options.center[1]).toBeLessThan(17.8);
     expect(options.zoom).toBeGreaterThanOrEqual(5);
+  });
+
+  test("points MapLibre at its own worker file before the first map is created", () => {
+    renderMap();
+
+    expect(mocks.api.setWorkerUrl).toHaveBeenCalledWith("/test-worker.js");
+    expect(mocks.api.setWorkerUrl.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.api.mapCreated.mock.invocationCallOrder[0],
+    );
   });
 
   test("shows the OpenFreeMap and OpenStreetMap attribution", () => {
@@ -317,7 +337,9 @@ describe("MapView errors", () => {
 
     expect(onError).toHaveBeenCalledTimes(1);
     expect(mocks.api.setStyle).toHaveBeenCalledTimes(1);
-    expect(mocks.api.setStyle).toHaveBeenCalledWith(fallbackStyle());
+    // A full reload is required: by default MapLibre diffs object styles, which
+    // would silently remove our overlays and never fire "style.load" again.
+    expect(mocks.api.setStyle).toHaveBeenCalledWith(fallbackStyle(), { diff: false });
   });
 
   test("further errors do not report again or swap the style again", () => {
