@@ -564,3 +564,14 @@ describe("MapScreen language toggle", () => {
     expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
   });
 });
+
+describe("MapScreen at 200% text zoom (work package 09)", () => {
+  test("the header row may wrap, so ES/EN move below the locate button instead of off screen", async () => {
+    await renderScreen();
+
+    const locate = screen.getByRole("button", { name: LOCATE_LABEL });
+    const row = screen.getByRole("region").querySelector(".ag-map-header > div") as HTMLElement;
+    expect(row.contains(locate)).toBe(true);
+    expect(row.style.flexWrap).toBe("wrap");
+  });
+});

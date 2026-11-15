@@ -57,7 +57,14 @@ const headerStyle: CSSProperties = {
   padding: 12,
   backgroundColor: COLORS.background,
 };
-const headerRowStyle: CSSProperties = { display: "flex", alignItems: "center", gap: 8 };
+// At 200% zoom (about 180 CSS px) ES/EN wrap below the locate button instead of
+// leaving the screen; with the locate box growing from 0 this never happens at 320 px.
+const headerRowStyle: CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: 8,
+};
 const toggleStyle: CSSProperties = { display: "flex", flex: "none", gap: 4 };
 
 // Language names are written in their own language, so each reader finds theirs.
@@ -189,7 +196,7 @@ export function MapScreen({
     <section className="ag-map-screen" aria-label={copy.defaultTitle}>
       <div className="ag-map-header" style={headerStyle}>
         <div style={headerRowStyle}>
-          <div style={{ flex: "1 1 auto" }}>
+          <div style={{ flex: "1 1 0" }}>
             <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
           </div>
           <LanguageToggle />

@@ -167,3 +167,12 @@ describe("comparison table on small phones", () => {
     expect(small).toMatch(/\.ag-table th\[scope="row"\]\{[^}]*width:22%/);
   });
 });
+
+describe("200% zoom on a phone (about 180 CSS px wide)", () => {
+  test("only below 320 px the five 48 px priority circles may wrap to a second line", () => {
+    const tiny = mediaBody(THEME_CSS, "(max-width:319px)") ?? "";
+
+    expect(rule(tiny, ".ag-circles")).toContain("flex-wrap:wrap");
+    expect(rule(outsideMedia(THEME_CSS), ".ag-circles")).not.toContain("flex-wrap");
+  });
+});

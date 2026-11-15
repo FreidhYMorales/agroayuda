@@ -9,7 +9,8 @@ import type { ReactNode } from "react";
  * - the recommended column is tinted and framed so the eye lands on it first (isolation effect);
  * - quick, quiet feedback (120 ms) that stops when the person asks for reduced motion;
  * - hover only on devices that hover: on a touch screen it would stick after a tap;
- * - below 360 px (small Android, iPhone SE zoomed) the table is a bit denser so it fits 320 px.
+ * - below 360 px (small Android, iPhone SE zoomed) the table is a bit denser so it fits 320 px;
+ * - below 320 px (only reached with browser zoom) the 48 px priority circles may wrap.
  * Width, centering and side padding come from .ag-screen (src/ui/layout.ts), which also gives
  * the tablet and desktop views.
  */
@@ -69,6 +70,7 @@ border-radius:50%;font-size:16px}
 .ag-track{flex:1;height:10px;background:#e4ddcb;border-radius:6px;overflow:hidden}
 .ag-fill{display:block;height:100%;background:#1f5e3b;border-radius:6px}
 .ag-low{background:#fff0c9;outline:2px solid #b7791f;outline-offset:-2px;font-weight:700;color:#3d2800}
+@media (max-width:319px){.ag-circles{flex-wrap:wrap;justify-content:flex-start}}
 @media (max-width:359px){.ag-table{font-size:14px}.ag-table th[scope="row"]{width:22%}}
 @media (hover:hover){.ag-btn:hover:not(:disabled){background:#f3eedf}
 .ag-primary:hover:not(:disabled){background:#184b2f}}
