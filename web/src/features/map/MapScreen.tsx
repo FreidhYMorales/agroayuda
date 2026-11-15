@@ -13,6 +13,7 @@ import { DemoPlaceList } from "./DemoPlaceList";
 import { MAP_COPY } from "./copy";
 import { useGeolocation } from "./useGeolocation";
 import type { SiteState } from "./useSite";
+import { COLORS } from "../../ui/colors";
 
 // A point chosen on the map, by geolocation or from the places list.
 // `place` is the DemoPoint id, or undefined when the point did not come from
@@ -51,7 +52,11 @@ const screenStyle: CSSProperties = {
   flexDirection: "column",
   height: "100dvh",
 };
-const headerStyle: CSSProperties = { flex: "none", padding: 12 };
+const headerStyle: CSSProperties = {
+  flex: "none",
+  padding: 12,
+  backgroundColor: COLORS.background,
+};
 const mapAreaStyle: CSSProperties = { position: "relative", flex: "1 1 auto", minHeight: 200 };
 const mapOverlayStyle: CSSProperties = {
   position: "absolute",
@@ -78,7 +83,7 @@ const sheetStyle: CSSProperties = {
   gap: 12,
   padding: "8px 12px 16px",
   borderRadius: "16px 16px 0 0",
-  background: "#fff",
+  backgroundColor: COLORS.background,
   boxShadow: "0 -2px 8px rgba(0, 0, 0, 0.15)",
 };
 const handleStyle: CSSProperties = {
@@ -87,7 +92,7 @@ const handleStyle: CSSProperties = {
   width: 40,
   height: 4,
   borderRadius: 2,
-  background: "#ccc",
+  background: COLORS.border,
 };
 
 export function MapScreen({

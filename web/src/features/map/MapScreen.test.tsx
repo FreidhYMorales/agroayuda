@@ -7,6 +7,14 @@ import { MapScreen, type MapScreenProps } from "./MapScreen";
 import type { RainCollection } from "./rainLayer";
 import { chiquimulaPlace, chiquimulaSite, demoPlaces, outsidePlace } from "./siteFixture";
 import type { SiteState } from "./useSite";
+import { COLORS } from "../../ui/colors";
+
+// jsdom reports colors as rgb(); compare through a probe so hex and rgb match.
+function expectSameColor(actual: string, expected: string) {
+  const probe = document.createElement("div");
+  probe.style.backgroundColor = expected;
+  expect(actual).toBe(probe.style.backgroundColor);
+}
 
 // MapLibre cannot draw in jsdom, so the map is replaced by a stub that shows
 // whether it received a site and has buttons to fire its callbacks.
@@ -218,6 +226,12 @@ describe("MapScreen layout", () => {
     expect(precedes(screen.getByTestId("map-area"), sheet)).toBe(true);
     expect(sheet.contains(screen.getByText("Chiquimula"))).toBe(true);
     expect(sheet.contains(screen.getByRole("button", { name: "Ver riesgos" }))).toBe(true);
+  });
+
+  test("the sheet uses the warm background of the form and comparison", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+
+    expectSameColor(screen.getByTestId("map-sheet").style.backgroundColor, COLORS.background);
   });
 
   test("the sheet scrolls on its own so the page does not", async () => {
