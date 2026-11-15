@@ -467,3 +467,21 @@ describe("MapScreen geolocation and taps", () => {
     expectPointWithoutPlace(onSelectPoint.mock.calls[0][0], 14.7, -89.5);
   });
 });
+
+describe("MapScreen language", () => {
+  afterEach(() => {
+    window.history.replaceState(null, "", "/");
+  });
+
+  test("with lang=en in the URL the map texts are in English", async () => {
+    window.history.replaceState(null, "", "/?step=map&lang=en");
+
+    await renderScreen();
+
+    expect(screen.getByRole("button", { name: "📍 Where is your plot?" })).toBeTruthy();
+    expect(screen.getByText("Tap the map or pick a place from the list")).toBeTruthy();
+    expect(screen.getByText("little rain")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Data: NASA POWER ›" })).toBeTruthy();
+    expect(screen.queryByText(EMPTY_TEXT)).toBeNull();
+  });
+});
