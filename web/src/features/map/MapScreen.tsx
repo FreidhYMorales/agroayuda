@@ -11,7 +11,8 @@ import { RainSourceLine } from "./RainSourceLine";
 import { SummaryCard } from "./SummaryCard";
 import { DemoPlaceList } from "./DemoPlaceList";
 import { mapCopy } from "./copy";
-import { useLang } from "../../lib/urlState";
+import { type Lang, useAppState, useLang } from "../../lib/urlState";
+import { buttonStyle } from "../../ui/buttonStyles";
 import { useGeolocation } from "./useGeolocation";
 import type { SiteState } from "./useSite";
 import { COLORS } from "../../ui/colors";
@@ -58,6 +59,39 @@ const headerStyle: CSSProperties = {
   padding: 12,
   backgroundColor: COLORS.background,
 };
+const headerRowStyle: CSSProperties = { display: "flex", alignItems: "center", gap: 8 };
+const toggleStyle: CSSProperties = { display: "flex", flex: "none", gap: 4 };
+
+// Language names are written in their own language, so each reader finds theirs.
+const LANGUAGES: { lang: Lang; short: string; name: string }[] = [
+  { lang: "es", short: "ES", name: "Español" },
+  { lang: "en", short: "EN", name: "English" },
+];
+
+function LanguageToggle() {
+  const lang = useLang();
+  const [, setState] = useAppState();
+
+  return (
+    <div style={toggleStyle}>
+      {LANGUAGES.map((option) => (
+        <button
+          key={option.lang}
+          type="button"
+          // Touch target of at least 44 px; the current language is the filled one.
+          style={buttonStyle(option.lang === lang ? "primary" : "secondary")}
+          aria-label={option.name}
+          aria-pressed={option.lang === lang}
+          // Spanish is the default, so it is kept out of the URL.
+          onClick={() => setState({ lang: option.lang === "en" ? "en" : undefined })}
+        >
+          {option.short}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 const mapAreaStyle: CSSProperties = { position: "relative", flex: "1 1 auto", minHeight: 200 };
 const mapOverlayStyle: CSSProperties = {
   position: "absolute",
@@ -163,7 +197,12 @@ export function MapScreen({
   return (
     <section style={screenStyle} aria-label={copy.defaultTitle}>
       <div style={headerStyle}>
-        <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
+        <div style={headerRowStyle}>
+          <div style={{ flex: "1 1 auto" }}>
+            <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
+          </div>
+          <LanguageToggle />
+        </div>
       </div>
 
       {mapData.status === "ready" && (
