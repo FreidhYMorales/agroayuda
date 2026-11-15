@@ -21,7 +21,7 @@ from engine.scoring import (
     score_option,
     weighted_score,
 )
-from engine.texts import LOCAL_REVIEW_ES, canicula_evidence, data_gaps, reason_line
+from engine.texts import LOCAL_REVIEW_ES, benefits, canicula_evidence, data_gaps, reason_line
 
 
 def _option(
@@ -105,4 +105,4 @@ def _with_deltas(option: RotationOption, current: RotationOption) -> RotationOpt
         income=_delta(mine.income, theirs.income),
         risk=_delta(mine.risk, theirs.risk),
     )
-    return option.model_copy(update={"delta_vs_current": deltas})
+    return option.model_copy(update={"delta_vs_current": deltas, "benefits": benefits(deltas)})
