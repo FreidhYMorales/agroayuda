@@ -1,6 +1,13 @@
 """One-line Spanish texts for each option (Guatemala, usted). Copy approved in story 15."""
 
-from contracts import Criteria, CropCatalogEntry, Evidence, Priorities, SiteProfile
+from contracts import (
+    Criteria,
+    CropCatalogEntry,
+    DeltaVsCurrent,
+    Evidence,
+    Priorities,
+    SiteProfile,
+)
 from engine.scoring import round_half_up
 
 # NASA POWER daily rain covers 1991-2020; the canícula share is a share of those years.
@@ -56,3 +63,16 @@ def data_gaps(site: SiteProfile, crops: list[CropCatalogEntry]) -> list[str]:
         if crop.id != "none" and not crop.local_source
     ]
     return [*([SOIL_GAP_ES] if missing_soil else []), *general, POWER_GAP_ES]
+
+
+CRITERION_NAME_ES = {"water": "agua", "soil": "suelo", "income": "ingreso", "risk": "riesgo"}
+
+
+def benefits(deltas: DeltaVsCurrent) -> list[str]:
+    """One line naming the criteria that are better than the current rotation."""
+    marks = deltas.model_dump()
+    better = [CRITERION_NAME_ES[name] for name in PRIORITY_ORDER if marks[name] == "better"]
+    if not better:
+        return []
+    listed = " y ".join(better) if len(better) < 3 else f"{', '.join(better[:-1])} y {better[-1]}"
+    return [f"Mejora frente a su rotación en: {listed}."]
