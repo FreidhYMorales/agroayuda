@@ -36,3 +36,17 @@ def test_benefits_name_what_improves_over_the_current(
 
     assert benefits[("frijol", "maicillo")] == ["Mejora frente a su rotación en: agua y riesgo."]
     assert benefits[("maiz_frijol", "maicillo")] == ["Mejora frente a su rotación en: suelo."]
+
+
+def test_four_improvements_are_listed_with_commas_and_y(
+    site: SiteProfile,
+    crops: dict[str, CropCatalogEntry],
+    templates: list[RotationTemplate],
+) -> None:
+    """Current maiz -> none: water 4, soil (2 + 1) / 2 - 0.5 (8 bare) = 1, income 2,
+    risk min(0, 5) -> 1. frijol -> maicillo 5/3/3/2 beats all four."""
+    benefits = recommend_for(site, crops, templates, "maiz", "none")
+
+    assert benefits[("frijol", "maicillo")] == [
+        "Mejora frente a su rotación en: agua, suelo, ingreso y riesgo."
+    ]
