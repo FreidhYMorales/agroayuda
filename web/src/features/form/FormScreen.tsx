@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CropCatalogEntry, CropId, Priorities } from "../../contracts/contracts";
 import { useLang } from "../../lib/urlState";
+import { cropLabel } from "../comparison/cropLabels";
 import { Page, visuallyHidden } from "../comparison/theme";
 import { formCopy } from "./copy";
 
@@ -71,6 +72,10 @@ type CropGridProps = {
 function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
   const allowed = crops.filter((entry) => entry.id !== "none" && entry.seasons.includes(season));
   const none = crops.find((entry) => entry.id === "none");
+  const lang = useLang();
+  // Spanish keeps the catalog name; English names are kept in the web app by crop id.
+  const label = (entry: CropCatalogEntry) =>
+    lang === "en" ? cropLabel(entry.id, "en") : entry.name_es;
   return (
     <section className="ag-card">
       <h2>{title}</h2>
@@ -79,14 +84,14 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
           <CropButton
             key={entry.id}
             icon={entry.icon}
-            label={entry.name_es}
+            label={label(entry)}
             selected={selected === entry.id}
             onSelect={() => onSelect(entry.id)}
           />
         ))}
         <CropButton
           icon={none?.icon ?? "⬜"}
-          label="Nada"
+          label={cropLabel("none", lang)}
           selected={selected === "none"}
           onSelect={() => onSelect("none")}
         />
