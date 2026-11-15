@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AgroAyuda</title>
+    <!-- Start downloading the logo before the bundle, so the splash does not wait for it. -->
+    <link rel="preload" href="/logo.svg" as="image" />
     <!-- The map screen fills the phone height; the default body margin would add a page scroll. -->
     <style>
       /* Warm background and text from the form and comparison theme (src/ui/colors.ts). */
@@ -12,9 +14,123 @@
         background: #faf7f0;
         color: #1e2a22;
       }
+
+      /* Opening splash. It lives here, outside #root, so the browser paints it before the
+         JavaScript bundle arrives; src/ui/splash.ts removes it after React renders. */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+          env(safe-area-inset-left);
+        background: #faf7f0;
+        color: #1e2a22;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        /* Must match SPLASH_FADE_MS in src/ui/splash.ts. */
+        transition: opacity 300ms;
+        /* Safety timeout: if the script fails or never calls hideSplash(), the splash still
+           disappears after 10 s, so it can never block the app. */
+        animation: splash-timeout 1ms linear 10s forwards;
+      }
+
+      #splash.is-leaving {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .splash-logo {
+        width: min(60vw, 240px);
+        height: auto;
+        /* Entrance first; the breathing loop starts when the entrance ends. */
+        animation:
+          splash-in 600ms ease-out both,
+          splash-breathe 1.6s ease-in-out 600ms infinite alternate;
+      }
+
+      .splash-label {
+        margin: 16px 0 0;
+        font-size: 16px;
+        animation: splash-fade 300ms ease-out 300ms both;
+      }
+
+      .splash-ai {
+        position: absolute;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        margin: 0;
+        font-size: 12px;
+        color: #4a5656; /* 4.5:1 or better on #faf7f0 */
+      }
+
+      @keyframes splash-in {
+        from {
+          opacity: 0;
+          transform: scale(0.92);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes splash-breathe {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.03);
+        }
+      }
+
+      @keyframes splash-fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes splash-timeout {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      /* People who ask for less motion get a still logo that just disappears. The safety
+         timeout on #splash is not touched here, so it still works. */
+      @media (prefers-reduced-motion: reduce) {
+        .splash-logo,
+        .splash-label {
+          animation: none;
+        }
+        #splash {
+          transition: none;
+        }
+      }
     </style>
   </head>
   <body>
+    <div id="splash" role="status" aria-live="polite">
+      <img class="splash-logo" src="/logo.svg" alt="" width="240" height="197" fetchpriority="high" />
+      <p class="splash-label">Cargando AgroAyuda…</p>
+      <p class="splash-ai">Logo generado con IA</p>
+    </div>
+    <script>
+      // Runs before any module: English texts when the URL has ?lang=en (same rule as urlState.ts).
+      (() => {
+        if (new URLSearchParams(location.search).get("lang") !== "en") return;
+        const label = document.querySelector(".splash-label");
+        const ai = document.querySelector(".splash-ai");
+        if (label) label.textContent = "Loading AgroAyuda…";
+        if (ai) ai.textContent = "AI-generated logo";
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
