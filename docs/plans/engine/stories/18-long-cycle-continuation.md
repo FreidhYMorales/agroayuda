@@ -36,3 +36,7 @@ Risk: none
 ## Log
 
 - L1 request: si, armalo como historia del motor
+- L2 test list approved (mode B), including the intended change of story 03's gandul -> none soil from 2.5 to 4.5.
+- L3 commits: 7b5ff68 (red: `assert 2.5 == 4.5`) -> 295eca2 (postrera scores with the primera row when it still covers September; spec row added), then 52cbf99 guard tests for maíz -> none (soil 1.0) and gandul -> none bare months (green on first run; the maíz guard is proven by the mutant "and" -> "or", which failed it).
+- L4 make check green: 185 pytest passed, ruff, mypy, biome, tsc and vitest clean. No verifier (Risk: none).
+Risk: none
