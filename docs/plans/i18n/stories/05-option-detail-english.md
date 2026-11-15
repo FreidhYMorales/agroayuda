@@ -6,9 +6,9 @@
 
 ## Acceptance criteria
 
-- [ ] Given English is chosen, when I open an option's detail, then the back link, the crop sequence, "Compared with current" with each criterion's better/same/worse, the confidence line, the bare-months line, every section title and the crop-values note are in English.
-- [ ] Given English is chosen, when the options load, then each option's reasons, benefits, local review and data gaps (including crop names) are in English, and so is the reason after "not recommended" / "⚠ Current:" on the comparison screen.
-- [ ] Given English is chosen and the site has a canícula share, when I read "Evidence (data)", then its text and its value (e.g. "1 of 30 years") are in English and still name NASA POWER and MERRA-2; in Spanish every detail and engine text stays exactly as it is today.
+- [x] Given English is chosen, when I open an option's detail, then the back link, the crop sequence, "Compared with current" with each criterion's better/same/worse, the confidence line, the bare-months line, every section title and the crop-values note are in English.
+- [x] Given English is chosen, when the options load, then each option's reasons, benefits, local review and data gaps (including crop names) are in English, and so is the reason after "not recommended" / "⚠ Current:" on the comparison screen.
+- [x] Given English is chosen and the site has a canícula share, when I read "Evidence (data)", then its text and its value (e.g. "1 of 30 years") are in English and still name NASA POWER and MERRA-2; in Spanish every detail and engine text stays exactly as it is today.
 
 ## Plan
 
@@ -38,3 +38,8 @@ Risk: item 3 (RecommendationResponse gains *_en fields)
 - L1 request: /flow:story 05
 - L2 finding: detail texts come from the engine (`texts.py`, `scoring.py`) and the evidence from `explanation_es` stored in the Parquet; user chose to build the English evidence in the engine at request time, with no Parquet change.
 - L3 approved by the user.
+- L4 built with /flow:pair 05 in mode C on branch `story/05-option-detail-english`; test/feat pairs 01d6d92..cf0b7b2.
+- L5 lead approvals for changing existing tests (stop rule 3, both in their own `test:` commit): aecf625 `engine/tests/test_evidence.py` compares the Spanish evidence fields only (contract now requires `text_en`/`value_en`); 8096215 `ComparisonScreen.test.tsx` story 04 Spanish reason under English becomes the English reason (criterion 2). The lead also approved the new characterization test in `api/tests/` (e2574f2, green on first run: the API passes engine output through, no `api/src` change).
+- L6 evidence: `make check` exit 0; pytest 243 passed; vitest `Tests 387 passed (387)`. Manual check (detail in English at phone width, ES unchanged): user OK. Local API with real data: English evidence matches the Spanish Parquet text sentence by sentence.
+- L7 verifier: PASS (refs unchanged). Gap noted: the `medium` English canícula lead has no test.
+- Risk: item 3 (RecommendationResponse gains *_en fields)
