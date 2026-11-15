@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, onTestFinished, test, vi } from "vitest";
 import type { RecommendationRequest } from "../../contracts/contracts";
 import { ComparisonScreen, ComparisonTable } from "./ComparisonScreen";
 import { FIXTURE_OPTIONS, withoutRecommended } from "./fixture";
@@ -303,4 +303,30 @@ test("the latest request wins when an older answer arrives late", async () => {
 
   expect(screen.queryByText(/Ayote/)).toBeNull();
   expect(screen.getAllByText("Maíz → Frijol").length).toBeGreaterThan(0);
+});
+
+test("with lang=en the comparison screen is in English", async () => {
+  window.history.replaceState(null, "", "/?step=results&lang=en");
+  onTestFinished(() => window.history.replaceState(null, "", "/"));
+  fetchMock.mockResolvedValue(okResponse());
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  expect(
+    await screen.findByText("✓ Recommended: Opt. 1 (Maize with beans → Sorghum)"),
+  ).toBeVisible();
+  expect(screen.getByText("⚠ Current: Aguanta poco la sequía de la canícula")).toBeVisible();
+  expect(
+    screen.getByText("✗ Opt. 2 not recommended: Aguanta poco la sequía de la canícula"),
+  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "← Your options" })).toBeVisible();
+  expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual(
+    expect.arrayContaining(["Current", "Opt. 1", "Opt. 2"]),
+  );
+  expect(screen.getByText("Beans → Sorghum")).toBeVisible();
+  expect(within(rowOf("Water")).getAllByRole("cell")).toHaveLength(3);
+  expect(within(rowOf("Confidence")).getByText("●○○ low")).toBeVisible();
+  expect(within(rowOf("Months without a crop")).getAllByRole("cell")).toHaveLength(3);
+  expect(screen.getByText("Tap an option ›")).toBeVisible();
+  expect(screen.getByText("ⓘ This is an aid; it does not replace your judgment")).toBeVisible();
+  expect(screen.getByRole("button", { name: "Change priorities" })).toBeVisible();
 });

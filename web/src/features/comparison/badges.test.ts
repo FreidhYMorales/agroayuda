@@ -65,3 +65,38 @@ test("confidence shows dots and a word", () => {
   expect(confidenceText("medium")).toBe("●●○ media");
   expect(confidenceText("low")).toBe("●○○ baja");
 });
+
+test("confidence words in English", () => {
+  expect(confidenceText("high", "en")).toBe("●●● high");
+  expect(confidenceText("medium", "en")).toBe("●●○ medium");
+  expect(confidenceText("low", "en")).toBe("●○○ low");
+});
+
+test("badges in English keep the reason as the API sends it", () => {
+  expect(columnBadge(FIXTURE_OPTIONS[1], "en")).toEqual({
+    kind: "recommended",
+    text: "✓ Recommended",
+  });
+  expect(columnBadge(FIXTURE_OPTIONS[2], "en")).toEqual({
+    kind: "not_recommended",
+    text: "✗ Not recommended: Aguanta poco la sequía de la canícula",
+  });
+  expect(columnBadge(FIXTURE_OPTIONS[0], "en")).toEqual({
+    kind: "warning",
+    text: "⚠ Aguanta poco la sequía de la canícula",
+  });
+});
+
+test("best current rotation in English, with and without the canícula warning", () => {
+  const options = withoutRecommended(FIXTURE_OPTIONS);
+  const plain = options.map((option) =>
+    option.is_current ? { ...option, not_recommended_reason: null } : option,
+  );
+
+  expect(summaryMessage(options, "en")).toBe(
+    "Your current rotation is already the best for your priorities, but watch out for the canícula",
+  );
+  expect(summaryMessage(plain, "en")).toBe(
+    "Your current rotation is already the best for your priorities",
+  );
+});

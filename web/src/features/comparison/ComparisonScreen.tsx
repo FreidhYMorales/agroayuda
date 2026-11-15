@@ -3,6 +3,8 @@ import { isAbortError } from "../../api/client";
 import { postRecommendations } from "../../api/recommendations";
 import type { RecommendationRequest, RotationOption } from "../../contracts/contracts";
 import { type Badge, columnBadge, confidenceText, summaryMessage } from "./badges";
+import { type Lang, useLang } from "../../lib/urlState";
+import { comparisonCopy } from "./copy";
 import { sequenceLabel } from "./cropLabels";
 import { OptionDetail } from "./OptionDetail";
 import { Page, visuallyHidden } from "./theme";
@@ -10,13 +12,13 @@ import { Page, visuallyHidden } from "./theme";
 export const SLOW_MESSAGE = "Despertando el servidor…";
 export const RETRY_LABEL = "Intentar de nuevo";
 
-const COLUMN_TITLES = ["Actual", "Op.1", "Op.2"] as const;
 const DETAIL_TITLES = ["Actual", "Opción 1", "Opción 2"] as const;
+// The labels come from comparisonCopy, by key.
 const CRITERIA = [
-  { key: "water", icon: "💧", label: "Agua" },
-  { key: "soil", icon: "🟫", label: "Suelo" },
-  { key: "income", icon: "💰", label: "Ingreso" },
-  { key: "risk", icon: "🛡", label: "Riesgo" },
+  { key: "water", icon: "💧" },
+  { key: "soil", icon: "🟫" },
+  { key: "income", icon: "💰" },
+  { key: "risk", icon: "🛡" },
 ] as const;
 
 /** Current rotation first, then the alternatives in the order the engine sent them. */
@@ -59,18 +61,22 @@ type ColumnNote = { kind: Badge["kind"]; text: string };
  * "✓ Recomendada: Op.1 (Gandul → Nada)", "⚠ Actual: <reason>",
  * "✗ Op.2 no recomendada: <reason>".
  */
-function columnNotes(columns: RotationOption[]): ColumnNote[] {
+function columnNotes(columns: RotationOption[], lang: Lang): ColumnNote[] {
+  const copy = comparisonCopy(lang);
   const notes: ColumnNote[] = [];
   columns.forEach((option, index) => {
     const kind = columnBadge(option).kind;
-    const title = COLUMN_TITLES[index];
+    const title = copy.columnTitles[index] ?? "";
     const reason = option.not_recommended_reason ?? "";
     if (kind === "recommended") {
-      notes.unshift({ kind, text: `✓ Recomendada: ${title} (${sequenceLabel(option.sequence)})` });
+      notes.unshift({
+        kind,
+        text: copy.recommendedNote(title, sequenceLabel(option.sequence, lang)),
+      });
     } else if (kind === "warning") {
-      notes.push({ kind, text: `⚠ ${title}: ${reason}` });
+      notes.push({ kind, text: copy.warningNote(title, reason) });
     } else if (kind === "not_recommended") {
-      notes.push({ kind, text: `✗ ${title} no recomendada: ${reason}` });
+      notes.push({ kind, text: copy.notRecommendedNote(title, reason) });
     }
   });
   return notes;
@@ -83,6 +89,8 @@ type ComparisonTableProps = {
 
 /** Always three columns: Actual, Op.1, Op.2. Bars come with their number, never color alone. */
 export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
+  const lang = useLang();
+  const copy = comparisonCopy(lang);
   const columns = orderOptions(options);
   const recommended = (index: number) =>
     columns[index] && columnBadge(columns[index]).kind === "recommended"
@@ -93,9 +101,9 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
       <thead>
         <tr>
           <th>
-            <span style={visuallyHidden}>Criterio</span>
+            <span style={visuallyHidden}>{copy.criterion}</span>
           </th>
-          {COLUMN_TITLES.map((title, index) => {
+          {copy.columnTitles.map((title, index) => {
             const option = columns[index];
             return (
               <th key={title} scope="col" className={recommended(index)}>
@@ -105,9 +113,9 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
                 {option ? (
                   <>
                     <div style={{ fontSize: 13, fontWeight: 400, marginTop: 4 }}>
-                      {sequenceLabel(option.sequence)}
+                      {sequenceLabel(option.sequence, lang)}
                     </div>
-                    <BadgeView badge={columnBadge(option)} />
+                    <BadgeView badge={columnBadge(option, lang)} />
                   </>
                 ) : null}
               </th>
@@ -116,13 +124,13 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
         </tr>
       </thead>
       <tbody>
-        {CRITERIA.map(({ key, icon, label }) => (
+        {CRITERIA.map(({ key, icon }) => (
           <tr key={key}>
             <th scope="row">
               <span aria-hidden="true">{icon}</span>
-              {` ${label}`}
+              {` ${copy.criteria[key]}`}
             </th>
-            {COLUMN_TITLES.map((title, index) => (
+            {copy.columnTitles.map((title, index) => (
               <td key={title} className={recommended(index)}>
                 {columns[index] ? <ScoreBar value={columns[index].criteria[key]} /> : "—"}
               </td>
@@ -130,8 +138,8 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
           </tr>
         ))}
         <tr>
-          <th scope="row">Confianza</th>
-          {COLUMN_TITLES.map((title, index) => {
+          <th scope="row">{copy.confidence}</th>
+          {copy.columnTitles.map((title, index) => {
             const option = columns[index];
             const low = option?.confidence === "low";
             return (
@@ -140,14 +148,14 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
                 data-low-confidence={low ? "true" : undefined}
                 className={low ? "ag-low" : recommended(index)}
               >
-                {option ? confidenceText(option.confidence) : "—"}
+                {option ? confidenceText(option.confidence, lang) : "—"}
               </td>
             );
           })}
         </tr>
         <tr>
-          <th scope="row">Meses sin cultivo</th>
-          {COLUMN_TITLES.map((title, index) => (
+          <th scope="row">{copy.bareMonths}</th>
+          {copy.columnTitles.map((title, index) => (
             <td key={title} className={recommended(index)}>
               {columns[index] ? columns[index].bare_months.length : "—"}
             </td>
@@ -192,6 +200,8 @@ function ResultsView(props: ResultsViewProps) {
   const { request, onBack, onChangePriorities, onRetry } = props;
   const [state, setState] = useState<LoadState>({ status: "loading", slow: false });
   const [selected, setSelected] = useState<number | null>(null);
+  const lang = useLang();
+  const copy = comparisonCopy(lang);
   const handlers = useRef(props);
   handlers.current = props;
   // The key restarts the request when the full request changes: the latest one wins.
@@ -233,7 +243,7 @@ function ResultsView(props: ResultsViewProps) {
 
   const back = (
     <button type="button" className="ag-btn ag-link" onClick={onBack}>
-      ← Sus opciones
+      {copy.back}
     </button>
   );
 
@@ -278,8 +288,8 @@ function ResultsView(props: ResultsViewProps) {
     );
   }
 
-  const summary = summaryMessage(state.options);
-  const notes = columnNotes(columns);
+  const summary = summaryMessage(state.options, lang);
+  const notes = columnNotes(columns, lang);
   return (
     <Page>
       {back}
@@ -292,10 +302,10 @@ function ResultsView(props: ResultsViewProps) {
       <div className="ag-card" style={{ padding: "8px 4px" }}>
         <ComparisonTable options={state.options} onSelect={setSelected} />
       </div>
-      <p className="ag-muted">Toque una opción ›</p>
-      <p className="ag-muted">ⓘ Esto es una ayuda; no reemplaza su criterio</p>
+      <p className="ag-muted">{copy.tapOption}</p>
+      <p className="ag-muted">{copy.aid}</p>
       <button type="button" className="ag-btn ag-primary" onClick={onChangePriorities}>
-        Cambiar prioridades
+        {copy.changePriorities}
       </button>
     </Page>
   );
