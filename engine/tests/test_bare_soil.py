@@ -18,8 +18,18 @@ def test_nine_bare_months_cost_half_a_soil_point(
 def test_exactly_six_bare_months_already_cost_half_a_point(
     site: SiteProfile, crops: dict[str, CropCatalogEntry]
 ) -> None:
-    # gandul 180 d covers May-Oct; fallow postrera: bare Nov-Apr (6). Soil (5 + 1) / 2 - 0.5.
-    assert soil(site, crops, "gandul", "none") == 2.5
+    # gandul 180 d covers May-Oct: bare Nov-Apr (6). Story 18: gandul is still in the field at
+    # the September postrera planting, so postrera scores as gandul. Soil (5 + 5) / 2 - 0.5.
+    assert soil(site, crops, "gandul", "none") == 4.5
+
+
+def test_long_cycle_crop_is_not_fallow_in_postrera(
+    site: SiteProfile, crops: dict[str, CropCatalogEntry]
+) -> None:
+    # Story 18. gandul row in crops.csv: water 5, soil 5, income 1, risk 5. Both seasons score as
+    # gandul; soil - 0.5 for 6 bare months; risk min(5 - 1 canícula high in primera, 5) = 4.
+    criteria = score_option(site, crops["gandul"], crops["none"], irrigation=False)
+    assert criteria == {"water": 5.0, "soil": 4.5, "income": 1.0, "risk": 4.0}
 
 
 def test_five_bare_months_cost_nothing(
