@@ -92,6 +92,11 @@ def test_demo_points_are_written(tmp_path: Path) -> None:
     assert [DemoPoint.model_validate(p).id for p in points] == [
         "chiquimula",
         "aguacatan",
+        "rabinal",
+        "san_martin_jilotepeque",
+        "san_jose_del_golfo",
+        "canilla",
+        "santa_lucia_la_reforma",
         "fuera_ciudad_guatemala",
     ]
 

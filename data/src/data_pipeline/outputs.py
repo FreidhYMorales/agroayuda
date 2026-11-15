@@ -31,6 +31,33 @@ DEMO_POINTS: Final[list[dict[str, Any]]] = [
         "name_es": "Aguacatán, Huehuetenango",
         "location": {"lat": 15.33, "lon": -91.23},
     },
+    # One per newly covered department, in the municipality with the largest share inside the
+    # corridor (SESAN 2016, Anexo 1); points well inside each ADM2 polygon, not the towns.
+    {
+        "id": "rabinal",
+        "name_es": "Rabinal, Baja Verapaz",
+        "location": {"lat": 15.08, "lon": -90.50},
+    },
+    {
+        "id": "san_martin_jilotepeque",
+        "name_es": "San Martín Jilotepeque, Chimaltenango",
+        "location": {"lat": 14.84, "lon": -90.77},
+    },
+    {
+        "id": "san_jose_del_golfo",
+        "name_es": "San José del Golfo, Guatemala",
+        "location": {"lat": 14.79, "lon": -90.37},
+    },
+    {
+        "id": "canilla",
+        "name_es": "Canillá, Quiché",
+        "location": {"lat": 15.20, "lon": -90.86},
+    },
+    {
+        "id": "santa_lucia_la_reforma",
+        "name_es": "Santa Lucía La Reforma, Totonicapán",
+        "location": {"lat": 15.17, "lon": -91.31},
+    },
     {
         "id": "fuera_ciudad_guatemala",
         "name_es": "Ciudad de Guatemala (fuera de la región)",
