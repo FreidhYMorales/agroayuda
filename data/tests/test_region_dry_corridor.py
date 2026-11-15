@@ -150,6 +150,6 @@ def test_run_writes_sites_for_cells_only_the_new_municipalities_reach(tmp_path: 
     before = written_cells(tmp_path / "before", huehuetenango_only)
     after = written_cells(tmp_path / "after", list(MUNICIPALITIES))
 
-    assert before < after
-    # The cell of Santa Lucía La Reforma's demo point (15.17, -91.31).
-    assert cell_id(15.0, -91.25) in after - before
+    # Recorded subset: 14 cells before, 16 after; the new ones are north Quiché / Baja Verapaz
+    # (Uspantán, Chicamán, Cubulco) and south Chimaltenango / Totonicapán.
+    assert after - before == {cell_id(15.5, -90.625), cell_id(14.5, -91.25)}
