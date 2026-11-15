@@ -484,6 +484,24 @@ describe("MapScreen language", () => {
     expect(screen.getByRole("button", { name: "Data: NASA POWER ›" })).toBeTruthy();
     expect(screen.queryByText(EMPTY_TEXT)).toBeNull();
   });
+
+  test("with lang=en the summary card and the source detail are in English", async () => {
+    window.history.replaceState(null, "", "/?step=map&lang=en");
+
+    await renderScreen({
+      site: { ...READY, site: { ...chiquimulaSite, cell_resolution_km: 61.7 } },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Data: NASA POWER ›" }));
+
+    expect(screen.getByRole("heading", { name: "Your area" })).toBeTruthy();
+    expect(screen.getByText("Area about 60 km across (regional data, not your plot)")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "See risks" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "See recommendations →" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Or pick a place: ›" })).toBeTruthy();
+    expect(
+      screen.getByText("NASA POWER (PRECTOTCORR diario, 1991-2020) · cells of about 60 km"),
+    ).toBeTruthy();
+  });
 });
 
 describe("MapScreen language toggle", () => {
