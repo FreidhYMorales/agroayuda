@@ -18,29 +18,29 @@ Result of the check matrix in `docs/work-packages/09-responsive.md`, on branch `
 
 | Width | Map | Risks | Form | Comparison | Detail |
 |---|---|---|---|---|---|
-| Small phone 320 × 568 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Phone 360 × 780 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Large phone 430 × 932 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Phone landscape 780 × 360 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Tablet portrait 768 × 1024 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Tablet landscape 1024 × 768 | pass: map 63% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Laptop 1280 × 800 | pass: map 67% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Large desktop 1920 × 1080 | pass: map 78% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Text zoom 200% (360 × 780 at 200%) | pass: map 100% wide | pass: ok | pass: ok | pass: table scrolls inside its frame, page does not | pass: ok |
+| Small phone 320 Ã— 568 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Phone 360 Ã— 780 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Large phone 430 Ã— 932 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Phone landscape 780 Ã— 360 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Tablet portrait 768 Ã— 1024 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Tablet landscape 1024 Ã— 768 | pass: map 63% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Laptop 1280 Ã— 800 | pass: map 67% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Large desktop 1920 Ã— 1080 | pass: map 78% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Text zoom 200% (360 Ã— 780 at 200%) | pass: map 100% wide | pass: ok | pass: ok | pass: table scrolls inside its frame, page does not | pass: ok |
 
 ### English (`?lang=en`)
 
 | Width | Map | Risks | Form | Comparison | Detail |
 |---|---|---|---|---|---|
-| Small phone 320 × 568 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Phone 360 × 780 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Large phone 430 × 932 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Phone landscape 780 × 360 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Tablet portrait 768 × 1024 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Tablet landscape 1024 × 768 | pass: map 63% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Laptop 1280 × 800 | pass: map 67% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Large desktop 1920 × 1080 | pass: map 78% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
-| Text zoom 200% (360 × 780 at 200%) | pass: map 100% wide | pass: ok | pass: ok | pass: table scrolls inside its frame, page does not | pass: ok |
+| Small phone 320 Ã— 568 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Phone 360 Ã— 780 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Large phone 430 Ã— 932 | pass: map 100% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Phone landscape 780 Ã— 360 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Tablet portrait 768 Ã— 1024 | pass: map 51% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Tablet landscape 1024 Ã— 768 | pass: map 63% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Laptop 1280 Ã— 800 | pass: map 67% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Large desktop 1920 Ã— 1080 | pass: map 78% wide | pass: ok | pass: ok | pass: table fits | pass: ok |
+| Text zoom 200% (360 Ã— 780 at 200%) | pass: map 100% wide | pass: ok | pass: ok | pass: table scrolls inside its frame, page does not | pass: ok |
 
 "Map 100% wide" on phones = the map takes the full width above the sheet (phone layout). From 768 px and on landscape phones the map sits left of the side panel.
 
