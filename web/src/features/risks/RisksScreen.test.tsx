@@ -273,3 +273,29 @@ describe("RisksScreen in English", () => {
     expect(screen.getByRole("button", { name: "Try again" })).toBeTruthy();
   });
 });
+
+describe("RisksScreen responsive layout (work package 09)", () => {
+  test("the screen centers itself with .ag-screen and has no inline max width", () => {
+    renderReady([makeRisk()]);
+
+    const root = screen.getByRole("region", { name: "Riesgos de esta zona" });
+    expect(root.classList).toContain("ag-screen");
+    expect(root.style.maxWidth).toBe("");
+  });
+
+  test("the risk list is the grid that becomes two columns on tablets", () => {
+    renderReady([makeRisk(), bareField()]);
+
+    expect(screen.getByRole("list").classList).toContain("ag-risk-grid");
+  });
+
+  test("Ver recomendaciones is a capped main action on wide screens and stays below the list", () => {
+    renderReady([makeRisk(), bareField()]);
+
+    const button = screen.getByRole("button", { name: "Ver recomendaciones →" });
+    expect(button.classList).toContain("ag-action");
+    expect(
+      screen.getByRole("list").compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).not.toBe(0);
+  });
+});
