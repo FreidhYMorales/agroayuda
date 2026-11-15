@@ -199,7 +199,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 - Risks first, detail one tap away. Sorted by severity; tapping a risk shows a plain explanation, period and "¿De dónde sale este dato?" (source, value, threshold).
 - Bare-field period is an estimate and says "estimado". Soil says "muestra cerca del centro de la zona".
-- Risk wording is generated from `level` (e.g. "fuerte" for high, "moderada" for medium, "baja" for low); mocks and the video script follow the real level found in the H0-H2 check. ❔ rows appear only for data the system tried to load and did not get.
+- Risk wording is generated from `level` (e.g. "fuerte" for high, "moderada" for medium, "baja" for low; bare field reads "Suelo sin cultivo · alto/moderado/bajo"). Each row has a drawn level badge (⚠ high, ! medium, ✓ low) plus the level in words, never the badge alone; mocks and the video script follow the real level found in the H0-H2 check. ❔ rows appear only for data the system tried to load and did not get.
 - States: no strong risks -> "No encontramos riesgos fuertes en esta zona"; loading -> grey rows; error -> "Intentar de nuevo".
 
 | UI element | Backend demand |
@@ -279,7 +279,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 ```
 
 - Comparison table; tapping a column opens the detail. Always exactly 3 columns (current + 2 alternatives); at most one alternative is "Recomendada", and none when the current rotation scores best ("Su rotación actual ya es la mejor para sus prioridades").
-- Badges per column: ✓ "Recomendada" if `recommended`; ✗ "No recomendada" plus the reason if an alternative has `not_recommended_reason`; ⚠ plus the reason on the current column; otherwise no badge. If the current rotation is the best but carries a ⚠, the message adds "pero tenga cuidado con la canícula".
+- Badges per column: ✓ if `recommended`, with a line above the table naming it: "✓ Recomendada: Op.1 (Gandul → Nada)" ("Recomendada" does not fit a column at 360 px); ✗ "No recomendada" plus the reason if an alternative has `not_recommended_reason`; ⚠ plus the reason on the current column; otherwise no badge. If the current rotation is the best but carries a ⚠, the message adds "pero tenga cuidado con la canícula".
 - Evidence items are labelled "Evidencia (datos)" with the dataset named per item (NASA POWER, SoilGrids). Bars plus text/icons, never color alone. Crop values say "valor general, validar localmente". Each option states how many months it leaves the field bare (row "Meses sin cultivo").
 - "Cambiar prioridades" scrolls the form to the priorities block with the current answers and recomputes.
 - The option detail is a plain list: crops, deltas, confidence, then one line each for why, evidence, benefits, check with a technician, what we do not know.
