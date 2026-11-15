@@ -46,7 +46,8 @@ The complete list with licences is in `docs/resources.md`; copy the two tables f
 - Demo (video): TODO (public or unlisted YouTube link, not marked "made for kids")
 - Final project: https://agroayuda.vercel.app
 - Repository: https://github.com/FreidhYMorales/agroayuda
-- Members: TODO (names of the team)
+- Team: AgroAyuda
+- Members: Freidh Yannel Morales Gonzalesz, Francisco David Diego Noriega, Fernando Rene Villatoro Samayoa, Wilder Estiven Cruz Garcia, Sheyla Mishel Argueta Cobón
 
 ## Before the final save (checklist)
 
