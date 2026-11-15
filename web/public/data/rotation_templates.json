@@ -1,0 +1,44 @@
+[
+  {
+    "id": "maiz__frijol",
+    "primera": "maiz",
+    "postrera": "frijol",
+    "description_es": "Maíz en primera y frijol en postrera.",
+    "source": "CGIAR-FRIJOL (frijol de postrera en el oriente, siembra del 15 de agosto al 15 de septiembre); ICTA-MAIZ (maíz de bajura en la zona de humedad limitada)"
+  },
+  {
+    "id": "maiz_frijol__maicillo",
+    "primera": "maiz_frijol",
+    "postrera": "maicillo",
+    "description_es": "Maíz con frijol en primera y maicillo en postrera.",
+    "source": "CGIAR-FRIJOL (maíz y frijol en asocio); ICTA-SORGO (maicillo ICTA Rendidor para la segunda siembra); USAC-JUTIAPA (maíz, frijol y maicillo, cultivos tradicionales del suroriente de Jutiapa)"
+  },
+  {
+    "id": "maiz__maicillo",
+    "primera": "maiz",
+    "postrera": "maicillo",
+    "description_es": "Maíz en primera y maicillo en postrera.",
+    "source": "ICTA-MAIZ (maíz B-5 recomendado para lluvia escasa o mal distribuida); ICTA-SORGO (maicillo ICTA Rendidor para la segunda siembra); USAC-JUTIAPA (cultivos tradicionales del suroriente de Jutiapa)"
+  },
+  {
+    "id": "frijol__maicillo",
+    "primera": "frijol",
+    "postrera": "maicillo",
+    "description_es": "Frijol en primera y maicillo en postrera.",
+    "source": "CGIAR-FRIJOL (guía del cultivo de frijol en Guatemala); ICTA-SORGO (maicillo ICTA Rendidor para la segunda siembra); USAC-JUTIAPA (frijol y maicillo, cultivos tradicionales del suroriente de Jutiapa)"
+  },
+  {
+    "id": "maiz__mucuna",
+    "primera": "maiz",
+    "postrera": "mucuna",
+    "description_es": "Maíz en primera y mucuna (abono verde) en postrera.",
+    "source": "ICTA-ABONOS (mucuna se adapta al Corredor Seco y el ICTA la promueve en sistemas de maíz); ICTA-MAIZ (maíz de bajura)"
+  },
+  {
+    "id": "gandul__none",
+    "primera": "gandul",
+    "postrera": "none",
+    "description_es": "Gandul en primera y el terreno en descanso en postrera.",
+    "source": "ICTA-ABONOS (gandul se adapta al Corredor Seco; su grano se come y también sirve de forraje)"
+  }
+]
