@@ -48,6 +48,9 @@ padding-bottom:max(16px,env(safe-area-inset-bottom))}
 .ag-map-sheet{flex:0 1 auto;max-height:50dvh;overflow-y:auto;display:flex;flex-direction:column;
 gap:12px;padding:8px 12px 16px;padding-bottom:max(16px,env(safe-area-inset-bottom));
 border-radius:16px 16px 0 0;background-color:${COLORS.background};box-shadow:0 -2px 8px rgba(0,0,0,.15)}
+/* Comparison table: long English words wrap; the wrapper only catches what still does not fit. */
+.ag-table th,.ag-table td,.ag-note{overflow-wrap:anywhere;hyphens:auto}
+.ag-table-wrap{overflow-x:auto}
 @media ${MEDIA.mapSide}{
 .ag-map-screen{display:grid;grid-template-columns:minmax(0,1fr) min(${SHEET_SIDE_WIDTH.tablet}px,50%);
 grid-template-rows:auto minmax(0,1fr)}

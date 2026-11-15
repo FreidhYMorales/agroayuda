@@ -374,3 +374,15 @@ test("with lang=en a failed load says so and offers Try again, but not without d
   expect(await screen.findByText("We could not get your options.")).toBeVisible();
   expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
 });
+
+test("responsive layout: the table sits in .ag-table-wrap and the notes in .ag-notes", async () => {
+  fetchMock.mockImplementation(async () => okResponse());
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  const warning = await screen.findByText("⚠ Actual: Aguanta poco la sequía de la canícula");
+  const rejected = screen.getByText("✗ Op.2 no recomendada: Aguanta poco la sequía de la canícula");
+  const notes = warning.closest(".ag-notes");
+  expect(notes).not.toBeNull();
+  expect(notes?.contains(rejected)).toBe(true);
+  expect(screen.getByRole("table").parentElement?.classList).toContain("ag-table-wrap");
+});

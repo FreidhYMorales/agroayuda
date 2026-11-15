@@ -168,3 +168,18 @@ test("with lang=en the evidence uses its English text and value", () => {
     screen.getByText("Long dry spell in 21 of 30 years. (NASA POWER: 21 of 30 years)"),
   ).toBeVisible();
 });
+
+test("responsive layout: why and evidence in the first column, the rest in the second", () => {
+  detail(1, "Opción 1");
+
+  const cols = document.querySelector(".ag-cols");
+  expect(cols).not.toBeNull();
+  const children = [...(cols as Element).children];
+  expect(children).toHaveLength(2);
+  const [first, second] = children as HTMLElement[];
+  expect(within(first).getByRole("heading", { name: "Por qué:" })).toBeTruthy();
+  expect(within(first).getByRole("heading", { name: "Evidencia (datos):" })).toBeTruthy();
+  expect(within(second).getByRole("heading", { name: "Beneficio:" })).toBeTruthy();
+  expect(within(second).getByRole("heading", { name: "⚠ Consulte con un técnico" })).toBeTruthy();
+  expect(within(second).getByRole("heading", { name: "❔ Lo que no sabemos:" })).toBeTruthy();
+});

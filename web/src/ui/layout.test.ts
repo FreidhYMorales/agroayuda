@@ -148,3 +148,22 @@ describe("form and comparison theme (THEME_CSS)", () => {
     );
   });
 });
+
+describe("comparison table on small phones", () => {
+  test("the table wrapper scrolls on its own, as a safety net only", () => {
+    expect(rule(LAYOUT_CSS, ".ag-table-wrap")).toContain("overflow-x:auto");
+  });
+
+  test("long words in the table and the notes wrap instead of widening the page", () => {
+    expect(LAYOUT_CSS).toMatch(
+      /\.ag-table th,\.ag-table td,\.ag-note\{[^}]*overflow-wrap:anywhere/,
+    );
+  });
+
+  test("below 360 px the table is a bit denser so it fits 320 px in Spanish", () => {
+    const small = mediaBody(THEME_CSS, "(max-width:359px)") ?? "";
+
+    expect(rule(small, ".ag-table")).toContain("font-size:14px");
+    expect(small).toMatch(/\.ag-table th\[scope="row"\]\{[^}]*width:22%/);
+  });
+});
