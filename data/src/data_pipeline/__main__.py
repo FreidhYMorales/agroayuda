@@ -64,6 +64,38 @@ MUNICIPALITIES: Final[tuple[Municipality, ...]] = (
     ("Aguacatán", "Huehuetenango"),
     ("Huehuetenango", "Huehuetenango"),
     ("Malacatancito", "Huehuetenango"),
+    # Rest of the annex (pp. 28-30). The south-coast departments (Escuintla, Retalhuleu,
+    # San Marcos, Santa Rosa, Suchitepéquez) are left out: the plan lists them as "otros
+    # departamentos afectados", outside the 11-department Dry Corridor of its section 4.1.
+    ("Cubulco", "Baja Verapaz"),
+    ("El Chol", "Baja Verapaz"),
+    ("Granados", "Baja Verapaz"),
+    ("Rabinal", "Baja Verapaz"),
+    ("Salamá", "Baja Verapaz"),
+    ("San Jerónimo", "Baja Verapaz"),
+    ("San Miguel Chicaj", "Baja Verapaz"),
+    ("San José Poaquil", "Chimaltenango"),
+    ("San Martín Jilotepeque", "Chimaltenango"),
+    ("Comalapa", "Chimaltenango"),  # annex: San Juan Comalapa
+    ("Chuarrancho", "Guatemala"),
+    ("Palencia", "Guatemala"),
+    ("San José del Golfo", "Guatemala"),
+    ("San Pedro Ayampuc", "Guatemala"),
+    ("San Raimundo", "Guatemala"),  # annex: San Raymundo
+    ("Canillá", "Quiché"),
+    ("Chicamán", "Quiché"),
+    ("Joyabaj", "Quiché"),
+    ("Sacapulas", "Quiché"),
+    ("San Andrés Sajcabajá", "Quiché"),
+    ("San Antonio Ilotenango", "Quiché"),
+    ("San Bartolomé Jocotenango", "Quiché"),
+    ("San Pedro Jocopilas", "Quiché"),
+    ("Zacualpa", "Quiché"),
+    ("Uspantán", "Quiché"),  # annex: San Miguel Uspantán
+    ("Momostenango", "Totonicapán"),
+    ("Santa Lucía La Reforma", "Totonicapán"),
+    ("Santa María Chiquimula", "Totonicapán"),
+    ("San Bartolo", "Totonicapán"),  # annex: San Bartolo Aguas Calientes
 )
 TYPICAL_ROTATION: Final = ("maiz", "frijol")
 
