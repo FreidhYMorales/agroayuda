@@ -29,7 +29,11 @@ export function riskTitle(risk: SiteRisk): string {
       return level === undefined ? "Suelo sin cultivo" : `Suelo sin cultivo · ${level}`;
     }
     case "heat":
-      return "Calor"; // sin copy en el paquete: pendiente de confirmar con el lead
+      // "Calor moderado" comes from the risks wireframe in docs/spec.md.
+      if (risk.level === "high") return "Calor fuerte";
+      if (risk.level === "medium") return "Calor moderado";
+      if (risk.level === "low") return "Calor bajo";
+      return "Calor";
     case "missing_data":
       return "❔ Suelo: sin dato";
   }
