@@ -314,9 +314,9 @@ test("with lang=en the comparison screen is in English", async () => {
   expect(
     await screen.findByText("✓ Recommended: Opt. 1 (Maize with beans → Sorghum)"),
   ).toBeVisible();
-  expect(screen.getByText("⚠ Current: Aguanta poco la sequía de la canícula")).toBeVisible();
+  expect(screen.getByText("⚠ Current: Cannot take much drought in the canícula")).toBeVisible();
   expect(
-    screen.getByText("✗ Opt. 2 not recommended: Aguanta poco la sequía de la canícula"),
+    screen.getByText("✗ Opt. 2 not recommended: Cannot take much drought in the canícula"),
   ).toBeVisible();
   expect(screen.getByRole("button", { name: "← Your options" })).toBeVisible();
   expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual(
