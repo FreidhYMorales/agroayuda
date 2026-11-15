@@ -107,7 +107,7 @@ Values change only with a test.
 
 ### Required engine tests
 
-- Water-first (5/3/3/3) vs income-first (3/3/5/3) at Chiquimula with maíz -> frijol each return a non-null recommended option, and the two differ. The demo vectors and current rotation are pinned at H2 from hand-computed scores on the real `crops.csv`; more extreme vectors (5/1/1/1 vs 1/1/5/1) or another current rotation may be used instead of changing values.
+- Water-first (5/3/3/3) vs income-first (1/1/5/1) at Chiquimula with maíz -> maicillo each return a non-null recommended option, and the two differ (pinned 2026-11-14 on the real data and templates: gandul -> none vs maíz -> frijol; with maíz -> frijol as the current rotation nothing beats it on income, so it cannot be the demo rotation). The demo vectors and current rotation are pinned at H2 from hand-computed scores on the real `crops.csv`; more extreme vectors (5/1/1/1 vs 1/1/5/1) or another current rotation may be used instead of changing values.
 - A current rotation that beats every alternative yields no recommended option.
 - Ties resolve by CSV order.
 - Every season-valid current rotation yields 3 distinct options.
@@ -294,7 +294,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ## Demo data
 
-- Golden point: Chiquimula (14.70 N, -89.50 W), snapping to the POWER cell centered at (14.5, -89.375); its id goes in `data/README.md`. Expected: canícula risk equals the documented rule applied to the cell's real data (H0-H2 check, 2026-11-14: "low", 1 of 30 years with a 20+ day dry spell; every region cell is low, see `data/README.md`); current rotation maíz (primera) -> frijol (postrera); exactly 3 options; water-first and income-first priorities recommend different options.
+- Golden point: Chiquimula (14.70 N, -89.50 W), snapping to the POWER cell centered at (14.5, -89.375); its id goes in `data/README.md`. Expected: canícula risk equals the documented rule applied to the cell's real data (H0-H2 check, 2026-11-14: "low", 1 of 30 years with a 20+ day dry spell; every region cell is low, see `data/README.md`); current rotation maíz (primera) -> maicillo (postrera); exactly 3 options; water-first (5/3/3/3) recommends gandul -> none and income-first (1/1/5/1) recommends maíz -> frijol (engine golden test).
 - If the golden cell is not high, the demo uses the highest-share cell in the region (its name in `demo_points.json`); if no cell is high, the demo shows the comparison without F1/F2 badges. Cut-offs are never tuned.
 - Contrast for tests: a synthetic wetter fixture (not a real cell).
 - ❔ demo: only if a null-soil cell exists once the grid exists; otherwise uncertainty shows through "estimado" (bare field) and the confidence row.
@@ -305,8 +305,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 1. Map with the NASA rainfall layer and source visible -> pick Chiquimula.
 2. Site risks: canícula (dry spells from NASA POWER daily data) and bare-field period marked "estimado".
-3. Form: maíz -> frijol, water first, no irrigation.
-4. Comparison: current vs 2 alternatives, trade-offs and bare months visible, one "Recomendada"; open it to show evidence, gaps and "consulte con un técnico". Tap "Cambiar prioridades", set income first, and show the recommendation change.
+3. Form: maíz -> maicillo, water first (5/3/3/3), no irrigation.
+4. Comparison: current vs 2 alternatives, trade-offs and bare months visible, one "Recomendada"; open it to show evidence, gaps and "consulte con un técnico". Tap "Cambiar prioridades", set income first (1/1/5/1: water, soil and risk on 1, income on 5), and show the recommendation change (gandul -> nada to maíz -> frijol).
 
 ## Data sources and attribution
 
