@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { getSite } from "./site";
 
-// Solo importa que `getSite` entregue lo que el API devolvió.
+// All that matters is that `getSite` returns what the API sent.
 const siteBody = {
   location: { lat: 14.7, lon: -89.5 },
   cell_resolution_km: 60,
@@ -20,7 +20,7 @@ function abortError(): DOMException {
   return new DOMException("The operation was aborted.", "AbortError");
 }
 
-// fetch simulado que se rechaza con AbortError cuando su señal se aborta.
+// Fake fetch that rejects with AbortError when its signal is aborted.
 function pendingUntilAborted(init?: RequestInit): Promise<Response> {
   return new Promise((_resolve, reject) => {
     init?.signal?.addEventListener("abort", () => reject(abortError()));
@@ -152,7 +152,7 @@ describe("getSite", () => {
     const second = new AbortController();
 
     const firstCall = getSite(14.7, -89.5, { signal: first.signal, onSlow: vi.fn() });
-    first.abort(); // una solicitud nueva reemplaza a la anterior
+    first.abort(); // a new request replaces the previous one
     const secondCall = getSite(14.6, -89.4, { signal: second.signal, onSlow: vi.fn() });
 
     await expect(firstCall).rejects.toMatchObject({ name: "AbortError" });

@@ -8,7 +8,7 @@ function monthName(month: number): string {
   return MONTHS[month - 1] ?? "";
 }
 
-// "mediados jul-ago", "dic-abr (estimado)", "abr". Vacío si no hay meses.
+// "mediados jul-ago", "dic-abr (estimado)", "abr". Empty when there are no months.
 export function riskPeriod(risk: SiteRisk): string {
   const first = risk.period_months[0];
   const last = risk.period_months[risk.period_months.length - 1];

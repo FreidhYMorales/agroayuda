@@ -27,7 +27,7 @@ const loadingCardStyle: CSSProperties = {
   borderRadius: 12,
   background: "#e0e0e0",
 };
-// Áreas táctiles >= 44 px.
+// Touch targets of at least 44 px.
 const retryStyle = buttonStyle("secondary");
 
 export function MapStates({
@@ -38,9 +38,9 @@ export function MapStates({
   onRetry,
   onPickPlace,
 }: MapStatesProps) {
-  // El mensaje de vacío sería engañoso si ya hay un aviso más específico.
+  // The empty message would mislead when a more specific notice is already shown.
   const showEmpty = site.status === "empty" && !geolocationDenied && !mapError;
-  // La lista es la alternativa sin mapa: visible siempre que el texto diga "elija un lugar".
+  // The list is the no-map fallback: shown whenever the text says "elija un lugar".
   const showList = site.status === "empty" || geolocationDenied || mapError;
 
   return (

@@ -1,7 +1,7 @@
 // web/src/features/risks/riskTitle.ts
 import type { SiteRisk } from "../../contracts/contracts";
 
-// Menor número = más grave. "unknown" va al final.
+// Lower number = more severe. "unknown" goes last.
 const SEVERITY: Record<SiteRisk["level"], number> = {
   high: 0,
   medium: 1,
@@ -40,7 +40,7 @@ export function riskTitle(risk: SiteRisk): string {
 }
 
 export function sortRisks(risks: SiteRisk[]): SiteRisk[] {
-  // Copia ordenada; Array.prototype.sort es estable, así que los niveles
-  // iguales conservan su orden original.
+  // Sorted copy; Array.prototype.sort is stable, so equal levels
+  // keep their original order.
   return [...risks].sort((a, b) => SEVERITY[a.level] - SEVERITY[b.level]);
 }
