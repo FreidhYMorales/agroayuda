@@ -189,8 +189,8 @@ def test_map_mask_holes_never_cross_on_the_real_borders() -> None:
         (s[0], t[0])
         for i, s in enumerate(segments)
         for t in segments[i + 1 :]
-        if s[0] != t[0] and _segments_cross(s[1], s[2], t[1], t[2])
+        if _segments_cross(s[1], s[2], t[1], t[2])
     ]
 
-    assert len(holes) >= 2  # Huehuetenango is apart from the eastern departments
-    assert crossings == []
+    assert holes  # the region is one hole or more (the new municipalities join both areas)
+    assert crossings == []  # no edge crosses another, within a hole or between two
