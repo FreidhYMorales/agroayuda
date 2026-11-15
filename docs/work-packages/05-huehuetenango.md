@@ -101,6 +101,7 @@ The base PR carries every test except "Demo point" (list PR). Run `uv run pytest
 
 ## Coordination
 
+- **Region mask (from `data/region-mask`, if merged).** `dissolve` in `outputs.py` drops a border only when two rings share exactly the same vertices. That holds between ADM1 departments of one file, but ADM2 municipalities come from another geoBoundaries file and may not match ADM1 vertex by vertex, which would leave slivers or overlapping holes in `region_mask.geojson`. Add a test with an ADM1 fixture plus an adjacent ADM2 fixture from the real files, and tell the lead if the mask breaks; do not change `dissolve` without the data owner.
 - Web map owner (package 03): the map's first view must include the new area (fit to the `region.geojson` bounds), and the demo-place list shows the new point automatically.
 - Lead: confirm the source in step 1 before you write the list PR.
 - Package 06 owner: one source for both lists; tell them as soon as the base PR is in `main`; check their final run on a phone.
