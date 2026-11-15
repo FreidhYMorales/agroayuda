@@ -104,7 +104,7 @@ const URL_STATE_EVENT = "agroayuda:urlstate";
 export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
   const [state, setState] = useState<AppState>(() => readState(window.location.search));
 
-  // El botón "atrás" o "adelante" del navegador cambia la URL: el estado la sigue.
+  // The browser's back or forward button changes the URL: the state follows it.
   // A patch from another copy of the hook does too (URL_STATE_EVENT).
   useEffect(() => {
     const onUrlChange = () => setState(readState(window.location.search));
@@ -117,8 +117,8 @@ export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
   }, []);
 
   const update = useCallback((patch: Partial<AppState>) => {
-    // La URL es la fuente de verdad: se combina el parche con lo que hay ahora,
-    // así dos parches seguidos nunca trabajan sobre un estado viejo.
+    // The URL is the source of truth: the patch is merged with what is there now,
+    // so two patches in a row never work on a stale state.
     const next: AppState = { ...readState(window.location.search), ...patch };
     window.history.pushState(null, "", toSearch(next));
     setState(next);
