@@ -4,7 +4,7 @@ import pytest
 
 from contracts import Criteria, CropCatalogEntry, DeltaVsCurrent, Level, Priorities, SiteProfile
 from engine.scoring import failure_reason_en
-from engine.texts import benefits_en, data_gaps_en, reason_line_en
+from engine.texts import benefits_en, canicula_evidence, data_gaps_en, reason_line_en
 
 CRITERIA = Criteria(water=4, soil=2, income=3, risk=5)
 
@@ -97,3 +97,37 @@ def test_no_english_reason_without_a_high_canicula(
 ) -> None:
     assert failure_reason_en(with_canicula(site, "medium"), maiz, irrigation=False) is None
     assert failure_reason_en(with_canicula(site, "high"), maiz, irrigation=True) is None
+
+
+REGIONAL_NOTE_EN = (
+    "NASA POWER rain is a regional estimate (MERRA-2 model), not a measurement on your plot."
+)
+
+
+def with_share(site: SiteProfile, level: Level, share: float) -> SiteProfile:
+    risks = [
+        r.model_copy(update={"level": level, "value": share}) if r.id == "canicula" else r
+        for r in site.risks
+    ]
+    return site.model_copy(update={"risks": risks})
+
+
+def test_low_canicula_evidence_in_english(site: SiteProfile) -> None:
+    [evidence] = canicula_evidence(with_share(site, "low", 1 / 30))
+
+    assert evidence.text_en == (
+        "Few long dry spells in July and August. "
+        f"There was a long dry spell in 1 of 30 years (1991-2020). {REGIONAL_NOTE_EN}"
+    )
+    assert evidence.value_en == "1 of 30 years"
+    assert evidence.dataset == "NASA POWER"
+
+
+def test_high_canicula_evidence_in_english(site: SiteProfile) -> None:
+    [evidence] = canicula_evidence(with_share(site, "high", 0.7))
+
+    assert evidence.text_en == (
+        "Long dry spell (canícula) in July and August in most years. "
+        f"There was a long dry spell in 21 of 30 years (1991-2020). {REGIONAL_NOTE_EN}"
+    )
+    assert evidence.value_en == "21 of 30 years"
