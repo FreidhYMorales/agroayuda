@@ -15,4 +15,4 @@
 03. [x] ce89191 As a visitor, I want the site risks explained in English so that I understand my plot's conditions. Requires: #01
 04. [x] b8a3635 As a visitor, I want the comparison screen and its badges in English so that I can compare the options. Requires: #01
 05. [x] cf0b7b2 As a visitor, I want each option's reasons, benefits, NASA evidence, data gaps and local review in English so that I understand why it is recommended. Requires: #04
-06. [ ] As a visitor, I want errors, loading and empty states in English so that I am never left with Spanish-only messages. Requires: #01
+06. [~] As a visitor, I want errors, loading and empty states in English so that I am never left with Spanish-only messages. Requires: #01
