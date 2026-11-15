@@ -80,3 +80,23 @@ describe("riskSourceLine", () => {
     expect(riskSourceLine(risk)).toBe("Dato: SoilGrids · muestra cerca del centro de la zona");
   });
 });
+
+describe("riskPeriod in English", () => {
+  test("canícula reads mid plus the English range", () => {
+    expect(riskPeriod(makeRisk(), "en")).toBe("mid Jul-Aug");
+  });
+
+  test("an estimated period that wraps the year reads Dec-Apr (estimated)", () => {
+    const risk = makeRisk({
+      id: "bare_field",
+      period_months: [12, 1, 2, 3, 4],
+      estimated: true,
+    });
+
+    expect(riskPeriod(risk, "en")).toBe("Dec-Apr (estimated)");
+  });
+
+  test("a single month reads its English name", () => {
+    expect(riskPeriod(makeRisk({ id: "heat", period_months: [4] }), "en")).toBe("Apr");
+  });
+});
