@@ -76,8 +76,11 @@ function Section({ title, items }: { title: string; items: string[] }) {
 export function OptionDetail({ option, title, onBack }: OptionDetailProps) {
   const lang = useLang();
   const copy = DETAIL_COPY[lang];
-  const evidence = option.evidence.map(
-    (item) => `${item.text_es} (${item.dataset}: ${item.value})`,
+  const en = lang === "en";
+  const evidence = option.evidence.map((item) =>
+    en
+      ? `${item.text_en} (${item.dataset}: ${item.value_en})`
+      : `${item.text_es} (${item.dataset}: ${item.value})`,
   );
   return (
     <Page>
@@ -107,12 +110,12 @@ export function OptionDetail({ option, title, onBack }: OptionDetailProps) {
         <p style={{ marginBottom: 0 }}>{bareMonthsText(option.bare_months.length, lang)}</p>
       </div>
 
-      <Section title={copy.why} items={option.reasons} />
+      <Section title={copy.why} items={en ? option.reasons_en : option.reasons} />
       <Section title={copy.evidence} items={evidence} />
       <p className="ag-muted">{copy.cropNote}</p>
-      <Section title={copy.benefit} items={option.benefits} />
-      <Section title={copy.localReview} items={option.local_review} />
-      <Section title={copy.dataGaps} items={option.data_gaps} />
+      <Section title={copy.benefit} items={en ? option.benefits_en : option.benefits} />
+      <Section title={copy.localReview} items={en ? option.local_review_en : option.local_review} />
+      <Section title={copy.dataGaps} items={en ? option.data_gaps_en : option.data_gaps} />
     </Page>
   );
 }
