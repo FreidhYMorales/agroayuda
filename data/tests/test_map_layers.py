@@ -74,9 +74,11 @@ def test_both_layers_carry_the_same_data_version(tmp_path: Path) -> None:
 
     rain = read(paths.web / "layers" / "rain.geojson")
     region = read(paths.web / "region.geojson")
+    mask = read(paths.web / "region_mask.geojson")
 
     assert rain["data_version"] == VERSION
     assert region["data_version"] == VERSION
+    assert mask["data_version"] == VERSION
     features = region["features"]
     assert isinstance(features, list)
     assert [f["properties"]["shapeISO"] for f in features] == ["GT-CQ"]

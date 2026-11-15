@@ -1,17 +1,21 @@
 import csv
 import json
+from itertools import pairwise
 from pathlib import Path
 
 import duckdb
 import pytest
 
 from contracts import CropCatalogEntry, DemoPoint, RainCellProperties, RotationTemplate, SiteData
+from data_pipeline.grid import _point_in_rings
 from data_pipeline.outputs import (
     DEMO_POINTS,
     RainCell,
+    dissolve,
     rain_geojson,
     read_catalog_csv,
     region_geojson,
+    region_mask_geojson,
     region_rings,
     write_catalog_parquet,
     write_json,
@@ -95,6 +99,58 @@ def test_region_geojson_carries_the_data_version() -> None:
     features = geojson["features"]
     assert isinstance(features, list)
     assert [f["properties"]["shapeISO"] for f in features] == ["GT-CQ"]
+
+
+# --- region mask ---------------------------------------------------------------------------------
+
+WEST = [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0]]
+EAST = [[1.0, 0.0], [2.0, 0.0], [2.0, 1.0], [1.0, 1.0], [1.0, 0.0]]
+
+
+def signed_area(ring: list[list[float]]) -> float:
+    return sum(a[0] * b[1] - b[0] * a[1] for a, b in pairwise(ring)) / 2
+
+
+def test_dissolve_removes_the_shared_border() -> None:
+    (outline,) = dissolve([WEST, EAST])
+
+    assert outline[0] == outline[-1]
+    assert signed_area(outline) == 2.0  # both squares, counterclockwise
+    assert {tuple(p) for p in outline} == {(0, 0), (1, 0), (2, 0), (2, 1), (1, 1), (0, 1)}
+    # The shared edge (1,0)-(1,1) is gone: no step along it in either direction.
+    steps = {(tuple(a), tuple(b)) for a, b in pairwise(outline)}
+    assert ((1.0, 0.0), (1.0, 1.0)) not in steps
+    assert ((1.0, 1.0), (1.0, 0.0)) not in steps
+
+
+def test_dissolve_keeps_separate_parts_apart() -> None:
+    far = [[5.0, 5.0], [6.0, 5.0], [6.0, 6.0], [5.0, 6.0], [5.0, 5.0]]
+
+    assert len(dissolve([WEST, far])) == 2
+
+
+def test_region_mask_is_the_world_with_the_region_as_holes() -> None:
+    mask = region_mask_geojson([WEST, EAST], "2026-11-14")
+
+    assert mask["data_version"] == "2026-11-14"
+    features = mask["features"]
+    assert isinstance(features, list)
+    (feature,) = features
+    world, *holes = feature["geometry"]["coordinates"]
+    assert feature["geometry"]["type"] == "Polygon"
+    assert world == [
+        [-180.0, -90.0],
+        [180.0, -90.0],
+        [180.0, 90.0],
+        [-180.0, 90.0],
+        [-180.0, -90.0],
+    ]
+    assert len(holes) == 1
+    assert signed_area(holes[0]) == -2.0  # RFC 7946: holes run clockwise
+    rings = feature["geometry"]["coordinates"]
+    assert not _point_in_rings((0.5, 0.5), rings)  # inside the region: not dimmed
+    assert not _point_in_rings((1.0, 0.5), rings)  # on the old shared border: not dimmed
+    assert _point_in_rings((3.0, 0.5), rings)  # outside the region: dimmed
 
 
 # --- rain layer ----------------------------------------------------------------------------------
