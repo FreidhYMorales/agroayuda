@@ -1,9 +1,11 @@
 """Pipeline entry point: uv run --package data-pipeline python -m data_pipeline [--map-layers]
 
---map-layers writes the web map files that need neither the crop catalog nor the engine:
-web/public/data/layers/rain.geojson, region.geojson and demo_points.json, from NASA POWER and
-geoBoundaries. The full run (sites Parquet with precomputed risks, catalogs) lands with
-engine/src/engine/risks.py, which needs engine.calendar (package 02).
+Full run: region (geoBoundaries ADM1) -> POWER cells that intersect it -> per cell: POWER daily
+features, SoilGrids soil, precomputed risks -> data/output/*.parquet and web/public/data/**, all
+with the same data_version (the run date).
+
+--map-layers writes only the web map files that need neither the crop catalog nor the engine:
+web/public/data/layers/rain.geojson, region.geojson and demo_points.json.
 
 Raw downloads are cached in data/cache/ (gitignored), so a second run works offline.
 """
@@ -20,17 +22,29 @@ from typing import Any, Final
 import httpx
 import pandas as pd  # type: ignore[import-untyped]
 
-from data_pipeline import power
-from data_pipeline.features import monthly_precip_mm
-from data_pipeline.grid import cells_intersecting
+from contracts import CropCatalogEntry, Polygon, RotationTemplate, SiteData, Soil
+from data_pipeline import power, soilgrids
+from data_pipeline.features import (
+    DRY_SPELL_RULE,
+    dekadal_precip_mm,
+    dry_spell_share,
+    monthly_precip_mm,
+    monthly_tmax_c,
+)
+from data_pipeline.grid import cell_id, cell_polygon, cells_intersecting
 from data_pipeline.outputs import (
     DEMO_POINTS,
     RainCell,
     rain_geojson,
+    read_catalog_csv,
     region_geojson,
     region_rings,
+    write_catalog_parquet,
     write_json,
+    write_region_parquet,
 )
+from data_pipeline.parquet_io import write_site_data
+from engine.risks import site_risks
 
 REPO_ROOT: Final = Path(__file__).resolve().parents[3]
 # Chiquimula, Jutiapa, Zacapa, El Progreso, Jalapa
@@ -39,8 +53,10 @@ GEOBOUNDARIES_URL: Final = (
     "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/GTM/ADM1/"
     "geoBoundaries-GTM-ADM1_simplified.geojson"
 )
+TYPICAL_ROTATION: Final = ("maiz", "frijol")
 
 DailyFetcher = Callable[[float, float, Path], pd.DataFrame]
+SoilFetcher = Callable[[float, float, Path], dict[str, float | None]]
 
 
 @dataclass(frozen=True)
@@ -53,6 +69,77 @@ class Paths:
 
 def _fetch_daily(lat: float, lon: float, cache: Path) -> pd.DataFrame:
     return power.fetch_daily(lat, lon, cache / "power")
+
+
+def _fetch_soil(lat: float, lon: float, cache: Path) -> dict[str, float | None]:
+    try:
+        return soilgrids.fetch_soil(lat, lon, cache / "soilgrids")
+    except power.PowerDownloadError as exc:  # cut (4): soil stays null, the app says so
+        print(f"SoilGrids failed at ({lat}, {lon}), soil left null: {exc}", file=sys.stderr)
+        return dict.fromkeys(soilgrids.FIELDS.values())
+
+
+def build_site(
+    lat: float,
+    lon: float,
+    daily: pd.DataFrame,
+    soil: dict[str, float | None],
+    data_version: str,
+    typical: tuple[CropCatalogEntry, CropCatalogEntry],
+) -> SiteData:
+    has_soil = any(value is not None for value in soil.values())
+    site = SiteData(
+        cell_id=cell_id(lat, lon),
+        lat=lat,
+        lon=lon,
+        cell_polygon=Polygon.model_validate(cell_polygon(lat, lon)),
+        monthly_precip_mm=monthly_precip_mm(daily),
+        monthly_tmax_c=monthly_tmax_c(daily),
+        dekadal_precip_mm=dekadal_precip_mm(daily),
+        dry_spell_year_share=dry_spell_share(daily),
+        dry_spell_rule=DRY_SPELL_RULE,
+        soil=Soil.model_validate(soil),
+        soil_sample_lat=lat if has_soil else None,
+        soil_sample_lon=lon if has_soil else None,
+        data_version=data_version,
+        risks=[],
+    )
+    return site.model_copy(update={"risks": site_risks(site, *typical)})
+
+
+def run(
+    paths: Paths,
+    data_version: str,
+    boundaries: dict[str, Any],
+    *,
+    fetch_daily: DailyFetcher = _fetch_daily,
+    fetch_soil: SoilFetcher = _fetch_soil,
+) -> list[SiteData]:
+    """Compute every cell and write all outputs; returns the sites written."""
+    crops = read_catalog_csv(paths.catalog / "crops.csv", CropCatalogEntry)
+    templates = read_catalog_csv(paths.catalog / "rotation_templates.csv", RotationTemplate)
+    by_id = {crop.id: crop for crop in crops}
+    typical = (by_id[TYPICAL_ROTATION[0]], by_id[TYPICAL_ROTATION[1]])
+
+    rings = region_rings(boundaries, set(REGION_ISO))
+    sites = []
+    for lat, lon in cells_intersecting(rings):
+        daily = fetch_daily(lat, lon, paths.cache)
+        soil = fetch_soil(lat, lon, paths.cache)
+        sites.append(build_site(lat, lon, daily, soil, data_version, typical))
+        print(f"cell {cell_id(lat, lon)}: share {sites[-1].dry_spell_year_share:.2f}")
+
+    paths.output.mkdir(parents=True, exist_ok=True)
+    write_site_data(sites, paths.output / "sites.parquet")
+    write_region_parquet(rings, paths.output / "region.parquet")
+    write_catalog_parquet(crops, paths.output / "crops.parquet")
+    write_catalog_parquet(templates, paths.output / "rotation_templates.parquet")
+
+    cells = [RainCell(s.lat, s.lon, sum(s.monthly_precip_mm)) for s in sites]
+    write_map_layers(paths, data_version, boundaries, cells)
+    write_json([crop.model_dump() for crop in crops], paths.web / "crops.json")
+    write_json([t.model_dump() for t in templates], paths.web / "rotation_templates.json")
+    return sites
 
 
 def write_map_layers(
@@ -100,11 +187,14 @@ def main(argv: Sequence[str] | None = None) -> None:
         help="only write rain.geojson, region.geojson and demo_points.json",
     )
     args = parser.parse_args(argv)
-    if not args.map_layers:
-        sys.exit("The full run needs engine/src/engine/risks.py (pending); use --map-layers.")
     paths = Paths()
-    cells = map_layers(paths, date.today().isoformat(), load_boundaries(paths))
-    print(f"Wrote {len(cells)} rain cells, the region and demo points to {paths.web}")
+    data_version = date.today().isoformat()
+    if args.map_layers:
+        cells = map_layers(paths, data_version, load_boundaries(paths))
+        print(f"Wrote {len(cells)} rain cells, the region and demo points to {paths.web}")
+        return
+    sites = run(paths, data_version, load_boundaries(paths))
+    print(f"Wrote {len(sites)} cells to {paths.output} and {paths.web}")
 
 
 if __name__ == "__main__":

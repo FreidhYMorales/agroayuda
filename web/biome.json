@@ -1,6 +1,6 @@
 {
   "files": {
-    "includes": ["**", "!dist", "!node_modules", "!src/contracts"]
+    "includes": ["**", "!dist", "!node_modules", "!src/contracts", "!public/data"]
   },
   "formatter": {
     "enabled": true,
