@@ -2,10 +2,10 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { CATALOG_FIXTURE } from "../form/catalogFixture";
 import { FIXTURE_OPTIONS } from "./fixture";
-import { buildRequest, ResultsFlow } from "./ResultsFlow";
+import { ResultsFlow } from "./ResultsFlow";
 
 const fetchMock = vi.fn<typeof fetch>();
-const LOCATION = { lat: 14.7, lon: -89.5 };
+const PLACE = "lat=14.65&lon=-89.51";
 
 beforeEach(() => {
   vi.stubGlobal("fetch", fetchMock);
@@ -14,7 +14,12 @@ beforeEach(() => {
 afterEach(() => {
   vi.unstubAllGlobals();
   fetchMock.mockReset();
+  window.history.replaceState(null, "", "/");
 });
+
+function openAt(search: string) {
+  window.history.replaceState(null, "", `/${search}`);
+}
 
 /** crops.json always answers; /recommendations answers with what each test queues. */
 function route(...recommendations: Array<() => Response>) {
@@ -36,6 +41,10 @@ function recommendationCalls() {
   return fetchMock.mock.calls.filter(([url]) => String(url).endsWith("/recommendations"));
 }
 
+function params() {
+  return new URLSearchParams(window.location.search);
+}
+
 async function chooseAndCompare(primera = "Maíz", postrera = "Frijol") {
   await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
   fireEvent.click(cropButton("¿Qué siembra en primera?", primera));
@@ -43,85 +52,126 @@ async function chooseAndCompare(primera = "Maíz", postrera = "Frijol") {
   fireEvent.click(screen.getByRole("button", { name: "Comparar opciones →" }));
 }
 
-test("buildRequest needs both crops and sends irrigation as a boolean", () => {
-  const priorities = { water: 5, soil: 3, income: 3, risk: 3 };
+test("the answers live in the URL while the form is filled", async () => {
+  openAt(`?step=form&${PLACE}`);
+  route();
+  render(<ResultsFlow />);
 
-  expect(buildRequest({ priorities }, LOCATION)).toBeNull();
-  expect(
-    buildRequest({ primera: "maiz", postrera: "frijol", priorities, irrigation: true }, LOCATION),
-  ).toEqual({
-    location: LOCATION,
-    current_rotation: { primera: "maiz", postrera: "frijol" },
-    priorities,
-    constraints: { irrigation: true },
-  });
-  expect(
-    buildRequest({ primera: "none", postrera: "none", priorities }, LOCATION)?.constraints,
-  ).toEqual({ irrigation: false });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  fireEvent.click(cropButton("¿Qué siembra en primera?", "Maíz"));
+  fireEvent.click(cropButton("¿Y en postrera?", "Frijol"));
+  const income = screen.getByRole("group", { name: /Ganar más/ });
+  fireEvent.click(within(income).getByRole("radio", { name: "5" }));
+  const irrigation = screen.getByRole("group", { name: "¿Tiene riego?" });
+  fireEvent.click(within(irrigation).getByRole("radio", { name: "Sí" }));
+
+  expect(params().get("p")).toBe("maiz");
+  expect(params().get("s")).toBe("frijol");
+  expect(params().get("i")).toBe("5");
+  expect(params().get("irr")).toBe("1");
 });
 
-test("form -> comparison sends the answers as the request", async () => {
+test("form -> comparison sends the answers from the URL as the request", async () => {
+  openAt(`?step=form&${PLACE}`);
   route();
-  render(<ResultsFlow location={LOCATION} onBackToMap={vi.fn()} />);
+  render(<ResultsFlow />);
 
   await chooseAndCompare();
 
   expect(await screen.findByRole("button", { name: "Op.1" })).toBeVisible();
+  expect(params().get("step")).toBe("results");
   const [, init] = recommendationCalls()[0];
   expect(JSON.parse(String(init?.body))).toEqual({
-    location: LOCATION,
+    location: { lat: 14.65, lon: -89.51 },
     current_rotation: { primera: "maiz", postrera: "frijol" },
     priorities: { water: 3, soil: 3, income: 3, risk: 3 },
     constraints: { irrigation: false },
   });
 });
 
+test("reloading on the results step shows the comparison again", async () => {
+  openAt(`?step=results&${PLACE}&p=maiz&s=frijol&w=5&irr=0`);
+  route();
+  render(<ResultsFlow />);
+
+  expect(await screen.findByRole("button", { name: "Op.1" })).toBeVisible();
+  expect(JSON.parse(String(recommendationCalls()[0][1]?.body)).priorities.water).toBe(5);
+});
+
+test("the results step without crops shows the form instead", async () => {
+  openAt(`?step=results&${PLACE}`);
+  route();
+  render(<ResultsFlow />);
+
+  expect(await screen.findByRole("heading", { name: "¿Qué siembra en primera?" })).toBeVisible();
+  expect(recommendationCalls()).toHaveLength(0);
+});
+
 test("422 shows the form again, answers kept, with 'Revise sus respuestas'", async () => {
+  openAt(`?step=form&${PLACE}`);
   route(() =>
     Response.json(
       { error: "invalid_request", detail: "maicillo is not a primera crop" },
       { status: 422 },
     ),
   );
-  render(<ResultsFlow location={LOCATION} onBackToMap={vi.fn()} />);
+  render(<ResultsFlow />);
 
   await chooseAndCompare();
 
   expect(await screen.findByText("Revise sus respuestas")).toBeVisible();
   await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  expect(params().get("step")).toBe("form");
   expect(cropButton("¿Qué siembra en primera?", "Maíz")).toHaveAttribute("aria-pressed", "true");
   expect(cropButton("¿Y en postrera?", "Frijol")).toHaveAttribute("aria-pressed", "true");
   expect(screen.getByRole("button", { name: "Comparar opciones →" })).toBeEnabled();
 });
 
-test("outside_region goes back to the map with its message", async () => {
+test("outside_region goes back to the map step with its message", async () => {
+  openAt(`?step=form&${PLACE}`);
   route(() => Response.json({ error: "outside_region", detail: "Point outside" }, { status: 404 }));
   const onBackToMap = vi.fn();
-  render(<ResultsFlow location={LOCATION} onBackToMap={onBackToMap} />);
+  render(<ResultsFlow onBackToMap={onBackToMap} />);
 
   await chooseAndCompare();
 
   await waitFor(() =>
     expect(onBackToMap).toHaveBeenCalledWith("Por ahora solo cubrimos el Corredor Seco"),
   );
+  expect(params().get("step")).toBe("map");
 });
 
-test("'← Su parcela' goes back to the map without a message", async () => {
+test("'← Su parcela' goes back to the map step without a message", async () => {
+  openAt(`?step=form&${PLACE}`);
   route();
   const onBackToMap = vi.fn();
-  render(<ResultsFlow location={LOCATION} onBackToMap={onBackToMap} />);
+  render(<ResultsFlow onBackToMap={onBackToMap} />);
 
   fireEvent.click(screen.getByRole("button", { name: "← Su parcela" }));
 
   expect(onBackToMap).toHaveBeenCalledWith();
+  expect(params().get("step")).toBe("map");
+  await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+});
+
+test("submitting without a place on the map goes back to the map", async () => {
+  openAt("?step=form&p=maiz&s=frijol");
+  route();
+  render(<ResultsFlow />);
+
   await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  fireEvent.click(screen.getByRole("button", { name: "Comparar opciones →" }));
+
+  expect(params().get("step")).toBe("map");
+  expect(recommendationCalls()).toHaveLength(0);
 });
 
 test("'Cambiar prioridades' shows the form at priorities, answers kept, then recalculates", async () => {
   const scrollIntoView = vi.fn();
   Element.prototype.scrollIntoView = scrollIntoView;
+  openAt(`?step=form&${PLACE}`);
   route();
-  render(<ResultsFlow location={LOCATION} onBackToMap={vi.fn()} />);
+  render(<ResultsFlow />);
   await chooseAndCompare();
 
   fireEvent.click(await screen.findByRole("button", { name: "[ Cambiar prioridades ]" }));
@@ -130,6 +180,7 @@ test("'Cambiar prioridades' shows the form at priorities, answers kept, then rec
     name: "¿Qué es lo más importante para usted?",
   });
   await waitFor(() => expect(scrollIntoView.mock.contexts).toContain(heading));
+  expect(params().get("step")).toBe("form");
   await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
   expect(cropButton("¿Qué siembra en primera?", "Maíz")).toHaveAttribute("aria-pressed", "true");
   expect(cropButton("¿Y en postrera?", "Frijol")).toHaveAttribute("aria-pressed", "true");
