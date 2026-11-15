@@ -25,5 +25,5 @@
 13. [x] 6bc3ccd As a farmer, I want one option marked recommended only when it passes the canícula check and beats my current rotation so that I know if changing is worth it. Requires: #02, #05
 14. [ ] As a farmer, I want water-first and income-first priorities to recommend different rotations at Chiquimula on the real templates so that my priorities visibly matter. Requires: #13
 15. [x] 04e0fc7 As a farmer, I want one line saying how each option does on my top priority, and a reminder to check with a local technician, so that I understand and verify the advice. Requires: #13
-16. [x] 623e649 As a farmer, I want NASA evidence and the data that is missing for each option so that I know what the advice rests on. Requires: #10
-17. [ ] As a farmer, I want one line naming what each option improves over my rotation so that I see its benefit. Requires: #08
+16. [x] a31cd4c As a farmer, I want NASA evidence and the data that is missing for each option so that I know what the advice rests on. Requires: #10
+17. [~] As a farmer, I want one line naming what each option improves over my rotation so that I see its benefit. Requires: #08
