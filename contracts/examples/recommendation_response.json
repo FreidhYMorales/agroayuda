@@ -153,6 +153,7 @@
       "is_current": true,
       "recommended": false,
       "not_recommended_reason": "Aguanta poco la sequía de la canícula",
+      "not_recommended_reason_en": "Cannot take much drought in the canícula",
       "bare_months": [
         12,
         1,
@@ -176,21 +177,35 @@
       "reasons": [
         "Es lo que usted siembra ahora."
       ],
+      "reasons_en": [
+        "It is what you plant now."
+      ],
       "evidence": [
         {
           "text_es": "Canícula fuerte en 21 de 30 años",
+          "text_en": "Strong canícula in 21 of 30 years",
           "dataset": "NASA POWER",
-          "value": "0.70"
+          "value": "0.70",
+          "value_en": "0.70"
         }
       ],
       "benefits": [
         "Cultivos que usted ya conoce."
       ],
+      "benefits_en": [
+        "Crops you already know."
+      ],
       "data_gaps": [
         "La lluvia de NASA POWER es una estimación regional."
       ],
+      "data_gaps_en": [
+        "NASA POWER rain is a regional estimate."
+      ],
       "local_review": [
         "Consulte con un técnico si su variedad de maíz aguanta la canícula."
+      ],
+      "local_review_en": [
+        "Ask a technician whether your maize variety can take the canícula."
       ]
     },
     {
@@ -201,6 +216,7 @@
       "is_current": false,
       "recommended": true,
       "not_recommended_reason": null,
+      "not_recommended_reason_en": null,
       "bare_months": [
         1,
         2,
@@ -223,21 +239,35 @@
       "reasons": [
         "Ahorra más agua, que es lo más importante para usted."
       ],
+      "reasons_en": [
+        "Saves more water, which matters most to you."
+      ],
       "evidence": [
         {
           "text_es": "Canícula fuerte en 21 de 30 años",
+          "text_en": "Strong canícula in 21 of 30 years",
           "dataset": "NASA POWER",
-          "value": "0.70"
+          "value": "0.70",
+          "value_en": "0.70"
         }
       ],
       "benefits": [
         "El frijol en asocio aporta nitrógeno al suelo."
       ],
+      "benefits_en": [
+        "Beans grown together add nitrogen to the soil."
+      ],
       "data_gaps": [
         "Valor general del maicillo; validar localmente."
       ],
+      "data_gaps_en": [
+        "General value for sorghum; check locally."
+      ],
       "local_review": [
         "Consulte con un técnico qué variedad de maicillo conviene."
+      ],
+      "local_review_en": [
+        "Ask a technician which sorghum variety suits you."
       ]
     },
     {
@@ -248,6 +278,7 @@
       "is_current": false,
       "recommended": false,
       "not_recommended_reason": "Aguanta poco la sequía de la canícula",
+      "not_recommended_reason_en": "Cannot take much drought in the canícula",
       "bare_months": [
         1,
         2,
@@ -271,15 +302,27 @@
       "reasons": [
         "Ahorra agua."
       ],
+      "reasons_en": [
+        "Saves water."
+      ],
       "evidence": [],
       "benefits": [
         "Menos riego."
       ],
+      "benefits_en": [
+        "Less irrigation."
+      ],
       "data_gaps": [
         "Valores de cultivo generales (FAO)."
       ],
+      "data_gaps_en": [
+        "General crop values (FAO)."
+      ],
       "local_review": [
         "Consulte con un técnico."
+      ],
+      "local_review_en": [
+        "Ask a technician."
       ]
     }
   ]

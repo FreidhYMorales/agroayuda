@@ -116,8 +116,10 @@ export interface ErrorResponse {
  */
 export interface Evidence {
   dataset: string;
+  text_en: string;
   text_es: string;
   value: string;
+  value_en: string;
 }
 /**
  * GeoJSON Polygon: rings of [lon, lat] positions.
@@ -188,15 +190,20 @@ export interface RecommendationResponse {
 export interface RotationOption {
   bare_months: number[];
   benefits: string[];
+  benefits_en: string[];
   confidence: "low" | "medium" | "high";
   criteria: Criteria;
   data_gaps: string[];
+  data_gaps_en: string[];
   delta_vs_current: DeltaVsCurrent;
   evidence: Evidence[];
   is_current: boolean;
   local_review: string[];
+  local_review_en: string[];
   not_recommended_reason: string | null;
+  not_recommended_reason_en: string | null;
   reasons: string[];
+  reasons_en: string[];
   recommended: boolean;
   sequence: Rotation;
 }

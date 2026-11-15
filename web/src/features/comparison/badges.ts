@@ -54,10 +54,16 @@ export function summaryMessage(options: RotationOption[], lang: Lang = "es"): st
   return warned ? `${words.best}${words.caniculaSuffix}` : words.best;
 }
 
-export function deltaText(d: Delta): string {
-  if (d === "better") return "▲ mejor";
-  if (d === "worse") return "▼ menos";
-  return "= igual";
+const DELTA_WORDS = {
+  es: { better: "mejor", worse: "menos", same: "igual" },
+  en: { better: "better", worse: "worse", same: "same" },
+} as const;
+
+export function deltaText(d: Delta, lang: Lang = "es"): string {
+  const words = DELTA_WORDS[lang];
+  if (d === "better") return `▲ ${words.better}`;
+  if (d === "worse") return `▼ ${words.worse}`;
+  return `= ${words.same}`;
 }
 
 /** Confidence as dots plus a word, so it never relies on color alone. */

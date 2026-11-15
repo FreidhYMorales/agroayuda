@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { expect, test, vi } from "vitest";
+import { expect, onTestFinished, test, vi } from "vitest";
 import { FIXTURE_OPTIONS } from "./fixture";
-import { OptionDetail } from "./OptionDetail";
+import { bareMonthsText, OptionDetail } from "./OptionDetail";
 
 function detail(index: number, title: string, onBack = vi.fn()) {
   render(<OptionDetail option={FIXTURE_OPTIONS[index]} title={title} onBack={onBack} />);
@@ -91,4 +91,80 @@ test("back calls the handler", () => {
   fireEvent.click(screen.getByRole("button", { name: "← Opción 1" }));
 
   expect(onBack).toHaveBeenCalledTimes(1);
+});
+
+function inEnglish() {
+  window.history.replaceState(null, "", "/?step=results&lang=en");
+  onTestFinished(() => window.history.replaceState(null, "", "/"));
+}
+
+test("with lang=en the detail's fixed texts are in English", () => {
+  inEnglish();
+  detail(1, "Opt. 1");
+
+  expect(screen.getByText("Maize with beans → Sorghum")).toBeVisible();
+  expect(screen.getByRole("heading", { name: "Compared with current:" })).toBeVisible();
+  expect(item(/Water/)).toHaveTextContent("▲ better");
+  expect(item(/Soil/)).toHaveTextContent("▲ better");
+  expect(item(/Income/)).toHaveTextContent("= same");
+  expect(item(/Risk/)).toHaveTextContent("▲ better");
+  expect(screen.getByText("Confidence: ●●○ medium")).toBeVisible();
+  expect(
+    screen.getByText("Leaves the field without a crop for 4 months (estimated)"),
+  ).toBeVisible();
+  for (const title of [
+    "Why:",
+    "Evidence (data):",
+    "Benefit:",
+    "⚠ Talk to a technician",
+    "❔ What we do not know:",
+  ]) {
+    expect(screen.getByRole("heading", { name: title })).toBeVisible();
+  }
+  expect(screen.getByText("Crop values: general value, check locally.")).toBeVisible();
+});
+
+test("with lang=en a worse criterion reads worse", () => {
+  inEnglish();
+  detail(2, "Opt. 2");
+
+  expect(item(/Income/)).toHaveTextContent("▼ worse");
+});
+
+test("bare months in English, singular and none", () => {
+  expect(bareMonthsText(0, "en")).toBe("Leaves no month without a crop (estimated)");
+  expect(bareMonthsText(1, "en")).toBe("Leaves the field without a crop for 1 month (estimated)");
+  expect(bareMonthsText(1)).toBe("Deja el terreno sin cultivo 1 mes (estimado)");
+});
+
+test("with lang=en the detail shows the engine's English texts", () => {
+  inEnglish();
+  detail(1, "Opt. 1");
+
+  expect(screen.getByText("Saves more water, which matters most to you.")).toBeVisible();
+  expect(screen.getByText("Beans grown together add nitrogen to the soil.")).toBeVisible();
+  expect(screen.getByText("Ask a technician which sorghum variety suits you.")).toBeVisible();
+  expect(screen.getByText("General value for sorghum; check locally.")).toBeVisible();
+  expect(screen.queryByText("Ahorra más agua, que es lo más importante para usted.")).toBeNull();
+});
+
+test("with lang=en the evidence uses its English text and value", () => {
+  inEnglish();
+  const option = {
+    ...FIXTURE_OPTIONS[1],
+    evidence: [
+      {
+        text_es: "Racha seca larga en 21 de 30 años.",
+        text_en: "Long dry spell in 21 of 30 years.",
+        dataset: "NASA POWER",
+        value: "21 de 30 años",
+        value_en: "21 of 30 years",
+      },
+    ],
+  };
+  render(<OptionDetail option={option} title="Opt. 1" onBack={vi.fn()} />);
+
+  expect(
+    screen.getByText("Long dry spell in 21 of 30 years. (NASA POWER: 21 of 30 years)"),
+  ).toBeVisible();
 });
