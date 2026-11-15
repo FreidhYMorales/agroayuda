@@ -91,6 +91,21 @@ def test_recommendations_return_three_options(client: TestClient) -> None:
     assert body.site.location.lat == 14.70
 
 
+def test_recommendations_carry_the_english_texts(client: TestClient) -> None:
+    """Current maiz -> frijol, water first, example site (high canícula, share 0.7)."""
+    response = client.post("/recommendations", json=request_body(CHIQUIMULA))
+
+    current = response.json()["options"][0]
+    assert current["reasons_en"] == [
+        "Your top priority is saving water: this option scores 4 of 5."
+    ]
+    assert current["not_recommended_reason_en"] == "Cannot take much drought in the canícula"
+    assert current["local_review_en"] == [
+        "Talk to a local technician before changing what you plant."
+    ]
+    assert [e["value_en"] for e in current["evidence"]] == ["21 of 30 years"]
+
+
 def test_recommendations_outside_the_region(client: TestClient) -> None:
     assert_error(client.post("/recommendations", json=request_body(OUTSIDE)), 404, "outside_region")
 
