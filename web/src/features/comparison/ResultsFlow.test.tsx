@@ -198,3 +198,17 @@ test("'Cambiar prioridades' shows the form at priorities, answers kept, then rec
     risk: 3,
   });
 });
+
+test("with lang=en a 422 shows the form again with 'Check your answers'", async () => {
+  openAt(`?step=results&lang=en&${PLACE}&p=maiz&s=frijol&w=5&irr=0`);
+  route(() =>
+    Response.json(
+      { error: "invalid_request", detail: "maicillo is not a primera crop" },
+      { status: 422 },
+    ),
+  );
+  render(<ResultsFlow />);
+
+  expect(await screen.findByText("Check your answers")).toBeVisible();
+  expect(screen.queryByText("Revise sus respuestas")).toBeNull();
+});
