@@ -33,8 +33,7 @@ const EN: typeof ES = {
   viewRisks: "See risks",
   viewRecommendations: "See recommendations →",
   pickPlace: "Or pick a place: ›",
-  zoneLine: (km: number) =>
-    `Area about ${roundKm(km)} km across (regional data, not your plot)`,
+  zoneLine: (km: number) => `Area about ${roundKm(km)} km across (regional data, not your plot)`,
   empty: "Tap the map or pick a place from the list",
   slow: "Waking up the server, one moment…",
   outsideRegion: "For now we only cover the Dry Corridor. Tap inside the line.",

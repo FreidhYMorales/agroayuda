@@ -132,3 +132,9 @@ export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
 
   return [state, update];
 }
+
+// The current language, Spanish unless the URL says lang=en.
+export function useLang(): Lang {
+  const [state] = useAppState();
+  return state.lang ?? "es";
+}

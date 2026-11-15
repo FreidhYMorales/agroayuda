@@ -10,7 +10,8 @@ import { RainLegend } from "./RainLegend";
 import { RainSourceLine } from "./RainSourceLine";
 import { SummaryCard } from "./SummaryCard";
 import { DemoPlaceList } from "./DemoPlaceList";
-import { MAP_COPY } from "./copy";
+import { mapCopy } from "./copy";
+import { useLang } from "../../lib/urlState";
 import { useGeolocation } from "./useGeolocation";
 import type { SiteState } from "./useSite";
 import { COLORS } from "../../ui/colors";
@@ -104,6 +105,7 @@ export function MapScreen({
   onViewRisks,
   onViewRecommendations,
 }: MapScreenProps) {
+  const copy = mapCopy(useLang());
   const [mapData, setMapData] = useState<MapDataState>({ status: "loading" });
   // Set when the basemap fails; MapView has already switched to the plain style.
   const [mapError, setMapError] = useState(false);
@@ -159,7 +161,7 @@ export function MapScreen({
   const firstCell = mapData.status === "ready" ? mapData.data.rain.features[0] : undefined;
 
   return (
-    <section style={screenStyle} aria-label={MAP_COPY.defaultTitle}>
+    <section style={screenStyle} aria-label={copy.defaultTitle}>
       <div style={headerStyle}>
         <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
       </div>

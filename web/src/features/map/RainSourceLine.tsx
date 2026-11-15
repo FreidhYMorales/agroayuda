@@ -2,7 +2,8 @@
 import { useState } from "react";
 import type { RainCellProperties } from "../../contracts/contracts";
 import { buttonStyle } from "../../ui/buttonStyles";
-import { MAP_COPY } from "./copy";
+import { mapCopy } from "./copy";
+import { useLang } from "../../lib/urlState";
 import { rainSourceDetail } from "./rainLayer";
 
 export interface RainSourceLineProps {
@@ -14,6 +15,7 @@ const sourceStyle = buttonStyle("link");
 
 export function RainSourceLine({ properties }: RainSourceLineProps) {
   const [open, setOpen] = useState(false);
+  const copy = mapCopy(useLang());
 
   return (
     <div>
@@ -23,7 +25,7 @@ export function RainSourceLine({ properties }: RainSourceLineProps) {
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
-        {MAP_COPY.sourceLine}
+        {copy.sourceLine}
       </button>
       {/* Text only: no NASA logo, as the work package requires. */}
       {open && <p>{rainSourceDetail(properties)}</p>}
