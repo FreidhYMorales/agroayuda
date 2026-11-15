@@ -34,3 +34,7 @@ Risk: none
 
 - L1 request: /flow:story 17
 - L2 user approved the story and the copy ("Mejora frente a su rotación en: {lista}.", empty list when nothing improves).
+- L3 test list approved; mode B (small, Risk: none).
+- L4 commits: c985889 -> a84348a (benefits line, " y " join), 18d7368 -> 5a0f23c (commas for 3+ items), 5799704 -> 7649473 (empty list when nothing improves; the planned "always write a line" mutant was not needed: the test was red against a real bug, a broken "...en: ." line). Every test was red before its code.
+- L5 make check green: 182 passed (Python), web green. No verifier (Risk: none).
+- Risk: none
