@@ -169,8 +169,10 @@ class DeltaVsCurrent(Contract):
 
 class Evidence(Contract):
     text_es: str
+    text_en: str
     dataset: str
     value: str
+    value_en: str
 
 
 class RotationOption(Contract):
@@ -178,15 +180,20 @@ class RotationOption(Contract):
     is_current: bool
     recommended: bool
     not_recommended_reason: str | None
+    not_recommended_reason_en: str | None
     bare_months: list[Month]
     criteria: Criteria
     delta_vs_current: DeltaVsCurrent
     confidence: Confidence
     reasons: list[str]
+    reasons_en: list[str]
     evidence: list[Evidence]
     benefits: list[str]
+    benefits_en: list[str]
     data_gaps: list[str]
+    data_gaps_en: list[str]
     local_review: list[str]
+    local_review_en: list[str]
 
 
 class RecommendationResponse(Contract):

@@ -287,17 +287,25 @@
         "dataset": {
           "type": "string"
         },
+        "text_en": {
+          "type": "string"
+        },
         "text_es": {
           "type": "string"
         },
         "value": {
           "type": "string"
+        },
+        "value_en": {
+          "type": "string"
         }
       },
       "required": [
         "text_es",
+        "text_en",
         "dataset",
-        "value"
+        "value",
+        "value_en"
       ],
       "title": "Evidence",
       "type": "object"
@@ -497,6 +505,12 @@
           },
           "type": "array"
         },
+        "benefits_en": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "confidence": {
           "enum": [
             "low",
@@ -509,6 +523,12 @@
           "$ref": "#/$defs/Criteria"
         },
         "data_gaps": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "data_gaps_en": {
           "items": {
             "type": "string"
           },
@@ -532,6 +552,12 @@
           },
           "type": "array"
         },
+        "local_review_en": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "not_recommended_reason": {
           "anyOf": [
             {
@@ -542,7 +568,23 @@
             }
           ]
         },
+        "not_recommended_reason_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reasons_en": {
           "items": {
             "type": "string"
           },
@@ -560,15 +602,20 @@
         "is_current",
         "recommended",
         "not_recommended_reason",
+        "not_recommended_reason_en",
         "bare_months",
         "criteria",
         "delta_vs_current",
         "confidence",
         "reasons",
+        "reasons_en",
         "evidence",
         "benefits",
+        "benefits_en",
         "data_gaps",
-        "local_review"
+        "data_gaps_en",
+        "local_review",
+        "local_review_en"
       ],
       "title": "RotationOption",
       "type": "object"

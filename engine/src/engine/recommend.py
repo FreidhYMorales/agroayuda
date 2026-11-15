@@ -40,15 +40,20 @@ def _option(
         is_current=is_current,
         recommended=False,
         not_recommended_reason=failure_reason(site, primera, request.constraints.irrigation),
+        not_recommended_reason_en=None,
         bare_months=bare_months(primera, postrera),
         criteria=criteria,
         delta_vs_current=DeltaVsCurrent(water="same", soil="same", income="same", risk="same"),
         confidence=confidence(site, [primera, postrera]),
         reasons=[reason_line(request.priorities, criteria)],
+        reasons_en=[],
         evidence=canicula_evidence(site),
         benefits=[],
+        benefits_en=[],
         data_gaps=data_gaps(site, [primera, postrera]),
+        data_gaps_en=[],
         local_review=[LOCAL_REVIEW_ES],
+        local_review_en=[],
     )
     return rank, option
 

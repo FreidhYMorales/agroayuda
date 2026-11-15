@@ -45,7 +45,15 @@ def canicula_evidence(site: SiteProfile) -> list[Evidence]:
         if risk.id == "canicula" and risk.value is not None:
             years = round_half_up(risk.value * POWER_YEARS)
             value = f"{years} de {POWER_YEARS} años"
-            return [Evidence(text_es=risk.explanation_es, dataset="NASA POWER", value=value)]
+            return [
+                Evidence(
+                    text_es=risk.explanation_es,
+                    text_en="",
+                    dataset="NASA POWER",
+                    value=value,
+                    value_en="",
+                )
+            ]
     return []
 
 
