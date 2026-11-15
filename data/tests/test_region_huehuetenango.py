@@ -20,7 +20,13 @@ from data_pipeline.__main__ import (
     write_map_layers,
 )
 from data_pipeline.grid import _point_in_rings, cells_intersecting
-from data_pipeline.outputs import region_geojson, region_rings, select_adm2, split_multipolygons
+from data_pipeline.outputs import (
+    DEMO_POINTS,
+    region_geojson,
+    region_rings,
+    select_adm2,
+    split_multipolygons,
+)
 from data_pipeline.parquet_io import read_site_data
 
 REGION_ISO = {"GT-CQ"}
@@ -73,8 +79,51 @@ def test_urls_are_pinned_to_the_same_geoboundaries_commit() -> None:
     assert ADM2_URL.replace("ADM2", "ADM1") == GEOBOUNDARIES_URL
 
 
-def test_the_municipality_list_starts_empty_in_the_base_pr() -> None:
-    assert MUNICIPALITIES == ()
+HUEHUETENANGO_LIST = [
+    ("Aguacatán", "Huehuetenango"),
+    ("Huehuetenango", "Huehuetenango"),
+    ("Malacatancito", "Huehuetenango"),
+]
+RECORDED = Path(__file__).resolve().parent / "fixtures" / "geoboundaries_region_subset.json"
+COVERED_ISO = {"GT-CQ", "GT-JU", "GT-ZA", "GT-PR", "GT-JA"}
+
+
+def recorded() -> dict[str, Any]:
+    """Real geoBoundaries subset (ADM1 + listed ADM2) recorded at commit 9469f09."""
+    data: dict[str, Any] = json.loads(RECORDED.read_text("utf-8"))
+    return data
+
+
+def test_the_list_has_the_cited_huehuetenango_municipalities() -> None:
+    """SESAN 2016, Plan de Respuesta para la Atención del Hambre Estacional, Anexo 1, p. 29."""
+    assert [m for m in MUNICIPALITIES if m[1] == "Huehuetenango"] == HUEHUETENANGO_LIST
+
+
+def test_the_huehuetenango_entries_match_the_real_adm2_names() -> None:
+    data = recorded()
+    listed = [m for m in MUNICIPALITIES if m[1] == "Huehuetenango"]
+
+    selected = select_adm2(data["adm2"], data["adm1"], listed, COVERED_ISO)
+
+    assert [f["properties"]["shapeName"] for f in selected] == [
+        "Aguacatán",
+        "Huehuetenango",
+        "Malacatancito",
+    ]
+
+
+def test_the_huehuetenango_demo_point_is_inside_and_the_others_keep_their_place() -> None:
+    data = recorded()
+    listed = [m for m in MUNICIPALITIES if m[1] == "Huehuetenango"]
+    rings = region_rings(data["adm1"], COVERED_ISO, data["adm2"], listed)
+    points = {p["id"]: p for p in DEMO_POINTS}
+
+    aguacatan = points["aguacatan"]
+    assert aguacatan["name_es"] == "Aguacatán, Huehuetenango"
+    assert _point_in_rings((aguacatan["location"]["lon"], aguacatan["location"]["lat"]), rings)
+    assert DEMO_POINTS[0]["id"] == "chiquimula"
+    outside = points["fuera_ciudad_guatemala"]["location"]
+    assert not _point_in_rings((outside["lon"], outside["lat"]), rings)
 
 
 # --- selection -----------------------------------------------------------------------------------
