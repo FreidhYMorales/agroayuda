@@ -56,6 +56,7 @@ const mocks = vi.hoisted(() => {
     unproject: vi.fn((point: [number, number]) => ({ at: point })),
     resize: vi.fn(() => undefined),
     setCenter: vi.fn((_center: unknown) => undefined),
+    redraw: vi.fn(() => undefined),
   };
 
   return { handlers, sources, api };
@@ -73,6 +74,7 @@ vi.mock("maplibre-gl", () => {
     unproject = mocks.api.unproject;
     resize = mocks.api.resize;
     setCenter = mocks.api.setCenter;
+    redraw = mocks.api.redraw;
 
     constructor(options: MapOptions) {
       mocks.api.mapCreated(options);
@@ -318,6 +320,22 @@ describe("MapView setup", () => {
       expect(mocks.api.unproject).toHaveBeenCalledWith([180, 100]);
       expect(mocks.api.resize).toHaveBeenCalled();
       expect(mocks.api.setCenter).toHaveBeenLastCalledWith({ at: [180, 100] });
+    });
+
+    // A new canvas size clears the canvas, and MapLibre draws again only on the next
+    // frame: the browser showed the empty canvas in between, so the map flickered.
+    test("draws again right away after a resize, before the browser paints", () => {
+      const { container } = renderMap();
+      const box = container.firstElementChild as HTMLElement;
+      size(box, 360, 300);
+      mocks.api.redraw.mockClear();
+
+      act(() => onResize?.());
+
+      expect(mocks.api.redraw).toHaveBeenCalledTimes(1);
+      const order = (mock: { mock: { invocationCallOrder: number[] } }) =>
+        mock.mock.invocationCallOrder.at(-1) ?? 0;
+      expect(order(mocks.api.redraw)).toBeGreaterThan(order(mocks.api.setCenter));
     });
 
     test("stops watching the size when the map goes away", () => {

@@ -172,6 +172,9 @@ export function MapView({ rain, region, mask, site, onSelectPoint, onError }: Ma
     // resize keeps the center still, so the whole map crept along with the finger.
     // Here the point that sits at the new middle, measured from the top, becomes the
     // center: the top edge stays put and the sheet just covers or uncovers the bottom.
+    // A new size clears the canvas and MapLibre would draw again only on the next
+    // frame, so the empty canvas flickered on screen; redraw() draws it right here,
+    // before the browser paints (ResizeObserver runs between layout and paint).
     let width = container.clientWidth;
     const observer =
       typeof ResizeObserver === "undefined"
@@ -181,6 +184,7 @@ export function MapView({ rain, region, mask, site, onSelectPoint, onError }: Ma
             width = container.clientWidth;
             map.resize();
             map.setCenter(center);
+            map.redraw();
           });
     observer?.observe(container);
 
