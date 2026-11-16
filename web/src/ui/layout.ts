@@ -48,6 +48,10 @@ padding-bottom:max(16px,env(safe-area-inset-bottom))}
 .ag-map-sheet{flex:0 1 auto;max-height:50dvh;overflow-y:auto;display:flex;flex-direction:column;
 gap:12px;padding:8px 12px 16px;padding-bottom:max(16px,env(safe-area-inset-bottom));
 border-radius:16px 16px 0 0;background-color:${COLORS.background};box-shadow:0 -2px 8px rgba(0,0,0,.15)}
+/* Phone: the handle (SheetHandle) switches the sheet between half and most of the screen,
+   and stays on top while the sheet content scrolls. */
+.ag-map-sheet[data-expanded="true"]{max-height:85dvh}
+.ag-map-handle{display:flex;position:sticky;top:-8px;z-index:1}
 /* Comparison table: long English words wrap; the wrapper only catches what still does not fit. */
 .ag-table th,.ag-table td,.ag-note{overflow-wrap:anywhere;hyphens:auto}
 .ag-table-wrap{overflow-x:auto}
@@ -56,7 +60,7 @@ border-radius:16px 16px 0 0;background-color:${COLORS.background};box-shadow:0 -
 grid-template-rows:auto minmax(0,1fr)}
 .ag-map-header{grid-column:2;grid-row:1;${SIDE_SHADOW}}
 .ag-map-area{grid-column:1;grid-row:1 / span 2;min-width:0;min-height:0}
-.ag-map-sheet{grid-column:2;grid-row:2;max-height:none;height:100%;border-radius:0;${SIDE_SHADOW}}
+.ag-map-sheet,.ag-map-sheet[data-expanded="true"]{grid-column:2;grid-row:2;max-height:none;height:100%;border-radius:0;${SIDE_SHADOW}}
 .ag-map-handle{display:none}
 }
 @media ${MEDIA.tablet}{
