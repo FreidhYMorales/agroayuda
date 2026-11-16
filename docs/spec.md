@@ -127,7 +127,7 @@ Values change only with a test.
 
 ## Screens
 
-UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, priorities, irrigation, step) lives in the URL query; results are keyed by the full request; missing inputs redirect to step 1.
+UI copy is English by default and Spanish (Guatemala) with `?lang=es` (ES/EN toggle); Spanish always uses "usted". The full request (point, crops, priorities, irrigation, step) lives in the URL query; results are keyed by the full request; missing inputs redirect to step 1.
 
 ### 1. Map
 
