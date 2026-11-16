@@ -4,6 +4,9 @@ import type { RecommendationRequest } from "../../contracts/contracts";
 import { ComparisonScreen, ComparisonTable } from "./ComparisonScreen";
 import { FIXTURE_OPTIONS, withoutRecommended } from "./fixture";
 
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
+
 const fetchMock = vi.fn<typeof fetch>();
 
 const REQUEST: RecommendationRequest = {

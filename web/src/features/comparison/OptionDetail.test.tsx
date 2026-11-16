@@ -1,7 +1,10 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { expect, onTestFinished, test, vi } from "vitest";
+import { beforeEach, expect, onTestFinished, test, vi } from "vitest";
 import { FIXTURE_OPTIONS } from "./fixture";
 import { bareMonthsText, OptionDetail } from "./OptionDetail";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 function detail(index: number, title: string, onBack = vi.fn()) {
   render(<OptionDetail option={FIXTURE_OPTIONS[index]} title={title} onBack={onBack} />);

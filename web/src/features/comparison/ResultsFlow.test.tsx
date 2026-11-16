@@ -4,6 +4,9 @@ import { CATALOG_FIXTURE } from "../form/catalogFixture";
 import { FIXTURE_OPTIONS } from "./fixture";
 import { ResultsFlow } from "./ResultsFlow";
 
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
+
 const fetchMock = vi.fn<typeof fetch>();
 const PLACE = "lat=14.65&lon=-89.51";
 
@@ -18,7 +21,11 @@ afterEach(() => {
 });
 
 function openAt(search: string) {
-  window.history.replaceState(null, "", `/${search}`);
+  window.history.replaceState(
+    null,
+    "",
+    `/${search.includes("lang=") ? search : `${search}&lang=es`}`,
+  );
 }
 
 /** crops.json always answers; /recommendations answers with what each test queues. */

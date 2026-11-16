@@ -9,6 +9,9 @@ import { chiquimulaPlace, chiquimulaSite, demoPlaces, outsidePlace } from "./sit
 import type { SiteState } from "./useSite";
 import { COLORS } from "../../ui/colors";
 
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
+
 // jsdom reports colors as rgb(); compare through a probe so hex and rgb match.
 function expectSameColor(actual: string, expected: string) {
   const probe = document.createElement("div");
@@ -567,18 +570,18 @@ describe("MapScreen language toggle", () => {
     window.history.replaceState(null, "", "/");
   });
 
-  test("EN switches the map to English and puts lang=en in the URL; ES switches back", async () => {
+  test("EN switches the map to English and takes lang out of the URL; ES puts lang=es back", async () => {
     await renderScreen();
 
     fireEvent.click(screen.getByRole("radio", { name: "English" }));
 
     expect(screen.getByRole("button", { name: "📍 Use my location" })).toBeTruthy();
-    expect(new URLSearchParams(window.location.search).get("lang")).toBe("en");
+    expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
 
     fireEvent.click(screen.getByRole("radio", { name: "Español" }));
 
     expect(screen.getByRole("button", { name: LOCATE_LABEL })).toBeTruthy();
-    expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
+    expect(new URLSearchParams(window.location.search).get("lang")).toBe("es");
   });
 });
 

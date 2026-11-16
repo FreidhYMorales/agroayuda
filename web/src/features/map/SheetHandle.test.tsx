@@ -1,7 +1,10 @@
 // web/src/features/map/SheetHandle.test.tsx
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { SheetHandle } from "./SheetHandle";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 afterEach(() => {
   cleanup();

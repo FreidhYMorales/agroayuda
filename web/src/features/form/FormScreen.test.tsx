@@ -3,6 +3,9 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { CATALOG_FIXTURE } from "./catalogFixture";
 import { DEFAULT_PRIORITIES, FormScreen, type FormValues } from "./FormScreen";
 
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
+
 const fetchMock = vi.fn<typeof fetch>();
 
 beforeEach(() => {

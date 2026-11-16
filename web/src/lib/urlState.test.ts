@@ -141,16 +141,17 @@ describe("useAppState", () => {
 });
 
 describe("language in the URL", () => {
-  test("lang=en reads as English and is written back", () => {
-    const state = readState("?step=map&lang=en");
+  test("lang=es reads as Spanish and is written back", () => {
+    const state = readState("?step=map&lang=es");
 
-    expect(state.lang).toBe("en");
-    expect(new URLSearchParams(toSearch(state)).get("lang")).toBe("en");
+    expect(state.lang).toBe("es");
+    expect(new URLSearchParams(toSearch(state)).get("lang")).toBe("es");
   });
 
-  test("no lang or an unknown value reads as Spanish", () => {
+  test("no lang, an unknown value or an old lang=en link read as the English default", () => {
     expect(readState("?step=map").lang).toBeUndefined();
     expect(readState("?step=map&lang=fr").lang).toBeUndefined();
-    expect(new URLSearchParams(toSearch(readState("?step=map"))).has("lang")).toBe(false);
+    expect(readState("?step=map&lang=en").lang).toBeUndefined();
+    expect(new URLSearchParams(toSearch(readState("?step=map&lang=en"))).has("lang")).toBe(false);
   });
 });

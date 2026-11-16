@@ -1,11 +1,14 @@
 // web/src/features/map/RainSourceLine.test.tsx
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import type { RainCellProperties } from "../../contracts/contracts";
 import { buttonStyle } from "../../ui/buttonStyles";
 
 import { expectButtonLook } from "../../ui/expectButtonLook";
 import { RainSourceLine } from "./RainSourceLine";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 afterEach(cleanup);
 

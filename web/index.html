@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es-GT">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <!-- viewport-fit=cover lets the layout pad for the iPhone home bar (env(safe-area-inset-*)). Zoom stays allowed. -->
@@ -119,17 +119,18 @@
   <body>
     <div id="splash" role="status" aria-live="polite">
       <img class="splash-logo" src="/logo.svg" alt="" width="240" height="197" fetchpriority="high" />
-      <p class="splash-label">Cargando AgroAyuda…</p>
-      <p class="splash-ai">Logo generado con IA</p>
+      <p class="splash-label">Loading AgroAyuda…</p>
+      <p class="splash-ai">AI-generated logo</p>
     </div>
     <script>
-      // Runs before any module: English texts when the URL has ?lang=en (same rule as urlState.ts).
+      // Runs before any module: Spanish texts when the URL has ?lang=es (same rule as urlState.ts).
       (() => {
-        if (new URLSearchParams(location.search).get("lang") !== "en") return;
+        if (new URLSearchParams(location.search).get("lang") !== "es") return;
+        document.documentElement.lang = "es-GT";
         const label = document.querySelector(".splash-label");
         const ai = document.querySelector(".splash-ai");
-        if (label) label.textContent = "Loading AgroAyuda…";
-        if (ai) ai.textContent = "AI-generated logo";
+        if (label) label.textContent = "Cargando AgroAyuda…";
+        if (ai) ai.textContent = "Logo generado con IA";
       })();
     </script>
     <div id="root"></div>
