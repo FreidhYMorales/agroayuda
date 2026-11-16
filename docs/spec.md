@@ -99,7 +99,7 @@ Values change only with a test.
 ### Recommendation and texts
 
 - `recommended` is true for the best passing alternative only, and only when its priority-weighted score is strictly greater than the current rotation's; never for the current one. If no alternative beats the current, none is recommended and the UI says "Su rotación actual ya es la mejor para sus prioridades" (both alternatives still shown). Ties break by template order in `rotation_templates.csv`.
-- One `reasons` line cites the farmer's top priority; ties between priorities break in the order water > soil > income > risk.
+- One `reasons` line cites the farmer's top priority. When several priorities tie at the top it names none as "the" priority: it lists each tied one with the option's score, in the order water > soil > income > risk ("Usted dio la misma importancia a varias cosas. Esta opción saca: cuidar el agua 4 de 5 y el ingreso 3 de 5.").
 - `bare_months` lists the months each option leaves the field bare (from `calendar.py` and `cycle_days`).
 - Irrigation lifts the risk criterion of high-water crops and disables F1/F2.
 - The current rotation also gets F1/F2 checks: its `not_recommended_reason` is shown as a ⚠ warning on the current column (never "No recomendada").

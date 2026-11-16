@@ -30,6 +30,15 @@ def test_reason_line_in_english(priorities: Priorities, expected: str) -> None:
     assert reason_line_en(priorities, CRITERIA) == expected
 
 
+def test_tied_reason_line_in_english() -> None:
+    tied = Priorities(water=4, soil=1, income=4, risk=1)
+
+    assert reason_line_en(tied, CRITERIA) == (
+        "You gave several things the same importance. This option scores: "
+        "saving water 4 of 5 and income 3 of 5."
+    )
+
+
 @pytest.mark.parametrize(
     ("deltas", "expected"),
     [
