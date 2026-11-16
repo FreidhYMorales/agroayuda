@@ -308,15 +308,22 @@ function ResultsView(props: ResultsViewProps) {
           ))}
         </div>
       ) : null}
+      {/* Picking an option is the main action here, so the hint sits right above the table. */}
+      <p style={{ fontWeight: 600, margin: "12px 0 6px" }}>{copy.tapOption}</p>
       <div className="ag-card" style={{ padding: "8px 4px" }}>
         {/* Safety net: a long English word scrolls inside the table, never the page. */}
         <div className="ag-table-wrap">
           <ComparisonTable options={state.options} onSelect={setSelected} />
         </div>
       </div>
-      <p className="ag-muted">{copy.tapOption}</p>
       <p className="ag-muted">{copy.aid}</p>
-      <button type="button" className="ag-btn ag-primary" onClick={onChangePriorities}>
+      {/* Secondary: it changes the question, it is not the next step. */}
+      <button
+        type="button"
+        className="ag-btn"
+        style={{ width: "100%" }}
+        onClick={onChangePriorities}
+      >
         {copy.changePriorities}
       </button>
     </Page>
@@ -325,7 +332,7 @@ function ResultsView(props: ResultsViewProps) {
 
 export type ComparisonScreenProps = {
   request: RecommendationRequest;
-  /** "← Sus opciones": back to the form. */
+  /** "← Sus cultivos": back to the form. */
   onBack: () => void;
   /** "Cambiar prioridades": show the form at the priorities block, answers kept. */
   onChangePriorities: () => void;

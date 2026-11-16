@@ -4,7 +4,8 @@ import type { Lang } from "../../lib/urlState";
 
 const ES = {
   header: "Riesgos de esta zona",
-  close: "Cerrar",
+  headerAt: (place: string) => `Riesgos en ${place}`,
+  back: "← Su parcela",
   noStrongRisk: "No encontramos riesgos fuertes en esta zona",
   continue: "Ver recomendaciones →",
   retry: "Intentar de nuevo",
@@ -12,7 +13,8 @@ const ES = {
 
 const EN: typeof ES = {
   header: "Risks in this area",
-  close: "Close",
+  headerAt: (place: string) => `Risks in ${place}`,
+  back: "← Your plot",
   noStrongRisk: "We found no strong risks in this area",
   continue: "See recommendations →",
   retry: "Try again",

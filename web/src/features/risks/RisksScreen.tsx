@@ -14,6 +14,9 @@ export type RisksView =
 
 export interface RisksScreenProps {
   view: RisksView;
+  /** Name of the place picked from the list; absent for a tapped point. */
+  placeName?: string;
+  /** "← Su parcela": back to the map. */
   onClose: () => void;
   onRetry: () => void;
   onContinue: () => void;
@@ -24,11 +27,6 @@ export interface RisksScreenProps {
 // Width, centering and side padding come from .ag-screen (src/ui/layout.ts);
 // the top padding keeps the phone view as it was.
 const screenStyle: CSSProperties = { paddingTop: 16 };
-const headerStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-};
 const skeletonStyle: CSSProperties = {
   height: 56,
   margin: "12px 0",
@@ -83,7 +81,7 @@ function RisksBody({ view, onRetry, onContinue }: Omit<RisksScreenProps, "onClos
   );
 }
 
-export function RisksScreen({ view, onClose, onRetry, onContinue }: RisksScreenProps) {
+export function RisksScreen({ view, placeName, onClose, onRetry, onContinue }: RisksScreenProps) {
   const copy = risksCopy(useLang());
   return (
     <section
@@ -92,16 +90,14 @@ export function RisksScreen({ view, onClose, onRetry, onContinue }: RisksScreenP
       aria-labelledby="risks-title"
       aria-busy={view.status === "loading"}
     >
-      <header style={headerStyle}>
-        <h2 id="risks-title">{copy.header}</h2>
-        <button
-          type="button"
-          style={buttonStyle("secondary")}
-          aria-label={copy.close}
-          onClick={onClose}
-        >
-          ✕
+      {/* Same "← where it leads" link as the form and comparison, top left. */}
+      <header>
+        <button type="button" style={buttonStyle("link")} onClick={onClose}>
+          {copy.back}
         </button>
+        <h2 id="risks-title" style={{ marginTop: 8 }}>
+          {placeName ? copy.headerAt(placeName) : copy.header}
+        </h2>
       </header>
       <RisksBody view={view} onRetry={onRetry} onContinue={onContinue} />
     </section>

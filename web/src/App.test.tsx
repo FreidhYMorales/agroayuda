@@ -84,6 +84,7 @@ vi.mock("./features/risks/RisksScreen", () => ({
       <div
         data-testid="risks-screen"
         data-view={props.view.status}
+        data-place-name={props.placeName ?? ""}
         data-risk-ids={
           props.view.status === "ready" ? props.view.risks.map((risk) => risk.id).join(",") : ""
         }
@@ -220,6 +221,17 @@ describe("App risks step", () => {
     expect(screen.getByTestId("risks-screen").getAttribute("data-risk-ids")).toBe(
       "canicula,bare_field",
     );
+  });
+
+  test("the risks screen gets the name of the picked place, and none for a tapped point", async () => {
+    goTo(`?step=risks&${POINT}&place=chiquimula`);
+    const { unmount } = renderApp();
+    expect(screen.getByTestId("risks-screen").getAttribute("data-place-name")).toBe("Chiquimula");
+    unmount();
+
+    goTo(`?step=risks&${POINT}`);
+    renderApp();
+    expect(screen.getByTestId("risks-screen").getAttribute("data-place-name")).toBe("");
   });
 
   test("the risks screen shows loading while the site is on its way", () => {
