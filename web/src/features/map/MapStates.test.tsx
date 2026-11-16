@@ -1,9 +1,12 @@
 // web/src/features/map/MapStates.test.tsx
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { MapStates } from "./MapStates";
 import { chiquimulaPlace, chiquimulaSite, demoPlaces } from "./siteFixture";
 import type { SiteState } from "./useSite";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 afterEach(cleanup);
 

@@ -29,6 +29,21 @@ describe("splash markup in index.html", () => {
     expect(logo?.getAttribute("alt")).toBe("");
   });
 
+  test("the page starts in English, the app's default language", () => {
+    expect(doc.documentElement.getAttribute("lang")).toBe("en");
+    expect(doc.getElementById("splash")?.hasAttribute("lang")).toBe(false);
+  });
+
+  test("an inline script switches the splash to Spanish when the URL has lang=es", () => {
+    const script = Array.from(doc.querySelectorAll("script:not([src])"))
+      .map((tag) => tag.textContent ?? "")
+      .join("\n");
+
+    expect(script).toContain('get("lang") !== "es"');
+    expect(script).toContain("Cargando AgroAyuda…");
+    expect(script).toContain("Logo generado con IA");
+  });
+
   test("the loading label is in English", () => {
     expect(doc.querySelector(".splash-label")?.textContent?.trim()).toBe("Loading AgroAyuda…");
   });

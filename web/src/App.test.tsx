@@ -9,6 +9,9 @@ import { chiquimulaSite } from "./features/map/siteFixture";
 import type { RisksScreenProps } from "./features/risks/RisksScreen";
 import { LAYOUT_CSS } from "./ui/layout";
 
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
+
 // Lets a test make a screen throw while it renders, to exercise the boundary.
 const crash = vi.hoisted(() => ({ map: false, risks: false }));
 
@@ -109,7 +112,13 @@ const networkError: SiteResult = { ok: false, error: "network" };
 
 const POINT = "lat=14.7&lon=-89.5";
 
-const goTo = (search: string) => window.history.replaceState(null, "", `/${search}`);
+// Spanish unless the search names a language (English is the app default, see beforeEach).
+const goTo = (search: string) =>
+  window.history.replaceState(
+    null,
+    "",
+    `/${search.includes("lang=") ? search : `?lang=es${search.replace("?", "&")}`}`,
+  );
 const params = () => new URLSearchParams(window.location.search);
 const renderApp = () => render(<App />);
 const mapSite = () => screen.getByTestId("map-screen").getAttribute("data-site");
@@ -380,32 +389,32 @@ describe("App error boundary", () => {
 
 describe("App language", () => {
   afterEach(() => {
-    document.documentElement.lang = "es-GT";
+    document.documentElement.lang = "en";
   });
 
-  test("lang=en makes the page English; no lang keeps it Spanish (Guatemala)", () => {
-    goTo("?lang=en");
-    renderApp();
-
-    expect(document.documentElement.lang).toBe("en");
-
-    cleanup();
-    goTo("");
+  test("lang=es makes the page Spanish (Guatemala); no lang keeps the English default", () => {
+    goTo("?lang=es");
     renderApp();
 
     expect(document.documentElement.lang).toBe("es-GT");
+
+    cleanup();
+    window.history.replaceState(null, "", "/");
+    renderApp();
+
+    expect(document.documentElement.lang).toBe("en");
   });
 
-  test("English is kept when going to the risks screen and back, also with browser back", () => {
-    goTo(`?${POINT}&lang=en`);
+  test("Spanish is kept when going to the risks screen and back, also with browser back", () => {
+    goTo(`?${POINT}&lang=es`);
     renderApp();
 
     fireEvent.click(screen.getByText("view-risks"));
     fireEvent.click(screen.getByText("risks-close"));
 
     expect(screen.getByTestId("map-screen")).toBeTruthy();
-    expect(params().get("lang")).toBe("en");
-    expect(document.documentElement.lang).toBe("en");
+    expect(params().get("lang")).toBe("es");
+    expect(document.documentElement.lang).toBe("es-GT");
 
     fireEvent.click(screen.getByText("view-risks"));
     act(() => {
@@ -414,8 +423,8 @@ describe("App language", () => {
 
     return waitFor(() => {
       expect(screen.getByTestId("map-screen")).toBeTruthy();
-      expect(params().get("lang")).toBe("en");
-      expect(document.documentElement.lang).toBe("en");
+      expect(params().get("lang")).toBe("es");
+      expect(document.documentElement.lang).toBe("es-GT");
     });
   });
 });

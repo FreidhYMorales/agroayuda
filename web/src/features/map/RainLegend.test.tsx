@@ -1,7 +1,10 @@
 // web/src/features/map/RainLegend.test.tsx
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { RainLegend } from "./RainLegend";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 afterEach(cleanup);
 

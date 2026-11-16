@@ -1,7 +1,10 @@
 // web/src/features/form/PriorityInfo.test.tsx
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test } from "vitest";
 import { PriorityInfo } from "./PriorityInfo";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 afterEach(() => {
   cleanup();

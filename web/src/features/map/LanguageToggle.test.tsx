@@ -8,34 +8,34 @@ afterEach(() => {
   window.history.replaceState(null, "", "/");
 });
 
-test("is one group of two languages, named in both languages, Spanish by default", () => {
+test("is one group of two languages, named in both languages, English by default", () => {
   render(<LanguageToggle />);
 
   const group = screen.getByRole("radiogroup", { name: "Idioma / Language" });
   expect(group).toBeTruthy();
-  expect(screen.getByRole("radio", { name: "Español" })).toHaveProperty("checked", true);
-  expect(screen.getByRole("radio", { name: "English" })).toHaveProperty("checked", false);
+  expect(screen.getByRole("radio", { name: "English" })).toHaveProperty("checked", true);
+  expect(screen.getByRole("radio", { name: "Español" })).toHaveProperty("checked", false);
   expect(screen.getByText("ES")).toBeTruthy();
   expect(screen.getByText("EN")).toBeTruthy();
 });
 
-test("picking English puts lang=en in the URL; picking Español takes it out", () => {
+test("picking Español puts lang=es in the URL; picking English takes it out", () => {
   render(<LanguageToggle />);
 
-  fireEvent.click(screen.getByRole("radio", { name: "English" }));
-  expect(new URLSearchParams(window.location.search).get("lang")).toBe("en");
-  expect(screen.getByRole("radio", { name: "English" })).toHaveProperty("checked", true);
-
   fireEvent.click(screen.getByRole("radio", { name: "Español" }));
-  expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
+  expect(new URLSearchParams(window.location.search).get("lang")).toBe("es");
   expect(screen.getByRole("radio", { name: "Español" })).toHaveProperty("checked", true);
+
+  fireEvent.click(screen.getByRole("radio", { name: "English" }));
+  expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
+  expect(screen.getByRole("radio", { name: "English" })).toHaveProperty("checked", true);
 });
 
 test("the sliding thumb follows the current language", () => {
-  window.history.replaceState(null, "", "/?lang=en");
+  window.history.replaceState(null, "", "/?lang=es");
   const { container } = render(<LanguageToggle />);
 
-  expect(container.querySelector(".ag-lang")?.getAttribute("data-lang")).toBe("en");
+  expect(container.querySelector(".ag-lang")?.getAttribute("data-lang")).toBe("es");
 });
 
 test("each side is a touch target of at least 44 px", () => {

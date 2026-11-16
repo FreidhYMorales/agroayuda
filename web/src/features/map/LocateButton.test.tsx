@@ -1,10 +1,13 @@
 // web/src/features/map/LocateButton.test.tsx
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { buttonStyle } from "../../ui/buttonStyles";
 
 import { expectButtonLook } from "../../ui/expectButtonLook";
 import { LocateButton } from "./LocateButton";
+
+// English is the app default; these tests check the Spanish texts, so they start in Spanish.
+beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
 
 afterEach(cleanup);
 

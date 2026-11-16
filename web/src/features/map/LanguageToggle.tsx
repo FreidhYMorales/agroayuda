@@ -87,8 +87,8 @@ export function LanguageToggle() {
               name="ag-lang"
               aria-label={option.name}
               checked={active}
-              // Spanish is the default, so it is kept out of the URL.
-              onChange={() => setState({ lang: option.lang === "en" ? "en" : undefined })}
+              // English is the default, so it is kept out of the URL.
+              onChange={() => setState({ lang: option.lang === "es" ? "es" : undefined })}
               style={inputStyle}
             />
             <span style={{ color: active ? "#ffffff" : COLORS.text }}>{option.short}</span>

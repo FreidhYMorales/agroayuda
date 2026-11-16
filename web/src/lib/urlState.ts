@@ -14,7 +14,7 @@ export interface AppState {
   postrera?: CropId;
   priorities: Priorities;
   irrigation?: boolean;
-  lang?: "en"; // Spanish is the default, so only English is kept in the URL.
+  lang?: "es"; // English is the default (the judges grade in English), so only Spanish is kept in the URL.
 }
 
 const STEPS: readonly Step[] = ["map", "risks", "form", "results"];
@@ -67,7 +67,7 @@ export function readState(search: string): AppState {
   if (irr === "1") state.irrigation = true;
   else if (irr === "0") state.irrigation = false;
 
-  if (params.get("lang") === "en") state.lang = "en";
+  if (params.get("lang") === "es") state.lang = "es";
 
   return state;
 }
@@ -133,8 +133,8 @@ export function useAppState(): [AppState, (patch: Partial<AppState>) => void] {
   return [state, update];
 }
 
-// The current language, Spanish unless the URL says lang=en.
+// The current language, English unless the URL says lang=es.
 export function useLang(): Lang {
   const [state] = useAppState();
-  return state.lang ?? "es";
+  return state.lang ?? "en";
 }

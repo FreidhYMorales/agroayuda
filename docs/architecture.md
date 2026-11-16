@@ -97,7 +97,7 @@ Integration checkpoints: contracts frozen (H0-H2) → each module green against 
 ## Conventions
 
 - Naming: Python `snake_case` modules and functions, `PascalCase` classes; TS `camelCase` functions, `PascalCase` components in `PascalCase.tsx`; JSON fields `snake_case` (match Pydantic).
-- Code, comments and docs: English. UI copy: Spanish (Guatemala).
+- Code, comments and docs: English. UI copy: English by default (for the judges) and Spanish (Guatemala) with `?lang=es`.
 - Formatter / linter: Python `ruff format` + `ruff check` (config in root `pyproject.toml`); TS `biome` (`web/biome.json`).
 - Typecheck: `mypy --strict` (Python), `tsc --noEmit` (TS).
 - Commits: conventional commits with module scope (`feat(engine): add legume rotation rule`), no AI attribution.
@@ -142,7 +142,7 @@ Strict TDD: write the failing test first. Tests never hit the network; use fixtu
 
 ## Accessibility & i18n
 
-- UI language: Spanish (Guatemala) with local vocabulary (primera, postrera, canícula, milpa, maicillo, ayote). Code language: English. No i18n framework (one language).
+- UI language: English by default, Spanish (Guatemala) with local vocabulary (primera, postrera, canícula, milpa, maicillo, ayote) through the ES/EN toggle, kept in the URL as `?lang=es`. The splash follows the same rule from an inline script in `web/index.html`. Code language: English. No i18n framework (copy modules per screen).
 - Mobile-first layout, touch targets at least 44 px, readable on a low-end phone.
 - Risk and scores always use color plus icon or text, never color alone; WCAG AA contrast.
 - Form inputs have labels; map interactions have a non-map alternative (list of demo places; municipio search is SHOULD).
