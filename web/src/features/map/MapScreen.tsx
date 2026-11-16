@@ -1,10 +1,11 @@
 // web/src/features/map/MapScreen.tsx
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { isAbortError } from "../../api/client";
 import type { DemoPoint } from "../../contracts/contracts";
 import { LanguageToggle } from "./LanguageToggle";
 import { LocateButton } from "./LocateButton";
 import { SheetHandle } from "./SheetHandle";
+import { clampSheetHeight } from "./sheetSize";
 import { loadMapData, type MapData } from "./mapData";
 import { MapStates } from "./MapStates";
 import { MapView } from "./MapView";
@@ -66,22 +67,6 @@ const headerRowStyle: CSSProperties = {
   alignItems: "center",
   gap: 8,
 };
-const mapOverlayStyle: CSSProperties = {
-  position: "absolute",
-  // Top corner: the bottom one belongs to the map attribution.
-  left: 8,
-  top: 8,
-  width: "min(60%, 240px)",
-  boxSizing: "border-box",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "stretch",
-  gap: 4,
-  padding: 8,
-  borderRadius: 8,
-  background: "rgba(255, 255, 255, 0.9)",
-  boxShadow: "0 1px 4px rgba(0, 0, 0, 0.2)",
-};
 // Height, corners and shadow change with the view, so they live in .ag-map-sheet.
 const sheetStyle: CSSProperties = {
   overflowY: "auto",
@@ -104,6 +89,12 @@ export function MapScreen({
   const [listOpen, setListOpen] = useState(false);
   // Phone sheet at half (default) or most of the screen; ignored in the side layout.
   const [expanded, setExpanded] = useState(false);
+  // Height in px after a drag on the handle (free sheet); null = the fixed sizes above.
+  const [sheetHeight, setSheetHeight] = useState<number | null>(null);
+  const screenRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const dragStart = useRef({ sheet: 0, available: 0 });
 
   // A point found by geolocation never comes from the places list.
   const geolocation = useGeolocation((point) =>
@@ -154,8 +145,8 @@ export function MapScreen({
   const firstCell = mapData.status === "ready" ? mapData.data.rain.features[0] : undefined;
 
   return (
-    <section className="ag-map-screen" aria-label={copy.defaultTitle}>
-      <div className="ag-map-header" style={headerStyle}>
+    <section ref={screenRef} className="ag-map-screen" aria-label={copy.defaultTitle}>
+      <div ref={headerRef} className="ag-map-header" style={headerStyle}>
         <div style={headerRowStyle}>
           <div style={{ flex: "1 1 0" }}>
             <LocateButton locating={geolocation.locating} onLocate={geolocation.locate} />
@@ -174,7 +165,7 @@ export function MapScreen({
             onSelectPoint={selectFromMap}
             onError={() => setMapError(true)}
           />
-          <div style={mapOverlayStyle}>
+          <div className="ag-map-legend">
             <RainLegend />
             {firstCell !== undefined && <RainSourceLine properties={firstCell.properties} />}
           </div>
@@ -182,13 +173,42 @@ export function MapScreen({
       )}
 
       <div
+        ref={sheetRef}
         id="map-sheet"
         className="ag-map-sheet"
-        style={sheetStyle}
+        style={
+          sheetHeight === null
+            ? sheetStyle
+            : ({ ...sheetStyle, "--ag-sheet-h": `${sheetHeight}px` } as CSSProperties)
+        }
         data-testid="map-sheet"
         data-expanded={expanded}
+        data-free={sheetHeight === null ? undefined : "true"}
       >
-        <SheetHandle expanded={expanded} controls="map-sheet" onChange={setExpanded} />
+        <SheetHandle
+          expanded={expanded}
+          controls="map-sheet"
+          onChange={(next) => {
+            // A tap goes back to the fixed sizes.
+            setSheetHeight(null);
+            setExpanded(next);
+          }}
+          onDragStart={() => {
+            const height = (element: HTMLElement | null) =>
+              element?.getBoundingClientRect().height ?? 0;
+            dragStart.current = {
+              sheet: height(sheetRef.current),
+              available: height(screenRef.current) - height(headerRef.current),
+            };
+          }}
+          onDrag={(dy) => {
+            const { sheet, available } = dragStart.current;
+            const next = clampSheetHeight(sheet - dy, available);
+            setSheetHeight(next);
+            // Past the middle the next tap should shrink it, before it should grow it.
+            setExpanded(next > available / 2);
+          }}
+        />
 
         <MapStates
           site={site}

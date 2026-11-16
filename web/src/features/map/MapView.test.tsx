@@ -256,6 +256,16 @@ describe("MapView setup", () => {
     expect(mocks.api.addControl).toHaveBeenCalledTimes(1);
   });
 
+  // A minimum height made the map taller than its area when the sheet grew, so the
+  // attribution ("i" and its text) ended up on top of the sheet.
+  test("the map container fills its area and never grows past it", () => {
+    const { container } = renderMap();
+    const box = container.firstElementChild as HTMLElement;
+
+    expect(box.style.height).toBe("100%");
+    expect(box.style.minHeight).toBe("");
+  });
+
   test("removes the map when the component unmounts", () => {
     const { unmount } = renderMap();
 

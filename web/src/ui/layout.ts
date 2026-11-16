@@ -16,6 +16,16 @@ export const BREAKPOINTS = {
   desktop: 1200,
   /** Phones in landscape: short screens get the map side layout too. */
   shortHeight: 500,
+  /** Small phones (about 640 px tall or less): the map legend gets smaller. */
+  compactHeight: 700,
+} as const;
+
+/** Phone map sheet that the handle drags freely (MapScreen, features/map/sheetSize.ts). */
+export const MAP_SHEET = {
+  /** The handle plus one line of text. */
+  minHeight: 96,
+  /** Map strip that always stays visible above the sheet: legend plus attribution. */
+  mapMinHeight: 160,
 } as const;
 
 /** Max width of text screens (risks, form, comparison, detail) per view. */
@@ -31,6 +41,8 @@ export const MEDIA = {
   tablet: `(min-width: ${BREAKPOINTS.tablet}px)`,
   /** Desktop view of every screen. */
   desktop: `(min-width: ${BREAKPOINTS.desktop}px)`,
+  /** Short screens (small phones): a smaller map legend. */
+  short: `(max-height: ${BREAKPOINTS.compactHeight}px)`,
 } as const;
 
 // Shadow towards the map when the panel sits on its right; clipped so it only
@@ -46,13 +58,20 @@ img,svg,canvas{max-width:100%}
 padding-bottom:max(16px,env(safe-area-inset-bottom))}
 .ag-map-screen{display:flex;flex-direction:column;height:100dvh}
 .ag-map-header{flex:none}
-.ag-map-area{position:relative;flex:1 1 auto;min-height:200px}
-.ag-map-sheet{flex:0 1 auto;max-height:50dvh;overflow-y:auto;display:flex;flex-direction:column;
+.ag-map-area{position:relative;flex:1 1 auto;min-height:${MAP_SHEET.mapMinHeight}px}
+/* Rain legend and NASA source on the map's top corner: the bottom one belongs to the attribution. */
+.ag-map-legend{position:absolute;left:8px;top:8px;width:min(60%,240px);display:flex;flex-direction:column;
+align-items:stretch;gap:4px;padding:8px;border-radius:8px;background:rgba(255,255,255,.9);
+box-shadow:0 1px 4px rgba(0,0,0,.2)}
+/* position and z-index: the sheet paints above the map, so map controls never cover it. */
+.ag-map-sheet{position:relative;z-index:1;flex:0 1 auto;max-height:50dvh;overflow-y:auto;display:flex;flex-direction:column;
 gap:12px;padding:8px 12px 16px;padding-bottom:max(16px,env(safe-area-inset-bottom));
 border-radius:16px 16px 0 0;background-color:${COLORS.background};background-image:${LEAF_PATTERN};box-shadow:0 -2px 8px rgba(0,0,0,.15)}
 /* Phone: the handle (SheetHandle) switches the sheet between half and most of the screen,
    and stays on top while the sheet content scrolls. */
 .ag-map-sheet[data-expanded="true"]{max-height:85dvh}
+/* Dragged by the handle: the height the finger left it at (MapScreen sets --ag-sheet-h). */
+.ag-map-sheet[data-free="true"]{height:var(--ag-sheet-h);max-height:none}
 .ag-map-handle{display:flex;position:sticky;top:-8px;z-index:1}
 /* Comparison table: long English words wrap; the wrapper only catches what still does not fit. */
 .ag-table th,.ag-table td,.ag-note{overflow-wrap:anywhere;hyphens:auto}
@@ -62,8 +81,12 @@ border-radius:16px 16px 0 0;background-color:${COLORS.background};background-ima
 grid-template-rows:auto minmax(0,1fr)}
 .ag-map-header{grid-column:2;grid-row:1;${SIDE_SHADOW}}
 .ag-map-area{grid-column:1;grid-row:1 / span 2;min-width:0;min-height:0}
-.ag-map-sheet,.ag-map-sheet[data-expanded="true"]{grid-column:2;grid-row:2;max-height:none;height:100%;border-radius:0;${SIDE_SHADOW}}
+.ag-map-sheet,.ag-map-sheet[data-expanded="true"],.ag-map-sheet[data-free="true"]{grid-column:2;grid-row:2;max-height:none;height:100%;border-radius:0;${SIDE_SHADOW}}
 .ag-map-handle{display:none}
+}
+@media ${MEDIA.short}{
+.ag-map-legend{padding:4px;gap:0;width:min(55%,220px);font-size:15px}
+.ag-map-sheet{gap:8px}
 }
 @media ${MEDIA.tablet}{
 .ag-screen{max-width:${CONTENT_MAX_WIDTH.tablet}px;padding-inline:24px}

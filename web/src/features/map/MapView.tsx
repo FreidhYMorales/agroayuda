@@ -46,7 +46,9 @@ const SELECTED_SOURCE = "selected-cell";
 const INITIAL_CENTER: [number, number] = [-89.6, 14.9];
 const INITIAL_ZOOM = 7;
 
-const containerStyle: CSSProperties = { width: "100%", height: "100%", minHeight: 240 };
+// No minimum height: the map area (.ag-map-area) sets it. A larger map than its area
+// slid under the sheet and put the attribution on top of it.
+const containerStyle: CSSProperties = { width: "100%", height: "100%" };
 
 interface OverlayData {
   rain: RainCollection;
