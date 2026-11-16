@@ -3,7 +3,7 @@
 import type { Lang } from "../../lib/urlState";
 
 const ES = {
-  back: "← Su parcela",
+  back: "← Mapa",
   primeraTitle: "¿Qué siembra en primera?",
   postreraTitle: "¿Y en postrera?",
   prioritiesTitle: "¿Qué es lo más importante para usted?",
@@ -25,7 +25,7 @@ const ES = {
 
 // Primera and postrera are local season names, so English keeps them in brackets.
 const EN: typeof ES = {
-  back: "← Your plot",
+  back: "← Map",
   primeraTitle: "What do you plant in the first season (primera)?",
   postreraTitle: "And in the second season (postrera)?",
   prioritiesTitle: "What matters most to you?",

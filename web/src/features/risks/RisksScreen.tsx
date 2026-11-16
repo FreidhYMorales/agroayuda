@@ -16,7 +16,7 @@ export interface RisksScreenProps {
   view: RisksView;
   /** Name of the place picked from the list; absent for a tapped point. */
   placeName?: string;
-  /** "← Su parcela": back to the map. */
+  /** "← Mapa": back to the map. */
   onClose: () => void;
   onRetry: () => void;
   onContinue: () => void;

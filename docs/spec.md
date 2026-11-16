@@ -179,7 +179,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ← Su parcela             │
+│ ← Mapa                   │
 │ Riesgos en Chiquimula    │
 │──────────────────────────│
 │ ⚠ Suelo sin cultivo    › │
@@ -212,7 +212,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ← Su parcela             │
+│ ← Mapa                   │
 │ (arriba: primera y       │
 │  postrera, íconos)       │
 │ ¿Qué es lo más           │

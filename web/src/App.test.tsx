@@ -60,7 +60,7 @@ vi.mock("./features/map/useDemoPlaces", () => {
 
 // Package 04 owns the form and results flow; here we only check that App shows
 // it. Like the real flow, the stub changes the step through its own
-// useAppState, as "← Su parcela" does in the form.
+// useAppState, as "← Mapa" does in the form.
 vi.mock("./features/comparison/ResultsFlow", async () => {
   const { useAppState } = await import("./lib/urlState");
   return {

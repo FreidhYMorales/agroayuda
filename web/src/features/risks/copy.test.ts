@@ -5,7 +5,7 @@ test("English risks texts", () => {
   expect(risksCopy("en")).toEqual({
     header: "Risks in this area",
     headerAt: expect.any(Function),
-    back: "← Your plot",
+    back: "← Map",
     noStrongRisk: "We found no strong risks in this area",
     continue: "See recommendations →",
     retry: "Try again",
@@ -16,7 +16,7 @@ test("Spanish risks texts", () => {
   expect(risksCopy("es")).toEqual({
     header: "Riesgos de esta zona",
     headerAt: expect.any(Function),
-    back: "← Su parcela",
+    back: "← Mapa",
     noStrongRisk: "No encontramos riesgos fuertes en esta zona",
     continue: "Ver recomendaciones →",
     retry: "Intentar de nuevo",

@@ -33,7 +33,7 @@ function block(title: string): HTMLElement {
 test("shows the three blocks with the exact titles", async () => {
   setup();
 
-  expect(screen.getByRole("button", { name: "← Su parcela" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "← Mapa" })).toBeInTheDocument();
   expect(await screen.findByRole("heading", { name: "¿Qué siembra en primera?" })).toBeVisible();
   expect(screen.getByRole("heading", { name: "¿Y en postrera?" })).toBeVisible();
   expect(
@@ -173,7 +173,7 @@ test("the chosen crop is marked without relying on color", async () => {
 test("back goes to the map step", () => {
   const { onBack } = setup();
 
-  fireEvent.click(screen.getByRole("button", { name: "← Su parcela" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
   expect(onBack).toHaveBeenCalledTimes(1);
 });
@@ -234,7 +234,7 @@ describe("FormScreen in English", () => {
   test("the form texts are in English", async () => {
     setup();
 
-    expect(screen.getByRole("button", { name: "← Your plot" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "← Map" })).toBeInTheDocument();
     expect(
       await screen.findByRole("heading", {
         name: "What do you plant in the first season (primera)?",

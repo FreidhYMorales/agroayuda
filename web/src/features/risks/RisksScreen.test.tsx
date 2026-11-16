@@ -148,10 +148,10 @@ describe("RisksScreen ready", () => {
     expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
-  test("← Su parcela calls onClose", () => {
+  test("← Mapa calls onClose", () => {
     const { onClose } = renderReady([makeRisk()]);
 
-    fireEvent.click(screen.getByRole("button", { name: "← Su parcela" }));
+    fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -183,7 +183,7 @@ describe("RisksScreen loading and error", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "← Su parcela" }));
+    fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -246,7 +246,7 @@ describe("RisksScreen in English", () => {
     renderReady([bareField(), makeRisk({ value: 0.4 })]);
 
     expect(screen.getByRole("heading", { name: "Risks in this area" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "← Your plot" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "← Map" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "See recommendations →" })).toBeTruthy();
     expect(screen.getByText("Strong dry spell (canícula)")).toBeTruthy();
     expect(screen.getByText("mid Jul-Aug")).toBeTruthy();
@@ -319,7 +319,7 @@ describe("RisksScreen place name", () => {
   test("the back link comes before the title (reading and tab order)", () => {
     renderReady([makeRisk()]);
 
-    const back = screen.getByRole("button", { name: "← Su parcela" });
+    const back = screen.getByRole("button", { name: "← Mapa" });
     const title = screen.getByRole("heading", { name: "Riesgos de esta zona" });
     expect(back.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
   });

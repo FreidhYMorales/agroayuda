@@ -93,7 +93,7 @@ describe("useAppState", () => {
   });
 
   // App and ResultsFlow each call useAppState. pushState fires no event, so a
-  // patch from one copy left the other on the old step: "← Su parcela" in the
+  // patch from one copy left the other on the old step: "← Mapa" in the
   // form did not go back to the map.
   test("a patch from one copy of the hook updates every other copy", () => {
     const app = renderHook(() => useAppState());

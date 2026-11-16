@@ -4,7 +4,7 @@ import { formCopy } from "./copy";
 test("English form texts", () => {
   const copy = formCopy("en");
 
-  expect(copy.back).toBe("← Your plot");
+  expect(copy.back).toBe("← Map");
   expect(copy.primeraTitle).toBe("What do you plant in the first season (primera)?");
   expect(copy.postreraTitle).toBe("And in the second season (postrera)?");
   expect(copy.prioritiesTitle).toBe("What matters most to you?");
@@ -25,7 +25,7 @@ test("English form texts", () => {
 test("Spanish form texts stay as they were", () => {
   const copy = formCopy("es");
 
-  expect(copy.back).toBe("← Su parcela");
+  expect(copy.back).toBe("← Mapa");
   expect(copy.primeraTitle).toBe("¿Qué siembra en primera?");
   expect(copy.postreraTitle).toBe("¿Y en postrera?");
   expect(copy.prioritiesTitle).toBe("¿Qué es lo más importante para usted?");
