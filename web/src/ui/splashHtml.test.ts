@@ -29,8 +29,12 @@ describe("splash markup in index.html", () => {
     expect(logo?.getAttribute("alt")).toBe("");
   });
 
-  test("the AI-generated mark is visible in Spanish by default", () => {
-    expect(doc.querySelector(".splash-ai")?.textContent?.trim()).toBe("Logo generado con IA");
+  test("the loading label is in English", () => {
+    expect(doc.querySelector(".splash-label")?.textContent?.trim()).toBe("Loading AgroAyuda…");
+  });
+
+  test("the AI-generated mark is visible in English", () => {
+    expect(doc.querySelector(".splash-ai")?.textContent?.trim()).toBe("AI-generated logo");
   });
 
   test("the inline style handles reduced motion and has the safety timeout", () => {

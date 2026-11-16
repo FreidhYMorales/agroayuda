@@ -117,21 +117,11 @@
     </style>
   </head>
   <body>
-    <div id="splash" role="status" aria-live="polite">
+    <div id="splash" role="status" aria-live="polite" lang="en">
       <img class="splash-logo" src="/logo.svg" alt="" width="240" height="197" fetchpriority="high" />
-      <p class="splash-label">Cargando AgroAyuda…</p>
-      <p class="splash-ai">Logo generado con IA</p>
+      <p class="splash-label">Loading AgroAyuda…</p>
+      <p class="splash-ai">AI-generated logo</p>
     </div>
-    <script>
-      // Runs before any module: English texts when the URL has ?lang=en (same rule as urlState.ts).
-      (() => {
-        if (new URLSearchParams(location.search).get("lang") !== "en") return;
-        const label = document.querySelector(".splash-label");
-        const ai = document.querySelector(".splash-ai");
-        if (label) label.textContent = "Loading AgroAyuda…";
-        if (ai) ai.textContent = "AI-generated logo";
-      })();
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
