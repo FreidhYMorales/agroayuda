@@ -3,6 +3,7 @@ import type { CropCatalogEntry, CropId, Priorities } from "../../contracts/contr
 import { useLang } from "../../lib/urlState";
 import { cropLabel } from "../comparison/cropLabels";
 import { Page, StepTitle, visuallyHidden } from "../comparison/theme";
+import { PriorityInfo } from "./PriorityInfo";
 import { formCopy } from "./copy";
 
 /** Same field names as `AppState` (web/src/lib/urlState.ts), so `onChange` can be its `patch`. */
@@ -250,7 +251,13 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
 
         <div>
           <section className="ag-card">
-            <h2 ref={prioritiesRef}>{copy.prioritiesTitle}</h2>
+            {/* Title on the left, ⓘ on the right: it explains what each priority means. */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <h2 ref={prioritiesRef} style={{ flex: "1 1 0" }}>
+                {copy.prioritiesTitle}
+              </h2>
+              <PriorityInfo />
+            </div>
             {/* Says what the numbers mean; each row of circles points to it for screen readers. */}
             <p id={SCALE_HINT_ID} className="ag-muted" style={{ marginTop: 0 }}>
               {copy.scaleHint}
