@@ -43,8 +43,7 @@ The app itself does not call any AI service: every recommendation comes from fix
 | Asset | SI use | How it is marked |
 |---|---|---|
 | Demo video voice-over | English AI-generated voice (ElevenLabs) from the team's script | Stated in the video description and in the video file metadata |
-| AgroAyuda logo | Generated with ChatGPT and Gemini from the team's prompts | Visible "AI-generated" watermark |
-| Team logo (splash screen) | Generated with ChatGPT (OpenAI) from the team's idea; vectorized with VTracer | Visible text "Logo generado con IA" / "AI-generated logo" on the splash screen |
+| AgroAyuda logo (also on the splash screen) | Generated with ChatGPT and Gemini from the team's prompts; vectorized with VTracer | Visible "AI-generated" watermark; on the splash screen, visible text "Logo generado con IA" / "AI-generated logo" |
 | Other images and video frames | None: made by the team | Not needed |
 | NASA branding | None | No NASA logos, flags or mission identifiers; text "Datos: NASA POWER" only |
 
