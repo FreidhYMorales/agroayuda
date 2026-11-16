@@ -1,7 +1,14 @@
 // web/src/ui/layout.test.ts
 import { describe, expect, test } from "vitest";
 import { THEME_CSS } from "../features/comparison/theme";
-import { BREAKPOINTS, CONTENT_MAX_WIDTH, LAYOUT_CSS, MEDIA, SHEET_SIDE_WIDTH } from "./layout";
+import {
+  BREAKPOINTS,
+  CONTENT_MAX_WIDTH,
+  LAYOUT_CSS,
+  MAP_SHEET,
+  MEDIA,
+  SHEET_SIDE_WIDTH,
+} from "./layout";
 
 // jsdom does not lay out pages, so these tests read the CSS rules themselves.
 
@@ -117,9 +124,39 @@ describe("map sheet expand (phone)", () => {
     expect(
       rule(
         mediaBody(LAYOUT_CSS, MEDIA.mapSide) ?? "",
-        '.ag-map-sheet,.ag-map-sheet[data-expanded="true"]',
+        '.ag-map-sheet,.ag-map-sheet[data-expanded="true"],.ag-map-sheet[data-free="true"]',
       ),
     ).toContain("max-height:none");
+  });
+
+  test("a dragged sheet takes the height the finger left it at", () => {
+    expect(rule(outsideMedia(LAYOUT_CSS), '.ag-map-sheet[data-free="true"]')).toContain(
+      "height:var(--ag-sheet-h)",
+    );
+  });
+
+  test("in the side layout a dragged sheet is full height too", () => {
+    const side = mediaBody(LAYOUT_CSS, MEDIA.mapSide) ?? "";
+    expect(side).toMatch(/\.ag-map-sheet\[data-free="true"\][^{]*\{[^}]*height:100%/);
+  });
+
+  test("the sheet paints above the map, so map controls never cover it", () => {
+    const sheet = rule(outsideMedia(LAYOUT_CSS), ".ag-map-sheet") ?? "";
+    expect(sheet).toContain("position:relative");
+    expect(sheet).toContain("z-index:1");
+  });
+
+  test("the map area keeps a visible strip of MAP_SHEET.mapMinHeight", () => {
+    expect(rule(outsideMedia(LAYOUT_CSS), ".ag-map-area")).toContain(
+      `min-height:${MAP_SHEET.mapMinHeight}px`,
+    );
+  });
+
+  test("on short phones the legend box is smaller, so more map shows", () => {
+    expect(rule(outsideMedia(LAYOUT_CSS), ".ag-map-legend")).toContain("position:absolute");
+    expect(rule(mediaBody(LAYOUT_CSS, MEDIA.short) ?? "", ".ag-map-legend")).toContain(
+      "padding:4px",
+    );
   });
 
   test("the handle stays on top while the sheet content scrolls", () => {

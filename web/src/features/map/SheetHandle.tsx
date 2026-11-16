@@ -4,19 +4,23 @@ import { useLang } from "../../lib/urlState";
 import { COLORS } from "../../ui/colors";
 import { mapCopy } from "./copy";
 
-// The bar on top of the phone sheet. Two sizes only (half and most of the
-// screen): a tap or a swipe switches between them, and a keyboard or screen
-// reader uses it as a plain button. .ag-map-handle hides it in the side layout,
-// where the panel is already full height.
+// The bar on top of the phone sheet. Dragging it moves the sheet freely (MapScreen
+// turns the finger travel into a height); a tap, a keyboard or a screen reader use
+// it as a plain button that switches between half and most of the screen.
+// .ag-map-handle hides it in the side layout, where the panel is already full height.
 
-/** Finger travel, in px, that counts as a swipe instead of a tap. */
-export const SWIPE_MIN_PX = 30;
+/** Finger travel, in px, that counts as a drag instead of a tap. */
+export const DRAG_MIN_PX = 8;
 
 export interface SheetHandleProps {
   expanded: boolean;
   /** id of the sheet it resizes (aria-controls). */
   controls: string;
   onChange: (expanded: boolean) => void;
+  /** A drag began: MapScreen keeps the sheet height it starts from. */
+  onDragStart: () => void;
+  /** Finger travel since the drag began, in px: negative is up. */
+  onDrag: (dy: number) => void;
 }
 
 // Touch target of at least 44 px around the 40 x 4 px bar. touch-action:none
@@ -42,11 +46,17 @@ const barStyle: CSSProperties = {
   background: COLORS.border,
 };
 
-export function SheetHandle({ expanded, controls, onChange }: SheetHandleProps) {
+export function SheetHandle({
+  expanded,
+  controls,
+  onChange,
+  onDragStart,
+  onDrag,
+}: SheetHandleProps) {
   const copy = mapCopy(useLang());
   const startY = useRef<number | null>(null);
-  // A swipe already changed the size; the click the browser fires after it must not undo it.
-  const swiped = useRef(false);
+  // A drag already changed the size; the click the browser fires after it must not undo it.
+  const dragged = useRef(false);
 
   return (
     <button
@@ -58,19 +68,29 @@ export function SheetHandle({ expanded, controls, onChange }: SheetHandleProps) 
       aria-controls={controls}
       onPointerDown={(event) => {
         startY.current = event.clientY;
-        swiped.current = false;
+        dragged.current = false;
+        // Keep getting the moves when the finger leaves the bar (jsdom has no capture).
+        event.currentTarget.setPointerCapture?.(event.pointerId);
       }}
-      onPointerUp={(event) => {
+      onPointerMove={(event) => {
         if (startY.current === null) return;
         const dy = event.clientY - startY.current;
+        if (!dragged.current) {
+          if (Math.abs(dy) < DRAG_MIN_PX) return;
+          dragged.current = true;
+          onDragStart();
+        }
+        onDrag(dy);
+      }}
+      onPointerUp={() => {
         startY.current = null;
-        if (Math.abs(dy) < SWIPE_MIN_PX) return;
-        swiped.current = true;
-        onChange(dy < 0);
+      }}
+      onPointerCancel={() => {
+        startY.current = null;
       }}
       onClick={() => {
-        if (swiped.current) {
-          swiped.current = false;
+        if (dragged.current) {
+          dragged.current = false;
           return;
         }
         onChange(!expanded);

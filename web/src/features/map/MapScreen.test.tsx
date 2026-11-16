@@ -8,6 +8,7 @@ import type { RainCollection } from "./rainLayer";
 import { chiquimulaPlace, chiquimulaSite, demoPlaces, outsidePlace } from "./siteFixture";
 import type { SiteState } from "./useSite";
 import { COLORS } from "../../ui/colors";
+import { MAP_SHEET } from "../../ui/layout";
 
 // English is the app default; these tests check the Spanish texts, so they start in Spanish.
 beforeEach(() => window.history.replaceState(null, "", "/?lang=es"));
@@ -299,6 +300,43 @@ describe("MapScreen sheet expand (phone)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Mostrar menos" }));
     expect(sheet.getAttribute("data-expanded")).toBe("false");
+  });
+
+  test("dragging the handle sizes the sheet freely, and a tap goes back to the fixed sizes", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+    const sheet = screen.getByTestId("map-sheet");
+    const header = document.querySelector(".ag-map-header") as HTMLElement;
+    const section = document.querySelector(".ag-map-screen") as HTMLElement;
+    // jsdom does no layout: give the screen, header and sheet a phone size.
+    const box = (height: number) => ({ height }) as DOMRect;
+    vi.spyOn(section, "getBoundingClientRect").mockReturnValue(box(640));
+    vi.spyOn(header, "getBoundingClientRect").mockReturnValue(box(72));
+    vi.spyOn(sheet, "getBoundingClientRect").mockReturnValue(box(300));
+    const handle = screen.getByRole("button", { name: "Mostrar más" });
+
+    fireEvent.pointerDown(handle, { clientY: 400 });
+    fireEvent.pointerMove(handle, { clientY: 300 });
+    fireEvent.pointerUp(handle, { clientY: 300 });
+
+    expect(sheet.getAttribute("data-free")).toBe("true");
+    expect(sheet.style.getPropertyValue("--ag-sheet-h")).toBe("400px");
+
+    fireEvent.pointerDown(handle, { clientY: 300 });
+    fireEvent.pointerMove(handle, { clientY: 0 });
+    fireEvent.pointerUp(handle, { clientY: 0 });
+
+    // Capped so a strip of map stays visible: 640 - 72 - MAP_SHEET.mapMinHeight.
+    expect(sheet.style.getPropertyValue("--ag-sheet-h")).toBe(
+      `${640 - 72 - MAP_SHEET.mapMinHeight}px`,
+    );
+
+    // A real tap: finger down and up in place, then the click.
+    const tapped = screen.getByRole("button", { name: /Mostrar/ });
+    fireEvent.pointerDown(tapped, { clientY: 100 });
+    fireEvent.pointerUp(tapped, { clientY: 100 });
+    fireEvent.click(tapped);
+    expect(sheet.hasAttribute("data-free")).toBe(false);
+    expect(sheet.style.getPropertyValue("--ag-sheet-h")).toBe("");
   });
 });
 

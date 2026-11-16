@@ -13,8 +13,18 @@ afterEach(() => {
 
 function renderHandle(expanded: boolean) {
   const onChange = vi.fn();
-  render(<SheetHandle expanded={expanded} controls="sheet" onChange={onChange} />);
-  return { onChange, handle: screen.getByRole("button") };
+  const onDragStart = vi.fn();
+  const onDrag = vi.fn();
+  render(
+    <SheetHandle
+      expanded={expanded}
+      controls="sheet"
+      onChange={onChange}
+      onDragStart={onDragStart}
+      onDrag={onDrag}
+    />,
+  );
+  return { onChange, onDragStart, onDrag, handle: screen.getByRole("button") };
 }
 
 test("collapsed: a 'Mostrar más' button that expands the sheet on tap", () => {
@@ -36,35 +46,39 @@ test("expanded: a 'Mostrar menos' button that collapses the sheet on tap", () =>
   expect(onChange).toHaveBeenCalledWith(false);
 });
 
-test("a swipe up expands once: the click that follows the swipe is ignored", () => {
-  const { onChange, handle } = renderHandle(false);
+test("a drag reports where the finger went, so the sheet can follow it freely", () => {
+  const { onChange, onDragStart, onDrag, handle } = renderHandle(false);
 
   fireEvent.pointerDown(handle, { clientY: 300 });
-  fireEvent.pointerUp(handle, { clientY: 240 });
+  fireEvent.pointerMove(handle, { clientY: 260 });
+  fireEvent.pointerMove(handle, { clientY: 180 });
+  fireEvent.pointerUp(handle, { clientY: 180 });
   fireEvent.click(handle);
 
-  expect(onChange).toHaveBeenCalledTimes(1);
-  expect(onChange).toHaveBeenCalledWith(true);
+  expect(onDragStart).toHaveBeenCalledTimes(1);
+  // Finger travel from where it went down: negative is up.
+  expect(onDrag).toHaveBeenLastCalledWith(-120);
+  // The click the browser fires after a drag must not toggle the sheet as well.
+  expect(onChange).not.toHaveBeenCalled();
 });
 
-test("a swipe down collapses an expanded sheet", () => {
-  const { onChange, handle } = renderHandle(true);
+test("moving the finger without pressing does nothing", () => {
+  const { onDrag, handle } = renderHandle(false);
 
-  fireEvent.pointerDown(handle, { clientY: 200 });
-  fireEvent.pointerUp(handle, { clientY: 280 });
-  fireEvent.click(handle);
+  fireEvent.pointerMove(handle, { clientY: 100 });
 
-  expect(onChange).toHaveBeenCalledTimes(1);
-  expect(onChange).toHaveBeenCalledWith(false);
+  expect(onDrag).not.toHaveBeenCalled();
 });
 
-test("a small finger wobble is a tap, not a swipe", () => {
-  const { onChange, handle } = renderHandle(false);
+test("a small finger wobble is a tap, not a drag", () => {
+  const { onChange, onDrag, handle } = renderHandle(false);
 
   fireEvent.pointerDown(handle, { clientY: 300 });
-  fireEvent.pointerUp(handle, { clientY: 290 });
+  fireEvent.pointerMove(handle, { clientY: 296 });
+  fireEvent.pointerUp(handle, { clientY: 296 });
   fireEvent.click(handle);
 
+  expect(onDrag).not.toHaveBeenCalled();
   expect(onChange).toHaveBeenCalledTimes(1);
   expect(onChange).toHaveBeenCalledWith(true);
 });
