@@ -40,7 +40,7 @@ const SLOW_TEXT = "Despertando el servidor, un momento…";
 const OUTSIDE_TEXT = "Por ahora solo cubrimos el Corredor Seco. Toque dentro de la línea.";
 const GEOLOCATION_TEXT = "No pudimos ver su ubicación. Toque el mapa o elija un lugar.";
 const MAP_ERROR_TEXT = "No pudimos cargar el mapa; elija un lugar de la lista";
-const LOCATE_LABEL = "📍 ¿Dónde está su parcela?";
+const LOCATE_LABEL = "📍 Usar mi ubicación";
 const SOURCE_LINE = "Dato: NASA POWER ›";
 
 const rain: RainCollection = {
@@ -519,7 +519,7 @@ describe("MapScreen language", () => {
 
     await renderScreen();
 
-    expect(screen.getByRole("button", { name: "📍 Where is your plot?" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "📍 Use my location" })).toBeTruthy();
     expect(screen.getByText("Tap the map or pick a place from the list")).toBeTruthy();
     expect(screen.getByText("little rain")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Data: NASA POWER ›" })).toBeTruthy();
@@ -553,12 +553,12 @@ describe("MapScreen language toggle", () => {
   test("EN switches the map to English and puts lang=en in the URL; ES switches back", async () => {
     await renderScreen();
 
-    fireEvent.click(screen.getByRole("button", { name: "English" }));
+    fireEvent.click(screen.getByRole("radio", { name: "English" }));
 
-    expect(screen.getByRole("button", { name: "📍 Where is your plot?" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "📍 Use my location" })).toBeTruthy();
     expect(new URLSearchParams(window.location.search).get("lang")).toBe("en");
 
-    fireEvent.click(screen.getByRole("button", { name: "Español" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Español" }));
 
     expect(screen.getByRole("button", { name: LOCATE_LABEL })).toBeTruthy();
     expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
