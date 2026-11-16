@@ -69,12 +69,40 @@ test("filters crops by season: maicillo only in postrera, Nada in postrera", asy
   expect(within(primera).getByRole("button", { name: "Nada" })).toBeVisible();
 });
 
-test("each crop shows its icon next to its text", async () => {
+test("each crop shows a real photo next to its text", async () => {
   setup();
   await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
   const primera = block("¿Qué siembra en primera (siembra de mayo)?");
+  const button = within(primera).getByRole("button", { name: "Maíz" });
 
-  expect(within(primera).getByRole("button", { name: "Maíz" })).toHaveTextContent("🌽");
+  const photo = button.querySelector("img");
+  expect(photo).toHaveAttribute("src", "/crops/maiz.webp");
+  // Decorative: the button text already names the crop.
+  expect(photo).toHaveAttribute("alt", "");
+  expect(button).not.toHaveTextContent("🌽");
+});
+
+test("a photo that fails to load falls back to the catalog icon", async () => {
+  setup();
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  const primera = block("¿Qué siembra en primera (siembra de mayo)?");
+  const button = within(primera).getByRole("button", { name: "Maíz" });
+
+  const photo = button.querySelector("img");
+  if (!photo) throw new Error("no photo");
+  fireEvent.error(photo);
+
+  expect(button.querySelector("img")).toBeNull();
+  expect(button).toHaveTextContent("🌽");
+});
+
+test("'Nada' keeps its icon and has no photo", async () => {
+  setup();
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  const primera = block("¿Qué siembra en primera (siembra de mayo)?");
+  const nada = within(primera).getByRole("button", { name: "Nada" });
+
+  expect(nada.querySelector("img")).toBeNull();
 });
 
 test("priorities default to 3 and each has five targets of at least 44 px", async () => {
