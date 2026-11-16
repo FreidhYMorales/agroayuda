@@ -553,12 +553,12 @@ describe("MapScreen language toggle", () => {
   test("EN switches the map to English and puts lang=en in the URL; ES switches back", async () => {
     await renderScreen();
 
-    fireEvent.click(screen.getByRole("button", { name: "English" }));
+    fireEvent.click(screen.getByRole("radio", { name: "English" }));
 
     expect(screen.getByRole("button", { name: "📍 Use my location" })).toBeTruthy();
     expect(new URLSearchParams(window.location.search).get("lang")).toBe("en");
 
-    fireEvent.click(screen.getByRole("button", { name: "Español" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Español" }));
 
     expect(screen.getByRole("button", { name: LOCATE_LABEL })).toBeTruthy();
     expect(new URLSearchParams(window.location.search).has("lang")).toBe(false);
