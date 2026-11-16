@@ -282,6 +282,23 @@ describe("MapScreen responsive layout (work package 09)", () => {
   });
 });
 
+describe("MapScreen sheet expand (phone)", () => {
+  test("the handle expands and collapses the sheet it controls", async () => {
+    await renderScreen({ site: READY, placeId: "chiquimula" });
+    const sheet = screen.getByTestId("map-sheet");
+
+    expect(sheet.getAttribute("data-expanded")).toBe("false");
+    fireEvent.click(screen.getByRole("button", { name: "Mostrar más" }));
+    expect(sheet.getAttribute("data-expanded")).toBe("true");
+    expect(
+      screen.getByRole("button", { name: "Mostrar menos" }).getAttribute("aria-controls"),
+    ).toBe(sheet.id);
+
+    fireEvent.click(screen.getByRole("button", { name: "Mostrar menos" }));
+    expect(sheet.getAttribute("data-expanded")).toBe("false");
+  });
+});
+
 describe("MapScreen summary card", () => {
   test("shows the picked place name, the zone line and the top risk", async () => {
     await renderScreen({ site: READY, placeId: "chiquimula" });

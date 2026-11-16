@@ -106,6 +106,27 @@ describe("map screen", () => {
   });
 });
 
+describe("map sheet expand (phone)", () => {
+  test("an expanded sheet grows to 85dvh on phones", () => {
+    expect(rule(outsideMedia(LAYOUT_CSS), '.ag-map-sheet[data-expanded="true"]')).toContain(
+      "max-height:85dvh",
+    );
+  });
+
+  test("in the side layout the sheet is full height either way", () => {
+    expect(
+      rule(
+        mediaBody(LAYOUT_CSS, MEDIA.mapSide) ?? "",
+        '.ag-map-sheet,.ag-map-sheet[data-expanded="true"]',
+      ),
+    ).toContain("max-height:none");
+  });
+
+  test("the handle stays on top while the sheet content scrolls", () => {
+    expect(rule(outsideMedia(LAYOUT_CSS), ".ag-map-handle")).toContain("position:sticky");
+  });
+});
+
 describe("safety rules", () => {
   test("bottom padding respects the phone's safe area", () => {
     expect(LAYOUT_CSS).toContain("env(safe-area-inset-bottom)");

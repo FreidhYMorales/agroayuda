@@ -4,6 +4,7 @@ import { isAbortError } from "../../api/client";
 import type { DemoPoint } from "../../contracts/contracts";
 import { LanguageToggle } from "./LanguageToggle";
 import { LocateButton } from "./LocateButton";
+import { SheetHandle } from "./SheetHandle";
 import { loadMapData, type MapData } from "./mapData";
 import { MapStates } from "./MapStates";
 import { MapView } from "./MapView";
@@ -86,16 +87,6 @@ const sheetStyle: CSSProperties = {
   overflowY: "auto",
   backgroundColor: COLORS.background,
 };
-// The handle means "drag up"; .ag-map-handle hides it in the side layout.
-const handleStyle: CSSProperties = {
-  alignSelf: "center",
-  flex: "none",
-  width: 40,
-  height: 4,
-  borderRadius: 2,
-  background: COLORS.border,
-};
-
 export function MapScreen({
   site,
   placeId,
@@ -111,6 +102,8 @@ export function MapScreen({
   const [mapError, setMapError] = useState(false);
   // The list opened from "O elija un lugar: ›" on the summary card.
   const [listOpen, setListOpen] = useState(false);
+  // Phone sheet at half (default) or most of the screen; ignored in the side layout.
+  const [expanded, setExpanded] = useState(false);
 
   // A point found by geolocation never comes from the places list.
   const geolocation = useGeolocation((point) =>
@@ -188,8 +181,14 @@ export function MapScreen({
         </div>
       )}
 
-      <div className="ag-map-sheet" style={sheetStyle} data-testid="map-sheet">
-        <div className="ag-map-handle" style={handleStyle} aria-hidden="true" />
+      <div
+        id="map-sheet"
+        className="ag-map-sheet"
+        style={sheetStyle}
+        data-testid="map-sheet"
+        data-expanded={expanded}
+      >
+        <SheetHandle expanded={expanded} controls="map-sheet" onChange={setExpanded} />
 
         <MapStates
           site={site}
