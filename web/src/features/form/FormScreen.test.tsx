@@ -34,8 +34,12 @@ test("shows the three blocks with the exact titles", async () => {
   setup();
 
   expect(screen.getByRole("button", { name: "← Mapa" })).toBeInTheDocument();
-  expect(await screen.findByRole("heading", { name: "¿Qué siembra en primera?" })).toBeVisible();
-  expect(screen.getByRole("heading", { name: "¿Y en postrera?" })).toBeVisible();
+  expect(
+    await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" }),
+  ).toBeVisible();
+  expect(
+    screen.getByRole("heading", { name: "¿Y en postrera (siembra de agosto a septiembre)?" }),
+  ).toBeVisible();
   expect(
     screen.getByRole("heading", { name: "¿Qué es lo más importante para usted?" }),
   ).toBeVisible();
@@ -52,10 +56,10 @@ test("shows a skeleton while the catalog loads", () => {
 
 test("filters crops by season: maicillo only in postrera, Nada in postrera", async () => {
   setup();
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
 
-  const primera = block("¿Qué siembra en primera?");
-  const postrera = block("¿Y en postrera?");
+  const primera = block("¿Qué siembra en primera (siembra de mayo)?");
+  const postrera = block("¿Y en postrera (siembra de agosto a septiembre)?");
 
   expect(within(primera).queryByRole("button", { name: "Maicillo" })).toBeNull();
   expect(within(primera).getByRole("button", { name: "Maíz con frijol" })).toBeVisible();
@@ -67,8 +71,8 @@ test("filters crops by season: maicillo only in postrera, Nada in postrera", asy
 
 test("each crop shows its icon next to its text", async () => {
   setup();
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
-  const primera = block("¿Qué siembra en primera?");
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  const primera = block("¿Qué siembra en primera (siembra de mayo)?");
 
   expect(within(primera).getByRole("button", { name: "Maíz" })).toHaveTextContent("🌽");
 });
@@ -87,7 +91,7 @@ test("priorities default to 3 and each has five targets of at least 44 px", asyn
       expect(Number.parseInt(target.style.height, 10)).toBeGreaterThanOrEqual(44);
     }
   }
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
 });
 
 test("the label sits above its circles", async () => {
@@ -96,12 +100,12 @@ test("the label sits above its circles", async () => {
 
   expect(group.firstElementChild?.tagName).toBe("LEGEND");
   expect(group.firstElementChild).toHaveTextContent("💧 Ahorrar agua");
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
 });
 
 test("picking a priority reports the whole priorities object", async () => {
   const { onChange } = setup();
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
 
   const group = screen.getByRole("group", { name: /Ganar más/ });
   fireEvent.click(within(group).getByRole("radio", { name: "5" }));
@@ -113,7 +117,7 @@ test("picking a priority reports the whole priorities object", async () => {
 
 test("irrigation defaults to No and can be changed", async () => {
   const { onChange } = setup();
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
   const group = screen.getByRole("group", { name: "¿Tiene riego?" });
 
   expect(within(group).getByRole("radio", { name: "No" })).toBeChecked();
@@ -124,8 +128,8 @@ test("irrigation defaults to No and can be changed", async () => {
 
 test("choosing a crop reports it", async () => {
   const { onChange } = setup();
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
-  const primera = block("¿Qué siembra en primera?");
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  const primera = block("¿Qué siembra en primera (siembra de mayo)?");
   fireEvent.click(within(primera).getByRole("button", { name: "Maíz" }));
 
   expect(onChange).toHaveBeenCalledWith({ primera: "maiz" });
@@ -163,8 +167,10 @@ test("the chosen crop is marked without relying on color", async () => {
       onBack={vi.fn()}
     />,
   );
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
-  const chosen = within(block("¿Qué siembra en primera?")).getByRole("button", { name: "Maíz" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  const chosen = within(block("¿Qué siembra en primera (siembra de mayo)?")).getByRole("button", {
+    name: "Maíz",
+  });
 
   expect(chosen).toHaveAttribute("aria-pressed", "true");
   expect(chosen).toHaveTextContent("✓");
@@ -237,11 +243,13 @@ describe("FormScreen in English", () => {
     expect(screen.getByRole("button", { name: "← Map" })).toBeInTheDocument();
     expect(
       await screen.findByRole("heading", {
-        name: "What do you plant in the first season (primera)?",
+        name: "What do you plant in the first season (primera, planted in May)?",
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole("heading", { name: "And in the second season (postrera)?" }),
+      screen.getByRole("heading", {
+        name: "And in the second season (postrera, planted in August to September)?",
+      }),
     ).toBeVisible();
     expect(screen.getByRole("heading", { name: "What matters most to you?" })).toBeVisible();
     expect(screen.getByRole("group", { name: "💧 Save water" })).toBeVisible();
@@ -256,11 +264,11 @@ describe("FormScreen in English", () => {
 
   test("the crop buttons show their English names, Nothing included", async () => {
     setup();
-    const primeraTitle = "What do you plant in the first season (primera)?";
+    const primeraTitle = "What do you plant in the first season (primera, planted in May)?";
     await screen.findByRole("heading", { name: primeraTitle });
 
     const primera = block(primeraTitle);
-    const postrera = block("And in the second season (postrera)?");
+    const postrera = block("And in the second season (postrera, planted in August to September)?");
 
     expect(within(primera).getByRole("button", { name: "Maize with beans" })).toBeVisible();
     expect(within(postrera).getByRole("button", { name: "Sorghum" })).toBeVisible();
@@ -286,7 +294,9 @@ describe("FormScreen in English", () => {
 describe("responsive layout (work package 09)", () => {
   test("the page centers itself as a text screen", async () => {
     setup();
-    const heading = await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+    const heading = await screen.findByRole("heading", {
+      name: "¿Qué siembra en primera (siembra de mayo)?",
+    });
 
     const page = heading.closest(".ag");
     expect(page?.classList).toContain("ag-screen");
@@ -294,7 +304,7 @@ describe("responsive layout (work package 09)", () => {
 
   test(".ag-cols holds two column blocks and the submit button spanning both", async () => {
     setup();
-    await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+    await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
 
     const cols = document.querySelector(".ag-cols");
     expect(cols).not.toBeNull();
@@ -304,10 +314,14 @@ describe("responsive layout (work package 09)", () => {
     expect(submit).toBe(screen.getByRole("button", { name: "Comparar opciones →" }));
     expect(submit.classList).toContain("ag-span");
     expect(
-      within(crops as HTMLElement).getByRole("heading", { name: "¿Qué siembra en primera?" }),
+      within(crops as HTMLElement).getByRole("heading", {
+        name: "¿Qué siembra en primera (siembra de mayo)?",
+      }),
     ).toBeVisible();
     expect(
-      within(crops as HTMLElement).getByRole("heading", { name: "¿Y en postrera?" }),
+      within(crops as HTMLElement).getByRole("heading", {
+        name: "¿Y en postrera (siembra de agosto a septiembre)?",
+      }),
     ).toBeVisible();
     expect(
       within(preferences as HTMLElement).getByRole("heading", {
@@ -321,7 +335,9 @@ describe("responsive layout (work package 09)", () => {
 
   test("crops come before priorities in the DOM (reading and tab order)", async () => {
     setup();
-    const postrera = await screen.findByRole("heading", { name: "¿Y en postrera?" });
+    const postrera = await screen.findByRole("heading", {
+      name: "¿Y en postrera (siembra de agosto a septiembre)?",
+    });
     const priorities = screen.getByRole("heading", {
       name: "¿Qué es lo más importante para usted?",
     });
@@ -333,10 +349,14 @@ describe("responsive layout (work package 09)", () => {
 
   test("only the crop grids get the wider crop columns, not the irrigation choice", async () => {
     setup();
-    await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+    await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
 
-    expect(block("¿Qué siembra en primera?").querySelector(".ag-crop-grid")).not.toBeNull();
-    expect(block("¿Y en postrera?").querySelector(".ag-crop-grid")).not.toBeNull();
+    expect(
+      block("¿Qué siembra en primera (siembra de mayo)?").querySelector(".ag-crop-grid"),
+    ).not.toBeNull();
+    expect(
+      block("¿Y en postrera (siembra de agosto a septiembre)?").querySelector(".ag-crop-grid"),
+    ).not.toBeNull();
     expect(screen.getAllByRole("radio", { name: /Sí|No/ })[0].closest(".ag-crop-grid")).toBeNull();
   });
 });
@@ -348,5 +368,40 @@ describe("priority scale", () => {
 
     const water = screen.getByRole("group", { name: "💧 Ahorrar agua" });
     expect(water.getAttribute("aria-describedby")).toBe(hint.id);
+  });
+});
+
+describe("screen title and step", () => {
+  test("says which step this is and names the screen", async () => {
+    setup();
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Cuéntenos de su siembra" }),
+    ).toBeVisible();
+    expect(screen.getByText("Paso 2 de 3")).toBeVisible();
+  });
+
+  test("in English", async () => {
+    window.history.replaceState(null, "", "/?lang=en");
+    setup();
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Tell us about your planting" }),
+    ).toBeVisible();
+    expect(screen.getByText("Step 2 of 3")).toBeVisible();
+    window.history.replaceState(null, "", "/");
+  });
+});
+
+describe("priority info", () => {
+  test("the ⓘ sits in the priorities card, after its title", async () => {
+    setup();
+    const title = await screen.findByRole("heading", {
+      name: "¿Qué es lo más importante para usted?",
+    });
+    const info = screen.getByRole("button", { name: "¿Qué significa cada prioridad?" });
+
+    expect(title.closest("section")?.contains(info)).toBe(true);
+    expect(title.compareDocumentPosition(info) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
   });
 });

@@ -213,6 +213,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 ```
 ┌──────────────────────────┐
 │ ← Mapa                   │
+│ Paso 2 de 3              │
+│ Cuéntenos de su siembra  │
 │ (arriba: primera y       │
 │  postrera, íconos)       │
 │ ¿Qué es lo más           │
@@ -229,12 +231,13 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 │ ¿Tiene riego? (Sí) (No)  │
 │ [ Comparar opciones → ]  │
 └──────────────────────────┘
- One scrolling form, three blocks: ¿Qué siembra en primera? (icon grid,
- incl. maíz con frijol) / ¿Y en postrera? (icon grid + "Nada") / priorities
+ One scrolling form, three blocks: ¿Qué siembra en primera (siembra de
+ mayo)? (icon grid, incl. maíz con frijol) / ¿Y en postrera (siembra de agosto
+ a septiembre)? (icon grid + "Nada") / priorities
  and irrigation (shown above).
 ```
 
-- One scrolling form, three blocks. Priorities are tap selectors 1-5 (five circles, targets >= 44 px, label above the circles so the row fits 360 px), default 3. Answers are kept in the URL; crops filtered by season from `crops.json`. Both seasons "Nada" is allowed (fallow; the engine says so).
+- One scrolling form, three blocks. Priorities are tap selectors 1-5 (five circles, targets >= 44 px, label above the circles so the row fits 360 px), default 3, with "1 = poco importante · 5 = muy importante" under the title and an ⓘ button next to it that opens, on tap, a small card saying in plain words what each priority scores (from Scoring v1). Answers are kept in the URL; crops filtered by season from `crops.json`. Both seasons "Nada" is allowed (fallow; the engine says so).
 - States: catalog loading -> skeleton; catalog error -> "Intentar de nuevo"; defaults never block submission.
 
 | UI element | Backend demand |
@@ -248,6 +251,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 ```
 ┌──────────────────────────┐
 │ ← Sus cultivos           │
+│ Paso 3 de 3              │
+│ Sus opciones             │
 │ 👆 Toque una opción para │
 │    ver por qué           │
 │ Puntaje 1-5: 5 es mejor  │
