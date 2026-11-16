@@ -1,5 +1,6 @@
 // web/src/ui/layout.ts
 import { COLORS } from "./colors";
+import { LEAF_PATTERN } from "./leafPattern";
 
 // Responsive layout for every screen (work package 09). Three views:
 //   phone   - one column, the layout the app was built for (360 px reference);
@@ -39,6 +40,7 @@ const SIDE_SHADOW = "box-shadow:-2px 0 8px rgba(0,0,0,.15);clip-path:inset(0 0 0
 /** Global layout CSS, rendered once by App in a <style> tag. */
 export const LAYOUT_CSS = `
 *,*::before,*::after{box-sizing:border-box}
+body{background-image:${LEAF_PATTERN}}
 img,svg,canvas{max-width:100%}
 .ag-screen{max-width:${CONTENT_MAX_WIDTH.phone}px;margin:0 auto;padding-inline:16px;
 padding-bottom:max(16px,env(safe-area-inset-bottom))}
@@ -47,7 +49,7 @@ padding-bottom:max(16px,env(safe-area-inset-bottom))}
 .ag-map-area{position:relative;flex:1 1 auto;min-height:200px}
 .ag-map-sheet{flex:0 1 auto;max-height:50dvh;overflow-y:auto;display:flex;flex-direction:column;
 gap:12px;padding:8px 12px 16px;padding-bottom:max(16px,env(safe-area-inset-bottom));
-border-radius:16px 16px 0 0;background-color:${COLORS.background};box-shadow:0 -2px 8px rgba(0,0,0,.15)}
+border-radius:16px 16px 0 0;background-color:${COLORS.background};background-image:${LEAF_PATTERN};box-shadow:0 -2px 8px rgba(0,0,0,.15)}
 /* Phone: the handle (SheetHandle) switches the sheet between half and most of the screen,
    and stays on top while the sheet content scrolls. */
 .ag-map-sheet[data-expanded="true"]{max-height:85dvh}

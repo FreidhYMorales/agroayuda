@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CropCatalogEntry, CropId, Priorities } from "../../contracts/contracts";
 import { useLang } from "../../lib/urlState";
+import { CropIcon } from "../../ui/CropIcon";
 import { cropLabel } from "../comparison/cropLabels";
 import { Page, StepTitle, visuallyHidden } from "../comparison/theme";
 import { PriorityInfo } from "./PriorityInfo";
@@ -41,17 +42,16 @@ async function loadCatalog(): Promise<CropCatalogEntry[]> {
 }
 
 function CropButton(props: {
+  id: CropId;
   icon: string;
   label: string;
   selected: boolean;
   onSelect: () => void;
 }) {
-  const { icon, label, selected, onSelect } = props;
+  const { id, icon, label, selected, onSelect } = props;
   return (
     <button type="button" className="ag-btn ag-crop" aria-pressed={selected} onClick={onSelect}>
-      <span className="ag-icon" aria-hidden="true">
-        {icon}
-      </span>
+      <CropIcon id={id} icon={icon} />
       <span>
         {selected ? <span aria-hidden="true">✓ </span> : null}
         {label}
@@ -84,6 +84,7 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
         {allowed.map((entry) => (
           <CropButton
             key={entry.id}
+            id={entry.id}
             icon={entry.icon}
             label={label(entry)}
             selected={selected === entry.id}
@@ -91,6 +92,7 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
           />
         ))}
         <CropButton
+          id="none"
           icon={none?.icon ?? "⬜"}
           label={cropLabel("none", lang)}
           selected={selected === "none"}
