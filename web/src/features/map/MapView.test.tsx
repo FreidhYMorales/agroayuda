@@ -24,6 +24,7 @@ type MapOptions = {
   bounds?: [[number, number], [number, number]];
   fitBoundsOptions?: { padding?: number };
   attributionControl: unknown;
+  trackResize?: boolean;
 };
 
 // State of the fake maplibre-gl. It is hoisted so the vi.mock factory can use it.
@@ -51,6 +52,10 @@ const mocks = vi.hoisted(() => {
     }),
     setWorkerUrl: vi.fn((_url: string) => undefined),
     remove: vi.fn(() => undefined),
+    // Screen point -> map point; the fake just tags the point it was given.
+    unproject: vi.fn((point: [number, number]) => ({ at: point })),
+    resize: vi.fn(() => undefined),
+    setCenter: vi.fn((_center: unknown) => undefined),
   };
 
   return { handlers, sources, api };
@@ -65,6 +70,9 @@ vi.mock("maplibre-gl", () => {
     getSource = mocks.api.getSource;
     setStyle = mocks.api.setStyle;
     remove = mocks.api.remove;
+    unproject = mocks.api.unproject;
+    resize = mocks.api.resize;
+    setCenter = mocks.api.setCenter;
 
     constructor(options: MapOptions) {
       mocks.api.mapCreated(options);
@@ -264,6 +272,61 @@ describe("MapView setup", () => {
 
     expect(box.style.height).toBe("100%");
     expect(box.style.minHeight).toBe("");
+  });
+
+  describe("resizing with the sheet", () => {
+    let onResize: (() => void) | undefined;
+    const disconnect = vi.fn();
+
+    beforeEach(() => {
+      onResize = undefined;
+      vi.stubGlobal(
+        "ResizeObserver",
+        class {
+          constructor(callback: () => void) {
+            onResize = callback;
+          }
+          observe() {}
+          disconnect = disconnect;
+        },
+      );
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    function size(box: HTMLElement, width: number, height: number) {
+      Object.defineProperty(box, "clientWidth", { configurable: true, value: width });
+      Object.defineProperty(box, "clientHeight", { configurable: true, value: height });
+    }
+
+    // MapLibre's own resize keeps the center still, so the map crept while the sheet
+    // was dragged. The map resizes itself here and keeps its top edge still instead.
+    test("the map's top edge stays still while its height changes", () => {
+      const { container } = renderMap();
+      const box = container.firstElementChild as HTMLElement;
+      expect(mocks.api.mapCreated.mock.calls[0][0].trackResize).toBe(false);
+
+      size(box, 360, 300);
+      act(() => onResize?.());
+      mocks.api.unproject.mockClear();
+      size(box, 360, 200);
+      act(() => onResize?.());
+
+      // The new center is the point that sat at the new middle, measured from the top.
+      expect(mocks.api.unproject).toHaveBeenCalledWith([180, 100]);
+      expect(mocks.api.resize).toHaveBeenCalled();
+      expect(mocks.api.setCenter).toHaveBeenLastCalledWith({ at: [180, 100] });
+    });
+
+    test("stops watching the size when the map goes away", () => {
+      const { unmount } = renderMap();
+
+      unmount();
+
+      expect(disconnect).toHaveBeenCalled();
+    });
   });
 
   test("removes the map when the component unmounts", () => {

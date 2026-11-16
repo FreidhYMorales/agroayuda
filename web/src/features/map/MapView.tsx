@@ -137,6 +137,8 @@ export function MapView({ rain, region, mask, site, onSelectPoint, onError }: Ma
       fitBoundsOptions: { padding: 24 },
       // Replaced by a compact control below.
       attributionControl: false,
+      // Resized below instead, keeping the top edge still (MapLibre keeps the center).
+      trackResize: false,
     });
     mapRef.current = map;
     // The text comes from the OpenFreeMap TileJSON ("OpenFreeMap © OpenMapTiles
@@ -166,7 +168,24 @@ export function MapView({ rain, region, mask, site, onSelectPoint, onError }: Ma
       map.setStyle(fallbackStyle(), { diff: false });
     });
 
+    // The phone sheet moves the map's bottom edge as it is dragged. MapLibre's own
+    // resize keeps the center still, so the whole map crept along with the finger.
+    // Here the point that sits at the new middle, measured from the top, becomes the
+    // center: the top edge stays put and the sheet just covers or uncovers the bottom.
+    let width = container.clientWidth;
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(() => {
+            const center = map.unproject([width / 2, container.clientHeight / 2]);
+            width = container.clientWidth;
+            map.resize();
+            map.setCenter(center);
+          });
+    observer?.observe(container);
+
     return () => {
+      observer?.disconnect();
       mapRef.current = null;
       map.remove();
     };
