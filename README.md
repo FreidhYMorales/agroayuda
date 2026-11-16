@@ -1,8 +1,13 @@
+<p align="center">
+  <img src="web/public/logo.svg" alt="AgroAyuda logo: a sprout under a rain cloud and the sun, with the words AgroAyuda, Siembra y Clima" width="260"><br>
+  <sub>AI-generated logo (ChatGPT and Gemini, see <a href="docs/si-usage.md">docs/si-usage.md</a>)</sub>
+</p>
+
 # AgroAyuda
 
 Crop rotation decision support for farmers in Guatemala's Dry Corridor, built with NASA POWER data. NASA Space Apps Challenge 2026, challenge "Field Shift: Adapting Farms with NASA Data".
 
-A farmer picks a zone on the map, says what they plant in the first (primera) and second (postrera) season, what matters most to them and whether they have irrigation, and sees their current rotation compared with two alternatives: why, evidence, benefits, what we do not know and what to check with a technician. It is a phone-first web app in Spanish, and every recommendation comes from fixed, tested rules, not from an AI at run time.
+A farmer picks a zone on the map, says what they plant in the first (primera) and second (postrera) season, what matters most to them and whether they have irrigation, and sees their current rotation compared with two alternatives: why, evidence, benefits, what we do not know and what to check with a technician. It is a phone-first web app in English, with a Spanish (Guatemala) version one tap away (ES/EN), and every recommendation comes from fixed, tested rules, not from an AI at run time.
 
 - **Live app:** https://agroayuda.vercel.app
 - **API:** https://agroayuda-api.onrender.com (docs at `/docs`; the free server sleeps, the first call can take about a minute)
@@ -23,9 +28,10 @@ Follow [docs/development.md](docs/development.md) (Windows 11 PowerShell, Linux,
 |---|---|---|
 | [NASA POWER](https://power.larc.nasa.gov/) | Daily rainfall and maximum temperature per grid cell (1991-2020): rain layer, climate normals, canícula (dry-spell) risk | NASA open data; see the POWER site for its data policy |
 | [SoilGrids (ISRIC)](https://soilgrids.org/) | Soil clay, sand, pH and organic carbon | CC BY 4.0 |
-| [geoBoundaries](https://www.geoboundaries.org/) | Dry Corridor region outline (ADM1 Guatemala) | ODbL 1.0 (source OpenStreetMap, per the GTM ADM1 metadata) |
+| [geoBoundaries](https://www.geoboundaries.org/) | Dry Corridor region outline (ADM1 Guatemala) and the listed Dry Corridor municipalities (ADM2) | ADM1: ODbL 1.0 (source OpenStreetMap); ADM2: CC BY 3.0 IGO (source CONRED and OCHA FISS), per the geoBoundaries GTM metadata |
 | [OpenFreeMap](https://openfreemap.org/) and [OpenStreetMap](https://www.openstreetmap.org/copyright) | Basemap tiles and content (attribution shown on the map) | ODbL; tiles: see the provider page |
 | [FAO ECOCROP](https://ecocrop.apps.fao.org/ecocrop/srv/en/) and FAO Irrigation and Drainage Paper 56 | Generic crop cycle, roots and tolerances | FAO; see the provider page |
+| [Wikimedia Commons](https://commons.wikimedia.org/) photos | Crop photos on the form (cropped and resized) | CC BY and CC BY-SA; author and licence per photo in [docs/resources.md](docs/resources.md) and `web/public/crops/CREDITS.md` |
 | ICTA, MAGA, CGIAR and USAC documents | Crop values and rotation templates from Guatemalan sources | Cited per row in `data/catalog/*.csv`; list in [docs/crop-sources.md](docs/crop-sources.md) |
 
 Data from NASA POWER, SoilGrids and geoBoundaries is not AI-generated. No NASA logos are used.
