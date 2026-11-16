@@ -95,6 +95,13 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
       : "";
   return (
     <table className="ag-table">
+      {/* Visible and the table's name: without it "Menos riesgo 5" could read as more risk. */}
+      <caption
+        className="ag-muted"
+        style={{ captionSide: "top", textAlign: "left", padding: "0 4px 6px" }}
+      >
+        {copy.scaleNote}
+      </caption>
       <thead>
         <tr>
           <th>

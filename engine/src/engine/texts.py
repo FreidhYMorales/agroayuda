@@ -34,24 +34,44 @@ LOCAL_REVIEW_ES = "Consulte con un técnico local antes de cambiar su siembra."
 LOCAL_REVIEW_EN = "Talk to a local technician before changing what you plant."
 
 
-def top_priority(priorities: Priorities) -> str:
-    """The highest priority; max() keeps the first in PRIORITY_ORDER on a tie."""
+def top_priorities(priorities: Priorities) -> list[str]:
+    """Every priority at the highest weight, in PRIORITY_ORDER."""
     weights = priorities.model_dump()
-    return max(PRIORITY_ORDER, key=lambda name: weights[name])
+    best = max(weights[name] for name in PRIORITY_ORDER)
+    return [name for name in PRIORITY_ORDER if weights[name] == best]
+
+
+def _join(parts: list[str], word: str) -> str:
+    """'a', 'a y b', 'a, b y c' (word is 'y' or 'and')."""
+    if len(parts) == 1:
+        return parts[0]
+    return f"{', '.join(parts[:-1])} {word} {parts[-1]}"
 
 
 def reason_line(priorities: Priorities, criteria: Criteria) -> str:
-    """How the option does on the farmer's top priority."""
-    name = top_priority(priorities)
-    score = criteria.model_dump()[name]
-    return f"Su prioridad es {PRIORITY_LABEL_ES[name]}: esta opción saca {score} de 5."
+    """How the option does on the farmer's top priority, or on each tied top one.
+
+    A tie never names one priority as "the" priority: the farmer did not say so.
+    """
+    names = top_priorities(priorities)
+    scores = criteria.model_dump()
+    if len(names) == 1:
+        name = names[0]
+        return f"Su prioridad es {PRIORITY_LABEL_ES[name]}: esta opción saca {scores[name]} de 5."
+    listed = _join([f"{PRIORITY_LABEL_ES[n]} {scores[n]} de 5" for n in names], "y")
+    return f"Usted dio la misma importancia a varias cosas. Esta opción saca: {listed}."
 
 
 def reason_line_en(priorities: Priorities, criteria: Criteria) -> str:
     """English version of reason_line."""
-    name = top_priority(priorities)
-    score = criteria.model_dump()[name]
-    return f"Your top priority is {PRIORITY_LABEL_EN[name]}: this option scores {score} of 5."
+    names = top_priorities(priorities)
+    scores = criteria.model_dump()
+    if len(names) == 1:
+        name = names[0]
+        label = PRIORITY_LABEL_EN[name]
+        return f"Your top priority is {label}: this option scores {scores[name]} of 5."
+    listed = _join([f"{PRIORITY_LABEL_EN[n]} {scores[n]} of 5" for n in names], "and")
+    return f"You gave several things the same importance. This option scores: {listed}."
 
 
 # English of the canícula text in engine/risks.py, built from the stored level and share.

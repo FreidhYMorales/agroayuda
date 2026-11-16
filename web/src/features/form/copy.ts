@@ -7,6 +7,7 @@ const ES = {
   primeraTitle: "¿Qué siembra en primera?",
   postreraTitle: "¿Y en postrera?",
   prioritiesTitle: "¿Qué es lo más importante para usted?",
+  scaleHint: "1 = poco importante · 5 = muy importante",
   priorities: {
     water: "Ahorrar agua",
     soil: "Cuidar suelo",
@@ -28,6 +29,7 @@ const EN: typeof ES = {
   primeraTitle: "What do you plant in the first season (primera)?",
   postreraTitle: "And in the second season (postrera)?",
   prioritiesTitle: "What matters most to you?",
+  scaleHint: "1 = not important · 5 = very important",
   priorities: {
     water: "Save water",
     soil: "Care for the soil",

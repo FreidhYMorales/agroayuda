@@ -116,16 +116,22 @@ function CatalogSkeleton({ label }: { label: string }) {
   );
 }
 
+const SCALE_HINT_ID = "priority-scale-hint";
+
 function PriorityCircles(props: {
   name: string;
   icon: string;
   label: string;
   value: number;
+  describedBy: string;
   onPick: (level: number) => void;
 }) {
-  const { name, icon, label, value, onPick } = props;
+  const { name, icon, label, value, describedBy, onPick } = props;
   return (
-    <fieldset style={{ border: "none", padding: 0, margin: "0 0 14px" }}>
+    <fieldset
+      aria-describedby={describedBy}
+      style={{ border: "none", padding: 0, margin: "0 0 14px" }}
+    >
       <legend style={{ padding: 0, marginBottom: 6, fontWeight: 600 }}>{`${icon} ${label}`}</legend>
       <div className="ag-circles">
         {LEVELS.map((level) => {
@@ -244,9 +250,14 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
         <div>
           <section className="ag-card">
             <h2 ref={prioritiesRef}>{copy.prioritiesTitle}</h2>
+            {/* Says what the numbers mean; each row of circles points to it for screen readers. */}
+            <p id={SCALE_HINT_ID} className="ag-muted" style={{ marginTop: 0 }}>
+              {copy.scaleHint}
+            </p>
             {PRIORITY_ROWS.map(({ key, icon }) => (
               <PriorityCircles
                 key={key}
+                describedBy={SCALE_HINT_ID}
                 name={`priority-${key}`}
                 icon={icon}
                 label={copy.priorities[key]}

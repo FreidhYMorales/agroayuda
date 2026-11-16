@@ -16,7 +16,7 @@ DROUGHT_EN = "Cannot take much drought in the canícula"
 def maize_bean(
     site: SiteProfile, crops: dict[str, CropCatalogEntry], templates: list[RotationTemplate]
 ) -> dict[tuple[str, str], RotationOption]:
-    """Default priorities 3/3/3/3: water is the top one on a tie."""
+    """Default priorities 3/3/3/3: all four tie, so the reason lists all of them."""
     request = RecommendationRequest.model_validate(
         {
             "location": {"lat": 14.70, "lon": -89.50},
@@ -33,7 +33,10 @@ def test_current_option_texts_in_english(
     """Example site: high canícula, share 0.7, full soil; maíz has low drought tolerance."""
     current = maize_bean(site, crops, templates)[("maiz", "frijol")]
 
-    assert current.reasons_en == ["Your top priority is saving water: this option scores 4 of 5."]
+    assert current.reasons_en == [
+        "You gave several things the same importance. This option scores: saving water 4 of 5, "
+        "caring for the soil 3 of 5, income 4 of 5 and lowering the risk 1 of 5."
+    ]
     assert current.not_recommended_reason_en == DROUGHT_EN
     assert current.benefits_en == []
     assert current.data_gaps_en == ["NASA POWER rain is a regional estimate."]
@@ -54,7 +57,8 @@ def test_alternatives_texts_in_english(
     intercrop_sorghum = options[("maiz_frijol", "maicillo")]
 
     assert bean_sorghum.reasons_en == [
-        "Your top priority is saving water: this option scores 5 of 5."
+        "You gave several things the same importance. This option scores: saving water 5 of 5, "
+        "caring for the soil 3 of 5, income 3 of 5 and lowering the risk 2 of 5."
     ]
     assert bean_sorghum.benefits_en == ["Better than your rotation in: water and risk."]
     assert bean_sorghum.not_recommended_reason_en is None

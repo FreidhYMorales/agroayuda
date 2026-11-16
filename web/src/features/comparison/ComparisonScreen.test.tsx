@@ -62,14 +62,23 @@ test("Meses sin cultivo shows 5, 4, 5", () => {
   expect(cells.map((cell) => cell.textContent)).toEqual(["5", "4", "5"]);
 });
 
+test("the table says which way is better: 5 is best, fewer bare months is better", () => {
+  render(<ComparisonTable options={FIXTURE_OPTIONS} onSelect={vi.fn()} />);
+
+  expect(screen.getByRole("table", { name: "Puntaje de 1 a 5: 5 es lo mejor" })).toBeVisible();
+  expect(
+    screen.getByRole("rowheader", { name: "Meses sin cultivo (menos es mejor)" }),
+  ).toBeVisible();
+});
+
 test("criteria rows show a bar and its number", () => {
   render(<ComparisonTable options={FIXTURE_OPTIONS} onSelect={vi.fn()} />);
 
   for (const [label, numbers] of [
-    ["Agua", ["3", "4", "4"]],
-    ["Suelo", ["3", "4", "3"]],
-    ["Ingreso", ["3", "3", "2"]],
-    ["Riesgo", ["2", "3", "2"]],
+    ["Ahorrar agua", ["3", "4", "4"]],
+    ["Cuidar suelo", ["3", "4", "3"]],
+    ["Ganar más", ["3", "3", "2"]],
+    ["Menos riesgo", ["2", "3", "2"]],
   ] as const) {
     const cells = within(rowOf(label)).getAllByRole("cell");
     expect(cells.map((cell) => cell.textContent)).toEqual(numbers);
@@ -323,7 +332,7 @@ test("with lang=en the comparison screen is in English", async () => {
     expect.arrayContaining(["Current", "Opt. 1", "Opt. 2"]),
   );
   expect(screen.getByText("Beans → Sorghum")).toBeVisible();
-  expect(within(rowOf("Water")).getAllByRole("cell")).toHaveLength(3);
+  expect(within(rowOf("Save water")).getAllByRole("cell")).toHaveLength(3);
   expect(within(rowOf("Confidence")).getByText("●○○ low")).toBeVisible();
   expect(within(rowOf("Months without a crop")).getAllByRole("cell")).toHaveLength(3);
   expect(screen.getByText("Tap an option ›")).toBeVisible();
