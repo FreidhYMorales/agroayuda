@@ -163,7 +163,7 @@ export type FormScreenProps = {
   values: FormValues;
   onChange: (patch: Partial<FormValues>) => void;
   onSubmit: () => void;
-  /** "← Su parcela": back to the map. */
+  /** "← Mapa": back to the map. */
   onBack: () => void;
   /** Message above the form, e.g. "Revise sus respuestas". */
   notice?: string | null;

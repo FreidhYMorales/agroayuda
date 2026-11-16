@@ -3,7 +3,9 @@
 import type { Lang } from "../../lib/urlState";
 
 const ES = {
-  back: "← Sus opciones",
+  // Back labels name where they lead.
+  back: "← Sus cultivos",
+  backToComparison: "← Comparación",
   columnTitles: ["Actual", "Op.1", "Op.2"] as readonly [string, string, string],
   detailTitles: ["Actual", "Opción 1", "Opción 2"] as readonly [string, string, string],
   // Same words as the form priorities, so a higher score always reads as better.
@@ -20,7 +22,7 @@ const ES = {
   recommendedNote: (title: string, sequence: string) => `✓ Recomendada: ${title} (${sequence})`,
   warningNote: (title: string, reason: string) => `⚠ ${title}: ${reason}`,
   notRecommendedNote: (title: string, reason: string) => `✗ ${title} no recomendada: ${reason}`,
-  tapOption: "Toque una opción ›",
+  tapOption: "👆 Toque una opción para ver por qué",
   aid: "ⓘ Esto es una ayuda; no reemplaza su criterio",
   changePriorities: "Cambiar prioridades",
   loading: "Cargando las opciones…",
@@ -30,7 +32,8 @@ const ES = {
 };
 
 const EN: typeof ES = {
-  back: "← Your options",
+  back: "← Your crops",
+  backToComparison: "← Comparison",
   columnTitles: ["Current", "Opt. 1", "Opt. 2"],
   detailTitles: ["Current", "Option 1", "Option 2"],
   criteria: {
@@ -46,7 +49,7 @@ const EN: typeof ES = {
   recommendedNote: (title, sequence) => `✓ Recommended: ${title} (${sequence})`,
   warningNote: (title, reason) => `⚠ ${title}: ${reason}`,
   notRecommendedNote: (title, reason) => `✗ ${title} not recommended: ${reason}`,
-  tapOption: "Tap an option ›",
+  tapOption: "👆 Tap an option to see why",
   aid: "ⓘ This is an aid; it does not replace your judgment",
   changePriorities: "Change priorities",
   loading: "Loading the options…",

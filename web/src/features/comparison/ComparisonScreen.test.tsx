@@ -178,8 +178,8 @@ test("loads the options, then shows the table and the footer", async () => {
   render(<ComparisonScreen request={REQUEST} {...handlers()} />);
 
   expect(await screen.findByRole("button", { name: "Op.1" })).toBeVisible();
-  expect(screen.getByRole("button", { name: "← Sus opciones" })).toBeVisible();
-  expect(screen.getByText("Toque una opción ›")).toBeVisible();
+  expect(screen.getByRole("button", { name: "← Sus cultivos" })).toBeVisible();
+  expect(screen.getByText("👆 Toque una opción para ver por qué")).toBeVisible();
   expect(screen.getByText("ⓘ Esto es una ayuda; no reemplaza su criterio")).toBeVisible();
   expect(screen.getByRole("button", { name: "Cambiar prioridades" })).toBeVisible();
   expect(screen.queryByText(/Su rotación actual ya es la mejor/)).toBeNull();
@@ -264,17 +264,17 @@ test("opening Op.1 shows its detail and 'Opción 1' goes back to the table", asy
   expect(screen.getByText("Maíz con frijol → Maicillo")).toBeVisible();
   expect(screen.getByRole("heading", { name: "Evidencia (datos):" })).toBeVisible();
   expect(screen.getByText(/NASA POWER/)).toBeVisible();
-  fireEvent.click(screen.getByRole("button", { name: "← Opción 1" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Comparación" }));
   expect(await screen.findByRole("button", { name: "Op.2" })).toBeVisible();
 });
 
-test("'Cambiar prioridades' and '← Sus opciones' call their handlers", async () => {
+test("'Cambiar prioridades' and '← Sus cultivos' call their handlers", async () => {
   fetchMock.mockImplementation(async () => okResponse());
   const props = handlers();
   render(<ComparisonScreen request={REQUEST} {...props} />);
 
   fireEvent.click(await screen.findByRole("button", { name: "Cambiar prioridades" }));
-  fireEvent.click(screen.getByRole("button", { name: "← Sus opciones" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Sus cultivos" }));
 
   expect(props.onChangePriorities).toHaveBeenCalledTimes(1);
   expect(props.onBack).toHaveBeenCalledTimes(1);
@@ -327,7 +327,7 @@ test("with lang=en the comparison screen is in English", async () => {
   expect(
     screen.getByText("✗ Opt. 2 not recommended: Cannot take much drought in the canícula"),
   ).toBeVisible();
-  expect(screen.getByRole("button", { name: "← Your options" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "← Your crops" })).toBeVisible();
   expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual(
     expect.arrayContaining(["Current", "Opt. 1", "Opt. 2"]),
   );
@@ -335,7 +335,7 @@ test("with lang=en the comparison screen is in English", async () => {
   expect(within(rowOf("Save water")).getAllByRole("cell")).toHaveLength(3);
   expect(within(rowOf("Confidence")).getByText("●○○ low")).toBeVisible();
   expect(within(rowOf("Months without a crop")).getAllByRole("cell")).toHaveLength(3);
-  expect(screen.getByText("Tap an option ›")).toBeVisible();
+  expect(screen.getByText("👆 Tap an option to see why")).toBeVisible();
   expect(screen.getByText("ⓘ This is an aid; it does not replace your judgment")).toBeVisible();
   expect(screen.getByRole("button", { name: "Change priorities" })).toBeVisible();
 });
@@ -347,7 +347,7 @@ test("with lang=en the detail's back link names the option in English", async ()
   render(<ComparisonScreen request={REQUEST} {...handlers()} />);
 
   fireEvent.click(await screen.findByRole("button", { name: "Opt. 1" }));
-  fireEvent.click(screen.getByRole("button", { name: "← Option 1" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Comparison" }));
 
   expect(await screen.findByRole("button", { name: "Opt. 2" })).toBeVisible();
 });
@@ -394,4 +394,16 @@ test("responsive layout: the table sits in .ag-table-wrap and the notes in .ag-n
   expect(notes).not.toBeNull();
   expect(notes?.contains(rejected)).toBe(true);
   expect(screen.getByRole("table").parentElement?.classList).toContain("ag-table-wrap");
+});
+
+test("the main action is picking an option: the hint is above the table, Cambiar prioridades is secondary", async () => {
+  fetchMock.mockImplementation(async () => okResponse());
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  const hint = await screen.findByText("👆 Toque una opción para ver por qué");
+  expect(
+    hint.compareDocumentPosition(screen.getByRole("table")) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).not.toBe(0);
+  const change = screen.getByRole("button", { name: "Cambiar prioridades" });
+  expect(change.classList).not.toContain("ag-primary");
 });

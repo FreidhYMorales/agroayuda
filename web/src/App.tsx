@@ -69,6 +69,7 @@ function Screens() {
     return (
       <RisksScreen
         view={toRisksView(site)}
+        placeName={places.find((place) => place.id === state.place)?.name_es}
         onClose={() => setState({ step: "map" })}
         onRetry={retry}
         onContinue={() => setState({ step: "form" })}

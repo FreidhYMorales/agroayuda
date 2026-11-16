@@ -148,10 +148,10 @@ describe("RisksScreen ready", () => {
     expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
-  test("the ✕ calls onClose", () => {
+  test("← Mapa calls onClose", () => {
     const { onClose } = renderReady([makeRisk()]);
 
-    fireEvent.click(screen.getByText("✕"));
+    fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -183,7 +183,7 @@ describe("RisksScreen loading and error", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("✕"));
+    fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -246,7 +246,7 @@ describe("RisksScreen in English", () => {
     renderReady([bareField(), makeRisk({ value: 0.4 })]);
 
     expect(screen.getByRole("heading", { name: "Risks in this area" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Close" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "← Map" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "See recommendations →" })).toBeTruthy();
     expect(screen.getByText("Strong dry spell (canícula)")).toBeTruthy();
     expect(screen.getByText("mid Jul-Aug")).toBeTruthy();
@@ -297,5 +297,30 @@ describe("RisksScreen responsive layout (work package 09)", () => {
     expect(
       screen.getByRole("list").compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).not.toBe(0);
+  });
+});
+
+describe("RisksScreen place name", () => {
+  test("with a place the header says where the risks are", () => {
+    render(
+      <RisksScreen
+        view={{ status: "ready", risks: [makeRisk()] }}
+        placeName="Chiquimula"
+        onClose={vi.fn()}
+        onRetry={vi.fn()}
+        onContinue={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Riesgos en Chiquimula" })).toBeTruthy();
+    expect(screen.getByRole("region", { name: "Riesgos en Chiquimula" })).toBeTruthy();
+  });
+
+  test("the back link comes before the title (reading and tab order)", () => {
+    renderReady([makeRisk()]);
+
+    const back = screen.getByRole("button", { name: "← Mapa" });
+    const title = screen.getByRole("heading", { name: "Riesgos de esta zona" });
+    expect(back.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
   });
 });

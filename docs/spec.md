@@ -179,8 +179,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ═  Chiquimula        ✕   │
-│ Riesgos de esta zona     │
+│ ← Mapa                   │
+│ Riesgos en Chiquimula    │
 │──────────────────────────│
 │ ⚠ Suelo sin cultivo    › │
 │   dic-abr (estimado)     │
@@ -212,7 +212,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ← Su parcela             │
+│ ← Mapa                   │
 │ (arriba: primera y       │
 │  postrera, íconos)       │
 │ ¿Qué es lo más           │
@@ -247,23 +247,26 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ← Sus opciones           │
+│ ← Sus cultivos           │
+│ 👆 Toque una opción para │
+│    ver por qué           │
+│ Puntaje 1-5: 5 es mejor  │
 │          Actual Op.1 Op.2│
-│ 💧Agua    ▓▓░   ▓▓▓  ▓▓▓▓│
-│ 🟫Suelo   ▓░░   ▓▓▓  ▓▓░ │
-│ 💰Ingreso ▓▓▓   ▓▓░  ▓▓░ │
-│ 🛡Riesgo  ▓░░   ▓▓▓  ▓▓░ │
+│ 💧Ahorrar ▓▓░   ▓▓▓  ▓▓▓▓│
+│ 🟫Cuidar  ▓░░   ▓▓▓  ▓▓░ │
+│ 💰Ganar   ▓▓▓   ▓▓░  ▓▓░ │
+│ 🛡Menos r.▓░░   ▓▓▓  ▓▓░ │
 │ Confianza ●●○   ●●○  ●○○ │
 │                 ✓    ✗ no│
 │                 recom.   │
-│ Toque una opción ›       │
 │ ⓘ Esto es una ayuda; no  │
 │   reemplaza su criterio  │
 │ [ Cambiar prioridades ]  │
 └──────────────────────────┘
  Tap a column -> detail:
 ┌──────────────────────────┐
-│ ← Opción 1               │
+│ ← Comparación            │
+│ Opción 1                 │
 │ Maíz con frijol →        │
 │ Maicillo                 │
 │ Comparada con lo actual: │

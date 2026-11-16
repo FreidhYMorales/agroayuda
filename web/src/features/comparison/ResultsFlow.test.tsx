@@ -141,13 +141,13 @@ test("outside_region goes back to the map step with its message", async () => {
   expect(params().get("step")).toBe("map");
 });
 
-test("'← Su parcela' goes back to the map step without a message", async () => {
+test("'← Mapa' goes back to the map step without a message", async () => {
   openAt(`?step=form&${PLACE}`);
   route();
   const onBackToMap = vi.fn();
   render(<ResultsFlow onBackToMap={onBackToMap} />);
 
-  fireEvent.click(screen.getByRole("button", { name: "← Su parcela" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
   expect(onBackToMap).toHaveBeenCalledWith();
   expect(params().get("step")).toBe("map");
