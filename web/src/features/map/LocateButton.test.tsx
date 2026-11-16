@@ -8,7 +8,7 @@ import { LocateButton } from "./LocateButton";
 
 afterEach(cleanup);
 
-const LABEL = "📍 ¿Dónde está su parcela?";
+const LABEL = "📍 Usar mi ubicación";
 
 function renderButton(locating = false) {
   const onLocate = vi.fn();

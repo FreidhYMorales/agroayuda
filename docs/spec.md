@@ -133,7 +133,7 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ¿Dónde está su parcela?📍│
+│ 📍 Usar mi ubicación     │
 │[Lluvia]  (+Calor/Suelo*) │
 │ ▓▓▒▒░░░░▒▒▓▓▓▒▒░░░░▒▒▓▓▓ │
 │ ▓▒▒░░┌─────┐▒▓▓▒▒░░▒▒▓▓▓ │

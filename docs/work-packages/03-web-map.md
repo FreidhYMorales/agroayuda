@@ -86,7 +86,7 @@ Fixture until H4 (placeholder numbers, not real data):
 
 ## What to build
 
-**Map screen.** MapLibre with OpenFreeMap tiles (keyless, attribution shown); if tiles fail, fall back to a plain background style that still draws region, cells and selection. Rain layer: one fill per cell from `rain.geojson`, legend "poca lluvia" ... "mucha", source line "Dato: NASA POWER ›" that opens source + resolution ("celdas de unos 60 km"). Region outline drawn above the cells. The tapped point's native cell is highlighted from `SiteProfile.cell_polygon` (not a radius). Buttons: "¿Dónde está su parcela?" with 📍 (browser Geolocation). Latest request wins: abort older `/site` calls (`AbortController`).
+**Map screen.** MapLibre with OpenFreeMap tiles (keyless, attribution shown); if tiles fail, fall back to a plain background style that still draws region, cells and selection. Rain layer: one fill per cell from `rain.geojson`, legend "poca lluvia" ... "mucha", source line "Dato: NASA POWER ›" that opens source + resolution ("celdas de unos 60 km"). Region outline drawn above the cells. The tapped point's native cell is highlighted from `SiteProfile.cell_polygon` (not a radius). Buttons: "📍 Usar mi ubicación" (was "¿Dónde está su parcela?") (browser Geolocation). Latest request wins: abort older `/site` calls (`AbortController`).
 
 **Summary card.** Title = demo place name if picked from the list, else "Su zona" (the contract has no place name). Lines: "Zona de unos 60 km de lado (dato regional, no de su parcela)"; the top risk ("⚠ Canícula fuerte"); buttons "Ver riesgos", "Ver recomendaciones →"; "O elija un lugar: ›" opens the demo-place list (Chiquimula + one outside point; the non-map alternative, MUST).
 
