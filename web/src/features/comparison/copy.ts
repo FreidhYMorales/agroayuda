@@ -6,6 +6,8 @@ const ES = {
   // Back labels name where they lead.
   back: "← Sus cultivos",
   backToComparison: "← Comparación",
+  step: "Paso 3 de 3",
+  title: "Sus opciones",
   columnTitles: ["Actual", "Op.1", "Op.2"] as readonly [string, string, string],
   detailTitles: ["Actual", "Opción 1", "Opción 2"] as readonly [string, string, string],
   // Same words as the form priorities, so a higher score always reads as better.
@@ -34,6 +36,8 @@ const ES = {
 const EN: typeof ES = {
   back: "← Your crops",
   backToComparison: "← Comparison",
+  step: "Step 3 of 3",
+  title: "Your options",
   columnTitles: ["Current", "Opt. 1", "Opt. 2"],
   detailTitles: ["Current", "Option 1", "Option 2"],
   criteria: {

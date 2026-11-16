@@ -407,3 +407,19 @@ test("the main action is picking an option: the hint is above the table, Cambiar
   const change = screen.getByRole("button", { name: "Cambiar prioridades" });
   expect(change.classList).not.toContain("ag-primary");
 });
+
+test("the results say which step this is and name the screen", async () => {
+  fetchMock.mockImplementation(async () => okResponse());
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  expect(await screen.findByRole("heading", { level: 1, name: "Sus opciones" })).toBeVisible();
+  expect(screen.getByText("Paso 3 de 3")).toBeVisible();
+});
+
+test("the step and title show while the options load too", () => {
+  fetchMock.mockImplementation(() => new Promise<Response>(() => {}));
+  render(<ComparisonScreen request={REQUEST} {...handlers()} />);
+
+  expect(screen.getByRole("heading", { level: 1, name: "Sus opciones" })).toBeVisible();
+  expect(screen.getByText("Paso 3 de 3")).toBeVisible();
+});

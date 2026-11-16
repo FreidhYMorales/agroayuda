@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CropCatalogEntry, CropId, Priorities } from "../../contracts/contracts";
 import { useLang } from "../../lib/urlState";
 import { cropLabel } from "../comparison/cropLabels";
-import { Page, visuallyHidden } from "../comparison/theme";
+import { Page, StepTitle, visuallyHidden } from "../comparison/theme";
 import { formCopy } from "./copy";
 
 /** Same field names as `AppState` (web/src/lib/urlState.ts), so `onChange` can be its `patch`. */
@@ -208,6 +208,7 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
       <button type="button" className="ag-btn ag-link" onClick={onBack}>
         {copy.back}
       </button>
+      <StepTitle step={copy.step} title={copy.title} />
       {notice ? (
         <p role="alert" className="ag-notice">
           {notice}

@@ -213,6 +213,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 ```
 ┌──────────────────────────┐
 │ ← Mapa                   │
+│ Paso 2 de 3              │
+│ Cuéntenos de su siembra  │
 │ (arriba: primera y       │
 │  postrera, íconos)       │
 │ ¿Qué es lo más           │
@@ -248,6 +250,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 ```
 ┌──────────────────────────┐
 │ ← Sus cultivos           │
+│ Paso 3 de 3              │
+│ Sus opciones             │
 │ 👆 Toque una opción para │
 │    ver por qué           │
 │ Puntaje 1-5: 5 es mejor  │

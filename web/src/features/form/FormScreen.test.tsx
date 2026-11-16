@@ -350,3 +350,25 @@ describe("priority scale", () => {
     expect(water.getAttribute("aria-describedby")).toBe(hint.id);
   });
 });
+
+describe("screen title and step", () => {
+  test("says which step this is and names the screen", async () => {
+    setup();
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Cuéntenos de su siembra" }),
+    ).toBeVisible();
+    expect(screen.getByText("Paso 2 de 3")).toBeVisible();
+  });
+
+  test("in English", async () => {
+    window.history.replaceState(null, "", "/?lang=en");
+    setup();
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Tell us about your planting" }),
+    ).toBeVisible();
+    expect(screen.getByText("Step 2 of 3")).toBeVisible();
+    window.history.replaceState(null, "", "/");
+  });
+});

@@ -7,7 +7,7 @@ import { type Lang, useLang } from "../../lib/urlState";
 import { comparisonCopy } from "./copy";
 import { sequenceLabel } from "./cropLabels";
 import { OptionDetail } from "./OptionDetail";
-import { Page, visuallyHidden } from "./theme";
+import { Page, StepTitle, visuallyHidden } from "./theme";
 
 // The labels come from comparisonCopy, by key.
 const CRITERIA = [
@@ -245,10 +245,14 @@ function ResultsView(props: ResultsViewProps) {
     };
   }, [requestKey]);
 
+  // Every state of this screen starts with the way back, the step and the title.
   const back = (
-    <button type="button" className="ag-btn ag-link" onClick={onBack}>
-      {copy.back}
-    </button>
+    <>
+      <button type="button" className="ag-btn ag-link" onClick={onBack}>
+        {copy.back}
+      </button>
+      <StepTitle step={copy.step} title={copy.title} />
+    </>
   );
 
   if (state.status === "loading") {
