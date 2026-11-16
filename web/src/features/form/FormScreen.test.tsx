@@ -340,3 +340,13 @@ describe("responsive layout (work package 09)", () => {
     expect(screen.getAllByRole("radio", { name: /Sí|No/ })[0].closest(".ag-crop-grid")).toBeNull();
   });
 });
+
+describe("priority scale", () => {
+  test("says what 1 and 5 mean, and each row of circles is described by it", async () => {
+    setup();
+    const hint = await screen.findByText("1 = poco importante · 5 = muy importante");
+
+    const water = screen.getByRole("group", { name: "💧 Ahorrar agua" });
+    expect(water.getAttribute("aria-describedby")).toBe(hint.id);
+  });
+});
