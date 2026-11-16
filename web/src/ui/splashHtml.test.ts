@@ -1,17 +1,13 @@
 // web/src/ui/splashHtml.test.ts
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { beforeAll, describe, expect, test } from "vitest";
-
-// Under jsdom import.meta.url is not a file: URL, so the path comes from the folder
-// where the web tests run (web/), which `npm --prefix web run test` guarantees.
-const INDEX_HTML = resolve(process.cwd(), "index.html");
+// Vite imports the file as text, so the test needs no Node types.
+import indexHtml from "../../index.html?raw";
 
 let doc: Document;
 
 beforeAll(() => {
   // DOMParser builds the tree without running the inline script.
-  doc = new DOMParser().parseFromString(readFileSync(INDEX_HTML, "utf-8"), "text/html");
+  doc = new DOMParser().parseFromString(indexHtml, "text/html");
 });
 
 describe("splash markup in index.html", () => {
