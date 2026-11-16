@@ -29,7 +29,7 @@ docs/       architecture, spec, development, ADRs, work-packages
 ## Conventions
 
 - Naming: Python `snake_case`, classes `PascalCase`; TS `camelCase`, components `PascalCase.tsx`; JSON fields `snake_case`.
-- Code, comments, docs: English. UI copy: Spanish (Guatemala), always "usted", short plain sentences, icon plus text.
+- Code, comments, docs: English. UI copy: English by default (for the judges) and Spanish (Guatemala) with `?lang=es`; Spanish always "usted"; short plain sentences, icon plus text in both.
 - Format/lint: `uv run ruff format .`, `uv run ruff check .`, `npm --prefix web run format`, `npm --prefix web run lint`.
 - Commits: conventional commits with module scope, e.g. `feat(engine): ...`; no AI attribution.
 - Tests first (Strict TDD). Run `uv run pytest` and `npm --prefix web run test`; typecheck with `uv run mypy contracts/src engine/src api/src data/src` and `npm --prefix web run typecheck`.
