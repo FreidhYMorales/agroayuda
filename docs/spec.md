@@ -99,7 +99,7 @@ Values change only with a test.
 ### Recommendation and texts
 
 - `recommended` is true for the best passing alternative only, and only when its priority-weighted score is strictly greater than the current rotation's; never for the current one. If no alternative beats the current, none is recommended and the UI says "Su rotación actual ya es la mejor para sus prioridades" (both alternatives still shown). Ties break by template order in `rotation_templates.csv`.
-- One `reasons` line cites the farmer's top priority; ties between priorities break in the order water > soil > income > risk.
+- One `reasons` line cites the farmer's top priority. When several priorities tie at the top it names none as "the" priority: it lists each tied one with the option's score, in the order water > soil > income > risk ("Usted dio la misma importancia a varias cosas. Esta opción saca: cuidar el agua 4 de 5 y el ingreso 3 de 5.").
 - `bare_months` lists the months each option leaves the field bare (from `calendar.py` and `cycle_days`).
 - Irrigation lifts the risk criterion of high-water crops and disables F1/F2.
 - The current rotation also gets F1/F2 checks: its `not_recommended_reason` is shown as a ⚠ warning on the current column (never "No recomendada").
@@ -179,8 +179,8 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ═  Chiquimula        ✕   │
-│ Riesgos de esta zona     │
+│ ← Mapa                   │
+│ Riesgos en Chiquimula    │
 │──────────────────────────│
 │ ⚠ Suelo sin cultivo    › │
 │   dic-abr (estimado)     │
@@ -212,7 +212,9 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ← Su parcela             │
+│ ← Mapa                   │
+│ Paso 2 de 3              │
+│ Cuéntenos de su siembra  │
 │ (arriba: primera y       │
 │  postrera, íconos)       │
 │ ¿Qué es lo más           │
@@ -229,12 +231,13 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 │ ¿Tiene riego? (Sí) (No)  │
 │ [ Comparar opciones → ]  │
 └──────────────────────────┘
- One scrolling form, three blocks: ¿Qué siembra en primera? (icon grid,
- incl. maíz con frijol) / ¿Y en postrera? (icon grid + "Nada") / priorities
+ One scrolling form, three blocks: ¿Qué siembra en primera (siembra de
+ mayo)? (icon grid, incl. maíz con frijol) / ¿Y en postrera (siembra de agosto
+ a septiembre)? (icon grid + "Nada") / priorities
  and irrigation (shown above).
 ```
 
-- One scrolling form, three blocks. Priorities are tap selectors 1-5 (five circles, targets >= 44 px, label above the circles so the row fits 360 px), default 3. Answers are kept in the URL; crops filtered by season from `crops.json`. Both seasons "Nada" is allowed (fallow; the engine says so).
+- One scrolling form, three blocks. Priorities are tap selectors 1-5 (five circles, targets >= 44 px, label above the circles so the row fits 360 px), default 3, with "1 = poco importante · 5 = muy importante" under the title and an ⓘ button next to it that opens, on tap, a small card saying in plain words what each priority scores (from Scoring v1). Answers are kept in the URL; crops filtered by season from `crops.json`. Both seasons "Nada" is allowed (fallow; the engine says so).
 - States: catalog loading -> skeleton; catalog error -> "Intentar de nuevo"; defaults never block submission.
 
 | UI element | Backend demand |
@@ -247,23 +250,28 @@ UI copy is Spanish (Guatemala), always "usted". The full request (point, crops, 
 
 ```
 ┌──────────────────────────┐
-│ ← Sus opciones           │
+│ ← Sus cultivos           │
+│ Paso 3 de 3              │
+│ Sus opciones             │
+│ 👆 Toque una opción para │
+│    ver por qué           │
+│ Puntaje 1-5: 5 es mejor  │
 │          Actual Op.1 Op.2│
-│ 💧Agua    ▓▓░   ▓▓▓  ▓▓▓▓│
-│ 🟫Suelo   ▓░░   ▓▓▓  ▓▓░ │
-│ 💰Ingreso ▓▓▓   ▓▓░  ▓▓░ │
-│ 🛡Riesgo  ▓░░   ▓▓▓  ▓▓░ │
+│ 💧Ahorrar ▓▓░   ▓▓▓  ▓▓▓▓│
+│ 🟫Cuidar  ▓░░   ▓▓▓  ▓▓░ │
+│ 💰Ganar   ▓▓▓   ▓▓░  ▓▓░ │
+│ 🛡Menos r.▓░░   ▓▓▓  ▓▓░ │
 │ Confianza ●●○   ●●○  ●○○ │
 │                 ✓    ✗ no│
 │                 recom.   │
-│ Toque una opción ›       │
 │ ⓘ Esto es una ayuda; no  │
 │   reemplaza su criterio  │
 │ [ Cambiar prioridades ]  │
 └──────────────────────────┘
  Tap a column -> detail:
 ┌──────────────────────────┐
-│ ← Opción 1               │
+│ ← Comparación            │
+│ Opción 1                 │
 │ Maíz con frijol →        │
 │ Maicillo                 │
 │ Comparada con lo actual: │

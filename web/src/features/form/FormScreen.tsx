@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { CropCatalogEntry, CropId, Priorities } from "../../contracts/contracts";
 import { useLang } from "../../lib/urlState";
+import { CropIcon } from "../../ui/CropIcon";
 import { cropLabel } from "../comparison/cropLabels";
-import { Page, visuallyHidden } from "../comparison/theme";
+import { Page, StepTitle, visuallyHidden } from "../comparison/theme";
+import { PriorityInfo } from "./PriorityInfo";
 import { formCopy } from "./copy";
 
 /** Same field names as `AppState` (web/src/lib/urlState.ts), so `onChange` can be its `patch`. */
@@ -40,17 +42,16 @@ async function loadCatalog(): Promise<CropCatalogEntry[]> {
 }
 
 function CropButton(props: {
+  id: CropId;
   icon: string;
   label: string;
   selected: boolean;
   onSelect: () => void;
 }) {
-  const { icon, label, selected, onSelect } = props;
+  const { id, icon, label, selected, onSelect } = props;
   return (
     <button type="button" className="ag-btn ag-crop" aria-pressed={selected} onClick={onSelect}>
-      <span className="ag-icon" aria-hidden="true">
-        {icon}
-      </span>
+      <CropIcon id={id} icon={icon} />
       <span>
         {selected ? <span aria-hidden="true">✓ </span> : null}
         {label}
@@ -83,6 +84,7 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
         {allowed.map((entry) => (
           <CropButton
             key={entry.id}
+            id={entry.id}
             icon={entry.icon}
             label={label(entry)}
             selected={selected === entry.id}
@@ -90,6 +92,7 @@ function CropGrid({ title, season, crops, selected, onSelect }: CropGridProps) {
           />
         ))}
         <CropButton
+          id="none"
           icon={none?.icon ?? "⬜"}
           label={cropLabel("none", lang)}
           selected={selected === "none"}
@@ -116,16 +119,22 @@ function CatalogSkeleton({ label }: { label: string }) {
   );
 }
 
+const SCALE_HINT_ID = "priority-scale-hint";
+
 function PriorityCircles(props: {
   name: string;
   icon: string;
   label: string;
   value: number;
+  describedBy: string;
   onPick: (level: number) => void;
 }) {
-  const { name, icon, label, value, onPick } = props;
+  const { name, icon, label, value, describedBy, onPick } = props;
   return (
-    <fieldset style={{ border: "none", padding: 0, margin: "0 0 14px" }}>
+    <fieldset
+      aria-describedby={describedBy}
+      style={{ border: "none", padding: 0, margin: "0 0 14px" }}
+    >
       <legend style={{ padding: 0, marginBottom: 6, fontWeight: 600 }}>{`${icon} ${label}`}</legend>
       <div className="ag-circles">
         {LEVELS.map((level) => {
@@ -157,7 +166,7 @@ export type FormScreenProps = {
   values: FormValues;
   onChange: (patch: Partial<FormValues>) => void;
   onSubmit: () => void;
-  /** "← Su parcela": back to the map. */
+  /** "← Mapa": back to the map. */
   onBack: () => void;
   /** Message above the form, e.g. "Revise sus respuestas". */
   notice?: string | null;
@@ -202,6 +211,7 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
       <button type="button" className="ag-btn ag-link" onClick={onBack}>
         {copy.back}
       </button>
+      <StepTitle step={copy.step} title={copy.title} />
       {notice ? (
         <p role="alert" className="ag-notice">
           {notice}
@@ -243,10 +253,21 @@ function FormContent(props: FormScreenProps & { onRetryCatalog: () => void }) {
 
         <div>
           <section className="ag-card">
-            <h2 ref={prioritiesRef}>{copy.prioritiesTitle}</h2>
+            {/* Title on the left, ⓘ on the right: it explains what each priority means. */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <h2 ref={prioritiesRef} style={{ flex: "1 1 0" }}>
+                {copy.prioritiesTitle}
+              </h2>
+              <PriorityInfo />
+            </div>
+            {/* Says what the numbers mean; each row of circles points to it for screen readers. */}
+            <p id={SCALE_HINT_ID} className="ag-muted" style={{ marginTop: 0 }}>
+              {copy.scaleHint}
+            </p>
             {PRIORITY_ROWS.map(({ key, icon }) => (
               <PriorityCircles
                 key={key}
+                describedBy={SCALE_HINT_ID}
                 name={`priority-${key}`}
                 icon={icon}
                 label={copy.priorities[key]}

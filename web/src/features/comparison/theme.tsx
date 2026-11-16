@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { LEAF_PATTERN } from "../../ui/leafPattern";
 
 /**
  * Visual system for the form and the comparison. Choices (and why):
@@ -15,9 +16,11 @@ import type { ReactNode } from "react";
  * the tablet and desktop views.
  */
 export const THEME_CSS = `
-.ag{padding-top:16px;padding-bottom:max(40px,env(safe-area-inset-bottom));background:#faf7f0;
-color:#1e2a22;font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.ag{padding-top:16px;padding-bottom:max(40px,env(safe-area-inset-bottom));
+background:#faf7f0 ${LEAF_PATTERN};color:#1e2a22;font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .ag *{box-sizing:border-box}
+.ag h1{font-size:23px;line-height:1.25;margin:0 0 14px;font-weight:700}
+.ag-step{margin:6px 0 2px;font-size:15px;color:#4a5656;font-weight:600}
 .ag h2{font-size:21px;line-height:1.25;margin:0 0 12px;font-weight:700}
 .ag h3{font-size:17px;margin:0 0 6px;font-weight:700;color:#1f5e3b}
 .ag p{margin:8px 0}
@@ -37,6 +40,7 @@ transition:background .12s,border-color .12s}
 .ag-crop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
 min-height:76px}
 .ag-icon{font-size:28px;line-height:1}
+.ag-crop-photo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #e4ddcb}
 .ag-choice{position:relative;display:inline-flex;align-items:center;justify-content:center;
 border:2px solid #c9c0a8;background:#fff;cursor:pointer;transition:background .12s,border-color .12s}
 .ag-choice input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
@@ -94,3 +98,13 @@ export const visuallyHidden = {
   overflow: "hidden",
   clip: "rect(0 0 0 0)",
 } as const;
+
+/** "Paso 2 de 3" above the screen title, so the farmer knows where they are in the flow. */
+export function StepTitle({ step, title }: { step: string; title: string }) {
+  return (
+    <>
+      <p className="ag-step">{step}</p>
+      <h1>{title}</h1>
+    </>
+  );
+}

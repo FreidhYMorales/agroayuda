@@ -15,7 +15,7 @@ function item(text: RegExp): HTMLElement {
 test("shows the crops, the comparison lines and the confidence", () => {
   detail(1, "Opción 1");
 
-  expect(screen.getByRole("button", { name: "← Opción 1" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "← Comparación" })).toBeVisible();
   expect(screen.getByText("Maíz con frijol → Maicillo")).toBeVisible();
   expect(screen.getByRole("heading", { name: "Comparada con lo actual:" })).toBeVisible();
   expect(item(/Agua/)).toHaveTextContent("▲ mejor");
@@ -88,7 +88,7 @@ test("an option without evidence shows a dash instead of an empty list", () => {
 test("back calls the handler", () => {
   const onBack = detail(1, "Opción 1");
 
-  fireEvent.click(screen.getByRole("button", { name: "← Opción 1" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Comparación" }));
 
   expect(onBack).toHaveBeenCalledTimes(1);
 });
@@ -182,4 +182,11 @@ test("responsive layout: why and evidence in the first column, the rest in the s
   expect(within(second).getByRole("heading", { name: "Beneficio:" })).toBeTruthy();
   expect(within(second).getByRole("heading", { name: "⚠ Consulte con un técnico" })).toBeTruthy();
   expect(within(second).getByRole("heading", { name: "❔ Lo que no sabemos:" })).toBeTruthy();
+});
+
+test("the detail still says which option it is, above the sequence", () => {
+  detail(1, "Opción 1");
+
+  expect(screen.getByText("Opción 1")).toBeVisible();
+  expect(screen.getByRole("button", { name: "← Comparación" })).toBeVisible();
 });

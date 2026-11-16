@@ -1,3 +1,4 @@
+import { comparisonCopy } from "./copy";
 import type { RotationOption } from "../../contracts/contracts";
 import { confidenceText, deltaText } from "./badges";
 import { sequenceLabel } from "./cropLabels";
@@ -85,9 +86,12 @@ export function OptionDetail({ option, title, onBack }: OptionDetailProps) {
   return (
     <Page>
       <button type="button" className="ag-btn ag-link" onClick={onBack}>
-        {`← ${title}`}
+        {comparisonCopy(lang).backToComparison}
       </button>
-      <h2 style={{ marginTop: 8 }}>{sequenceLabel(option.sequence, lang)}</h2>
+      <p className="ag-muted" style={{ margin: "8px 0 0" }}>
+        {title}
+      </p>
+      <h2 style={{ marginTop: 0 }}>{sequenceLabel(option.sequence, lang)}</h2>
 
       {option.is_current ? null : (
         <section className="ag-card">

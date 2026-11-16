@@ -46,9 +46,9 @@ function params() {
 }
 
 async function chooseAndCompare(primera = "Maíz", postrera = "Frijol") {
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
-  fireEvent.click(cropButton("¿Qué siembra en primera?", primera));
-  fireEvent.click(cropButton("¿Y en postrera?", postrera));
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  fireEvent.click(cropButton("¿Qué siembra en primera (siembra de mayo)?", primera));
+  fireEvent.click(cropButton("¿Y en postrera (siembra de agosto a septiembre)?", postrera));
   fireEvent.click(screen.getByRole("button", { name: "Comparar opciones →" }));
 }
 
@@ -57,9 +57,9 @@ test("the answers live in the URL while the form is filled", async () => {
   route();
   render(<ResultsFlow />);
 
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
-  fireEvent.click(cropButton("¿Qué siembra en primera?", "Maíz"));
-  fireEvent.click(cropButton("¿Y en postrera?", "Frijol"));
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  fireEvent.click(cropButton("¿Qué siembra en primera (siembra de mayo)?", "Maíz"));
+  fireEvent.click(cropButton("¿Y en postrera (siembra de agosto a septiembre)?", "Frijol"));
   const income = screen.getByRole("group", { name: /Ganar más/ });
   fireEvent.click(within(income).getByRole("radio", { name: "5" }));
   const irrigation = screen.getByRole("group", { name: "¿Tiene riego?" });
@@ -103,7 +103,9 @@ test("the results step without crops shows the form instead", async () => {
   route();
   render(<ResultsFlow />);
 
-  expect(await screen.findByRole("heading", { name: "¿Qué siembra en primera?" })).toBeVisible();
+  expect(
+    await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" }),
+  ).toBeVisible();
   expect(recommendationCalls()).toHaveLength(0);
 });
 
@@ -120,10 +122,16 @@ test("422 shows the form again, answers kept, with 'Revise sus respuestas'", asy
   await chooseAndCompare();
 
   expect(await screen.findByText("Revise sus respuestas")).toBeVisible();
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
   expect(params().get("step")).toBe("form");
-  expect(cropButton("¿Qué siembra en primera?", "Maíz")).toHaveAttribute("aria-pressed", "true");
-  expect(cropButton("¿Y en postrera?", "Frijol")).toHaveAttribute("aria-pressed", "true");
+  expect(cropButton("¿Qué siembra en primera (siembra de mayo)?", "Maíz")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(cropButton("¿Y en postrera (siembra de agosto a septiembre)?", "Frijol")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   expect(screen.getByRole("button", { name: "Comparar opciones →" })).toBeEnabled();
 });
 
@@ -141,13 +149,13 @@ test("outside_region goes back to the map step with its message", async () => {
   expect(params().get("step")).toBe("map");
 });
 
-test("'← Su parcela' goes back to the map step without a message", async () => {
+test("'← Mapa' goes back to the map step without a message", async () => {
   openAt(`?step=form&${PLACE}`);
   route();
   const onBackToMap = vi.fn();
   render(<ResultsFlow onBackToMap={onBackToMap} />);
 
-  fireEvent.click(screen.getByRole("button", { name: "← Su parcela" }));
+  fireEvent.click(screen.getByRole("button", { name: "← Mapa" }));
 
   expect(onBackToMap).toHaveBeenCalledWith();
   expect(params().get("step")).toBe("map");
@@ -159,7 +167,7 @@ test("submitting without a place on the map goes back to the map", async () => {
   route();
   render(<ResultsFlow />);
 
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
   fireEvent.click(screen.getByRole("button", { name: "Comparar opciones →" }));
 
   expect(params().get("step")).toBe("map");
@@ -181,9 +189,15 @@ test("'Cambiar prioridades' shows the form at priorities, answers kept, then rec
   });
   await waitFor(() => expect(scrollIntoView.mock.contexts).toContain(heading));
   expect(params().get("step")).toBe("form");
-  await screen.findByRole("heading", { name: "¿Qué siembra en primera?" });
-  expect(cropButton("¿Qué siembra en primera?", "Maíz")).toHaveAttribute("aria-pressed", "true");
-  expect(cropButton("¿Y en postrera?", "Frijol")).toHaveAttribute("aria-pressed", "true");
+  await screen.findByRole("heading", { name: "¿Qué siembra en primera (siembra de mayo)?" });
+  expect(cropButton("¿Qué siembra en primera (siembra de mayo)?", "Maíz")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(cropButton("¿Y en postrera (siembra de agosto a septiembre)?", "Frijol")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
 
   const income = screen.getByRole("group", { name: /Ganar más/ });
   fireEvent.click(within(income).getByRole("radio", { name: "5" }));

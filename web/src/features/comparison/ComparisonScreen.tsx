@@ -7,7 +7,7 @@ import { type Lang, useLang } from "../../lib/urlState";
 import { comparisonCopy } from "./copy";
 import { sequenceLabel } from "./cropLabels";
 import { OptionDetail } from "./OptionDetail";
-import { Page, visuallyHidden } from "./theme";
+import { Page, StepTitle, visuallyHidden } from "./theme";
 
 // The labels come from comparisonCopy, by key.
 const CRITERIA = [
@@ -95,6 +95,13 @@ export function ComparisonTable({ options, onSelect }: ComparisonTableProps) {
       : "";
   return (
     <table className="ag-table">
+      {/* Visible and the table's name: without it "Menos riesgo 5" could read as more risk. */}
+      <caption
+        className="ag-muted"
+        style={{ captionSide: "top", textAlign: "left", padding: "0 4px 6px" }}
+      >
+        {copy.scaleNote}
+      </caption>
       <thead>
         <tr>
           <th>
@@ -238,10 +245,14 @@ function ResultsView(props: ResultsViewProps) {
     };
   }, [requestKey]);
 
+  // Every state of this screen starts with the way back, the step and the title.
   const back = (
-    <button type="button" className="ag-btn ag-link" onClick={onBack}>
-      {copy.back}
-    </button>
+    <>
+      <button type="button" className="ag-btn ag-link" onClick={onBack}>
+        {copy.back}
+      </button>
+      <StepTitle step={copy.step} title={copy.title} />
+    </>
   );
 
   if (state.status === "loading") {
@@ -301,15 +312,22 @@ function ResultsView(props: ResultsViewProps) {
           ))}
         </div>
       ) : null}
+      {/* Picking an option is the main action here, so the hint sits right above the table. */}
+      <p style={{ fontWeight: 600, margin: "12px 0 6px" }}>{copy.tapOption}</p>
       <div className="ag-card" style={{ padding: "8px 4px" }}>
         {/* Safety net: a long English word scrolls inside the table, never the page. */}
         <div className="ag-table-wrap">
           <ComparisonTable options={state.options} onSelect={setSelected} />
         </div>
       </div>
-      <p className="ag-muted">{copy.tapOption}</p>
       <p className="ag-muted">{copy.aid}</p>
-      <button type="button" className="ag-btn ag-primary" onClick={onChangePriorities}>
+      {/* Secondary: it changes the question, it is not the next step. */}
+      <button
+        type="button"
+        className="ag-btn"
+        style={{ width: "100%" }}
+        onClick={onChangePriorities}
+      >
         {copy.changePriorities}
       </button>
     </Page>
@@ -318,7 +336,7 @@ function ResultsView(props: ResultsViewProps) {
 
 export type ComparisonScreenProps = {
   request: RecommendationRequest;
-  /** "← Sus opciones": back to the form. */
+  /** "← Sus cultivos": back to the form. */
   onBack: () => void;
   /** "Cambiar prioridades": show the form at the priorities block, answers kept. */
   onChangePriorities: () => void;
