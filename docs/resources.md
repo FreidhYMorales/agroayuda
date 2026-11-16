@@ -84,6 +84,8 @@ Rows marked _verify_ need the owner to confirm the licence on the provider's pag
 | Vercel | https://vercel.com | Web hosting |
 | Render | https://render.com | API hosting |
 | uv | https://docs.astral.sh/uv/ | Python packaging |
+| VTracer (visioncortex) | https://github.com/visioncortex/vtracer | Converting the logo image to SVG |
+| ImageMagick | https://imagemagick.org | Cleaning the logo image before vectorizing |
 
 ### Images, icons, fonts, audio
 
